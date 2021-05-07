@@ -9,6 +9,7 @@ using System.Reflection;
 using MySql.Data.MySqlClient;
 using DevExpress.XtraEditors;
 using System.Windows.Forms;
+using System.ComponentModel.DataAnnotations;
 
 namespace scale_lite
 {
@@ -146,6 +147,33 @@ namespace scale_lite
         {
             public int hourd { get; set; }
             public int hourt { get; set; }
+        }
+
+        public class headertick
+        {
+            [Display(Name = "TIcket")]
+            public int ticket { get; set; }
+
+            [Display(Name = "F. Entr")]
+            public string fecpen { get; set; }
+
+            [Display(Name = "H. Entr")]
+            public string horent { get; set; }
+
+            [Display(Name = "Grupo")]
+            public string nom_grupo { get; set; }
+
+            [Display(Name = "Fletero")]
+            public string fletero { get; set; }
+
+            [Display(Name = "Peso Bruto")]
+            public int pesob { get; set; }
+
+        }
+
+        public class dayzafra
+        {
+            public int diazafra { get; set; }
         }
 
         #endregion

@@ -1,4 +1,6 @@
-﻿using DevExpress.XtraEditors;
+﻿using DevExpress.Utils.Drawing;
+using DevExpress.XtraEditors;
+using DevExpress.XtraGrid.Views.Grid;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -22,6 +24,8 @@ namespace scale_lite
         public string sConexion;
         public bool bLifeconecta = false;
         public int izafra;
+        public string sUserC;
+        public int iPesoB;
 
         List<strucdata.users> lUsers = new List<strucdata.users>();
 
@@ -59,10 +63,16 @@ namespace scale_lite
             new strucdata.dhour { hourd = 5, hourt =  24}
         };
 
+        List<strucdata.headertick> lTicko = new List<strucdata.headertick>();
+
         strucdata procedure = new strucdata();
         public Form1()
         {
             InitializeComponent();
+
+            this.gridView1.OptionsBehavior.Editable = false;
+            this.gridView1.FocusedRowChanged += GridView1_FocusedRowChanged;
+           
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -78,6 +88,8 @@ namespace scale_lite
             label2.Text = string.Empty;
             label6.Text = string.Empty;
             label7.Text = string.Empty;
+            label13.Text = string.Empty;
+            label14.Text = string.Empty;
             textEdit3.Text = string.Empty;
 
             sServer = ConfigurationManager.AppSettings.Get("server");
@@ -100,6 +112,8 @@ namespace scale_lite
                 lForward = procedure.ConvertToList<strucdata.forwarder>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'FLET'", sConexion));
 
                 llifting = procedure.ConvertToList<strucdata.lifting>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'ALZD'", sConexion));
+
+                gridControl1.DataSource = Headert();
 
             }
             else
@@ -135,6 +149,105 @@ namespace scale_lite
 
         }
 
+        private BindingList<strucdata.headertick> Headert()
+        {
+            BindingList<strucdata.headertick> lResult = new BindingList<strucdata.headertick>();
+
+            string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob";
+
+            var lheadert = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0", sConexion));
+
+           
+
+            foreach(var Itm in lheadert)
+            {
+                lResult.Add(new strucdata.headertick
+                {
+                    ticket = Itm.ticket,
+                    fecpen = Convert.ToDateTime( Itm.fecpen).ToString("yyyy-MM-dd"),
+                    horent = Itm.horent,
+                    nom_grupo = Itm.nom_grupo,
+                    fletero = Itm.fletero,
+                    pesob = Itm.pesob
+                });
+            }
+
+            return lResult;
+        } 
+
+        private void GridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
+        {
+
+            if (this.gridView1.FocusedColumn.FieldName == "ticket")
+            {
+                lTicko.Clear();
+
+                string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob";
+
+                textEdit5.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
+
+                lTicko = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0 and ticket = " + textEdit5.Text, sConexion));
+
+                textEdit7.Text = lTicko[0].pesob.ToString();
+                textEdit10.Text = lTicko[0].pesob.ToString();
+            }
+
+        }
+
+        private void Totals()
+        {
+            int iTara;
+
+            if (textEdit7.Text.Trim().Length == 0)
+            {
+                textEdit7.Text = lTicko[0].pesob.ToString();
+                textEdit10.Text = lTicko[0].pesob.ToString();
+            }
+
+            if (int.TryParse(textEdit6.Text, out iTara))
+            {
+
+                int iPesob = lTicko[0].pesob;
+
+                double doDesc = (textEdit8.Text.Trim().Length > 0) ? Convert.ToInt32(textEdit8.Text) : 0;
+
+                double doCast = (textEdit9.Text.Trim().Length > 0) ? Convert.ToInt32(textEdit9.Text) : 0;
+
+                int iPesoN = iPesob - Convert.ToInt32(textEdit6.Text);
+
+                int iTd = 0; int iTc = 0;
+
+                if (doDesc > 0)
+                {
+
+                    double doTDesc = (doDesc / 100);
+                    iTd =  Convert.ToInt32( Math.Round( (iPesoN * doTDesc),0)) ;
+                    label13.Text = iTd.ToString();
+                }
+                else
+                {
+                    label13.Text = string.Empty;
+                }
+
+                if (doCast > 0)
+                {
+                    double doTcast =  (doCast / 100);
+                    iTc = Convert.ToInt32(Math.Round((iPesoN * doTcast), 0));
+                    label14.Text = iTc.ToString();
+                }
+                else
+                {
+                    label14.Text = string.Empty;
+                }
+
+                textEdit7.Text = iPesoN.ToString();
+                textEdit10.Text = (iPesoN - (iTd + iTc)).ToString();
+
+            }
+
+        }
+
+
         #endregion
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -153,6 +266,9 @@ namespace scale_lite
                 toolStripComboBox1.Enabled = true;
                 toolStripStatusLabel2.Text = lUserv[0].nombre_full;
                 tabControl1.Enabled = true;
+                gridControl1.Enabled = true;
+                tabPane1.Enabled = true;
+                sUserC = lUserv[0].user;
             }
             else
             {
@@ -255,7 +371,6 @@ namespace scale_lite
                 {
                     string sCondicion = string.Empty;
                     int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
-                    string sTipoq = (radioButton1.Checked) ? "P'" : "A'";
                     string sTipoc = (radioButton3.Checked) ? "Q'" : "C'";
 
                     int iHorP = lhorlab.Where(x => x.hourd == iHora).ToList()[0].hourt;
@@ -269,14 +384,15 @@ namespace scale_lite
 
                     sCondicion = "numtra = " + textEdit2.Text;
                     sCondicion = sCondicion + ", numalz = " + textEdit4.Text;
-                    sCondicion = sCondicion + ", tipque = '" + sTipoq ;
+                    sCondicion = sCondicion + ", tipque = 'P'";
                     sCondicion = sCondicion + ", tpocan = '" + sTipoc;
                     sCondicion = sCondicion + ", numtra = " + textEdit2.Text;
                     sCondicion = sCondicion + ", numalz = " + textEdit4.Text;
-                    sCondicion = sCondicion + ", numavi = 20000, material = 1";
+                    sCondicion = sCondicion + ", numavi = 20000, material = 1, peson = 0, pesot = 0, pesol = 0, pesob = " + textEdit3.Text;
                     sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") +"', hora = " + DateTime.Now.ToString("HH");
                     sCondicion = sCondicion + ", fecque = '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "', horque = '18:00', hr_code = " + iHorP ;
                     sCondicion = sCondicion + ", nofecha =" +  sNofecha;
+                    sCondicion = sCondicion + ", status = 'BATEY', ent_usuario = '" + sUserC;
 
                     string sArmado = procedure.stringexe(2, sCondicion , "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
 
@@ -298,6 +414,85 @@ namespace scale_lite
         private void simpleButton5_Click(object sender, EventArgs e)
         {
             CleanControls();
+        }
+
+        private void gridControl1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textEdit6_EditValueChanged(object sender, EventArgs e)
+        {
+
+            Totals();
+        }
+
+        private void textEdit8_EditValueChanged(object sender, EventArgs e)
+        {
+            Totals();
+
+        }
+
+        private void textEdit9_EditValueChanged(object sender, EventArgs e)
+        {
+            Totals();
+        }
+
+        private void simpleButton6_Click(object sender, EventArgs e)
+        {
+            int iTara;
+
+            if (textEdit6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar peso tara..."); textEdit3.Text = string.Empty; return; }
+
+            if (int.TryParse(textEdit6.Text, out iTara))
+            {
+                if (XtraMessageBox.Show("Procede a dar salida a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
+                {
+                    string sActualiza = string.Empty;
+
+                    var lDz = procedure.ConvertToList<strucdata.dayzafra>(procedure.Predata(1, "max(diazafra) as diazafra", "b_ticket", "zafra = " + izafra, sConexion));
+
+                    int iHour = Convert.ToInt32( DateTime.Now.ToString("HH"));
+
+                    int iDz = lDz[0].diazafra;
+
+                    if (iHour < 7) {iDz = (lDz[0].diazafra >= 6) ? lDz[0].diazafra + 1 : lDz[0].diazafra; }
+
+                    string sDescto = (textEdit8.Text.Trim().Length > 0) ? textEdit8.Text : "0";
+                    string sCast = (textEdit9.Text.Trim().Length > 0) ? textEdit9.Text : "0";
+                    string sTDescto = (label13.Text.Trim().Length > 0) ? label13.Text : "0";
+                    string sTCast = (label14.Text.Trim().Length > 0) ? label14.Text : "0";
+
+                    sActualiza = "pesot = " + textEdit6.Text;
+                    sActualiza = sActualiza + ", peson = " + textEdit7.Text;
+                    sActualiza = sActualiza + ", pesol = " + textEdit10.Text;
+                    sActualiza = sActualiza + ", descto = " + sDescto;
+                    sActualiza = sActualiza + ", castigo = " + sCast;
+                    sActualiza = sActualiza + ", totaldescuento = " + sTDescto;
+                    sActualiza = sActualiza + ", totalcastigo = " + sTCast;
+                    sActualiza = sActualiza + ", fecpes = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horsal = '" + DateTime.Now.ToString("HH:mm") + "'";
+                    sActualiza = sActualiza + ", status = 'OK', diazafra = " + iDz.ToString();
+
+
+                    string sArmado = procedure.stringexe(2, sActualiza, "b_ticket", " ticket = " + textEdit5.Text + " and zafra = " + izafra);
+
+                    procedure.Executecmm(sArmado, sConexion);
+
+                    textEdit6.Text = string.Empty; textEdit8.Text = string.Empty; label13.Text = string.Empty; label14.Text = string.Empty;
+                    gridControl1.DataSource = Headert();
+
+                    XtraMessageBox.Show("Se dio salida a la unidad...");
+
+
+                }
+
+            }
+            else
+            {
+                XtraMessageBox.Show("Debe anotar peso tara...");
+            }
+
+
         }
     }
 }

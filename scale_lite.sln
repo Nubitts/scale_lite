@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scale_lite", "scale_lite\scale_lite.csproj", "{1BC5367B-62D3-48FA-896F-666477241838}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "install_scale_lite", "install_scale_lite\install_scale_lite.vdproj", "{CF0DC7A3-E556-42CB-8FE2-4C06EA89C2F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,8 @@ Global
 		{1BC5367B-62D3-48FA-896F-666477241838}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BC5367B-62D3-48FA-896F-666477241838}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BC5367B-62D3-48FA-896F-666477241838}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF0DC7A3-E556-42CB-8FE2-4C06EA89C2F1}.Debug|Any CPU.ActiveCfg = Debug
+		{CF0DC7A3-E556-42CB-8FE2-4C06EA89C2F1}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -153,7 +153,7 @@ namespace scale_lite
         {
             BindingList<strucdata.headertick> lResult = new BindingList<strucdata.headertick>();
 
-            string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob";
+            string sCampos = "ticket,numtra, fecpen, horent,nom_grupo, pesob";
 
             var lheadert = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0", sConexion));
 
@@ -167,7 +167,7 @@ namespace scale_lite
                     fecpen = Convert.ToDateTime( Itm.fecpen).ToString("yyyy-MM-dd"),
                     horent = Itm.horent,
                     nom_grupo = Itm.nom_grupo,
-                    fletero = Itm.fletero,
+                    numtra = Itm.numtra,
                     pesob = Itm.pesob
                 });
             }
@@ -178,19 +178,31 @@ namespace scale_lite
         private void GridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
 
-            if (this.gridView1.FocusedColumn.FieldName == "ticket")
+            try
             {
-                lTicko.Clear();
+                if (this.gridView1.FocusedColumn.FieldName == "ticket")
+                {
+                    lTicko.Clear();
 
-                string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob";
+                    if (gridView1.RowCount > 0)
+                    {
+                        string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob";
 
-                textEdit5.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
+                        textEdit5.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
 
-                lTicko = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0 and ticket = " + textEdit5.Text, sConexion));
+                        lTicko = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0 and ticket = " + textEdit5.Text, sConexion));
 
-                textEdit7.Text = lTicko[0].pesob.ToString();
-                textEdit10.Text = lTicko[0].pesob.ToString();
+                        textEdit7.Text = lTicko[0].pesob.ToString();
+                        textEdit10.Text = lTicko[0].pesob.ToString();
+                    }
+
+                }
             }
+            catch 
+            {
+            }
+
+
 
         }
 
@@ -289,7 +301,7 @@ namespace scale_lite
 
             List<strucdata.ticketfree> lTicketf = new List<strucdata.ticketfree>();
 
-            lTicketf = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and peson is null", sConexion));
+            lTicketf = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob = 0 or pesob is null)", sConexion));
 
             if (int.TryParse(textEdit1.Text, out iTicketFr))
             {
@@ -299,6 +311,10 @@ namespace scale_lite
                 if (lfTicket.Count() > 0)
                 {
                     label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
+                }
+                else
+                {
+                    XtraMessageBox.Show("No se encuentra ticket...");
                 }
 
             }
@@ -365,7 +381,6 @@ namespace scale_lite
 
                 if (label6.Text.Trim().Length == 0) { XtraMessageBox.Show("No ha focalizado ningun fletero..."); return; }
 
-                if (label7.Text.Trim().Length == 0) { XtraMessageBox.Show("No ha focalizado ningun alzadora..."); return; }
 
                 if (XtraMessageBox.Show("Procede a guardar datos capturados?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
                 {
@@ -382,23 +397,24 @@ namespace scale_lite
                         sNofecha = DateTime.Now.AddDays(-1).ToString("yyMMdd");
                     }
 
-                    sCondicion = "numtra = " + textEdit2.Text;
-                    sCondicion = sCondicion + ", numalz = " + textEdit4.Text;
+                    string sNumtra = (textEdit2.Text.Trim().Length > 0) ? textEdit2.Text : "0";
+                    string sNumalz = (textEdit4.Text.Trim().Length > 0) ? textEdit4.Text : "0";
+
+                    sCondicion = "numtra = " + sNumtra;
+                    sCondicion = sCondicion + ", numalz = " + sNumalz;
                     sCondicion = sCondicion + ", tipque = 'P'";
-                    sCondicion = sCondicion + ", tpocan = '" + sTipoc;
-                    sCondicion = sCondicion + ", numtra = " + textEdit2.Text;
-                    sCondicion = sCondicion + ", numalz = " + textEdit4.Text;
+                    sCondicion = sCondicion + ", tpocan = '" + sTipoc ;
                     sCondicion = sCondicion + ", numavi = 20000, material = 1, peson = 0, pesot = 0, pesol = 0, pesob = " + textEdit3.Text;
                     sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") +"', hora = " + DateTime.Now.ToString("HH");
                     sCondicion = sCondicion + ", fecque = '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "', horque = '18:00', hr_code = " + iHorP ;
                     sCondicion = sCondicion + ", nofecha =" +  sNofecha;
-                    sCondicion = sCondicion + ", status = 'BATEY', ent_usuario = '" + sUserC;
+                    sCondicion = sCondicion + ", status = 'BATEY', ent_usuario = '" + sUserC + "'";
 
                     string sArmado = procedure.stringexe(2, sCondicion , "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
 
                     procedure.Executecmm(sArmado, sConexion);
 
-                    XtraMessageBox.Show("Se ingreso entrada...");
+                    gridControl1.DataSource = Headert();
 
                     CleanControls();
 
@@ -480,8 +496,6 @@ namespace scale_lite
 
                     textEdit6.Text = string.Empty; textEdit8.Text = string.Empty; label13.Text = string.Empty; label14.Text = string.Empty;
                     gridControl1.DataSource = Headert();
-
-                    XtraMessageBox.Show("Se dio salida a la unidad...");
 
 
                 }

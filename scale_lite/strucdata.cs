@@ -154,6 +154,9 @@ namespace scale_lite
             [Display(Name = "TIcket")]
             public int ticket { get; set; }
 
+            [Display(Name = "Fletero")]
+            public string numtra { get; set; }
+
             [Display(Name = "F. Entr")]
             public string fecpen { get; set; }
 
@@ -162,9 +165,6 @@ namespace scale_lite
 
             [Display(Name = "Grupo")]
             public string nom_grupo { get; set; }
-
-            [Display(Name = "Fletero")]
-            public string fletero { get; set; }
 
             [Display(Name = "Peso Bruto")]
             public int pesob { get; set; }

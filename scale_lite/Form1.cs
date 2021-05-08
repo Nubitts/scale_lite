@@ -405,10 +405,10 @@ namespace scale_lite
                     sCondicion = sCondicion + ", tipque = 'P'";
                     sCondicion = sCondicion + ", tpocan = '" + sTipoc ;
                     sCondicion = sCondicion + ", numavi = 20000, material = 1, peson = 0, pesot = 0, pesol = 0, pesob = " + textEdit3.Text;
-                    sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") +"', hora = " + DateTime.Now.ToString("HH");
-                    sCondicion = sCondicion + ", fecque = '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "', horque = '18:00', hr_code = " + iHorP ;
+                    sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") +"'";
+                    sCondicion = sCondicion + ", fecque = '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "', horque = '18:00'" ;
                     sCondicion = sCondicion + ", nofecha =" +  sNofecha;
-                    sCondicion = sCondicion + ", status = 'BATEY', ent_usuario = '" + sUserC + "'";
+                    sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "'";
 
                     string sArmado = procedure.stringexe(2, sCondicion , "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
 
@@ -466,6 +466,11 @@ namespace scale_lite
                 {
                     string sActualiza = string.Empty;
 
+                    int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
+
+                    int iHorP = lhorlab.Where(x => x.hourd == iHora).ToList()[0].hourt;
+
+
                     var lDz = procedure.ConvertToList<strucdata.dayzafra>(procedure.Predata(1, "max(diazafra) as diazafra", "b_ticket", "zafra = " + izafra, sConexion));
 
                     int iHour = Convert.ToInt32( DateTime.Now.ToString("HH"));
@@ -473,6 +478,8 @@ namespace scale_lite
                     int iDz = lDz[0].diazafra;
 
                     if (iHour < 7) {iDz = (lDz[0].diazafra >= 6) ? lDz[0].diazafra + 1 : lDz[0].diazafra; }
+
+                    var dFechakk = (iHora < 6) ? DateTime.Now.AddDays(-1).ToString("yyMMdd") : DateTime.Now.ToString("yyyy-MM-dd");
 
                     string sDescto = (textEdit8.Text.Trim().Length > 0) ? textEdit8.Text : "0";
                     string sCast = (textEdit9.Text.Trim().Length > 0) ? textEdit9.Text : "0";
@@ -486,8 +493,8 @@ namespace scale_lite
                     sActualiza = sActualiza + ", castigo = " + sCast;
                     sActualiza = sActualiza + ", totaldescuento = " + sTDescto;
                     sActualiza = sActualiza + ", totalcastigo = " + sTCast;
-                    sActualiza = sActualiza + ", fecpes = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horsal = '" + DateTime.Now.ToString("HH:mm") + "'";
-                    sActualiza = sActualiza + ", status = 'OK', diazafra = " + iDz.ToString();
+                    sActualiza = sActualiza + ", fecpes = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horsal = '" + DateTime.Now.ToString("HH:mm") + "', hora = " + DateTime.Now.ToString("HH");
+                    sActualiza = sActualiza + ", status = 'OK', diazafra = " + iDz.ToString()+ ", hr_code = " + iHorP + ", fechakk = '" + dFechakk + "'";
 
 
                     string sArmado = procedure.stringexe(2, sActualiza, "b_ticket", " ticket = " + textEdit5.Text + " and zafra = " + izafra);
@@ -507,6 +514,11 @@ namespace scale_lite
             }
 
 
+        }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show(e.ToString());
         }
     }
 }

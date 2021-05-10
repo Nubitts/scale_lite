@@ -1,20 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Reflection;
-using MySql.Data.MySqlClient;
 using DevExpress.XtraEditors;
 using System.Windows.Forms;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SQLite;
 
 namespace scale_lite
 {
     class strucdata
     {
+
+        public void MakeStructure(string sConecta)
+        {
+
+            try
+            {
+                List<string> lsSQL = new List<string>();
+
+                // Usuario
+                lsSQL.Add("CREATE TABLE IF NOT EXISTS parameters (parameter TEXT NULL, value1 TEXT NULL, value2 TEXT NULL);");
+                // Informes
+
+                SQLiteConnection Con;
+                SQLiteCommand Cmmd;
+
+                Con = new SQLiteConnection(sConecta);
+
+                Con.Open();
+
+                foreach (string Value in lsSQL)
+                {
+
+                    Cmmd = new SQLiteCommand(Value, Con);
+
+                    Cmmd.ExecuteNonQuery();
+                }
+
+                Con.Close();
+
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message + " " + e.Source);
+            }
+
+        }
+
 
         public DataTable Predata(int iOption, string sCampos, string sTabla, string sCondicion, string sConecta)
         {

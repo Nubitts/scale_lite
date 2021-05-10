@@ -1,16 +1,14 @@
-﻿using DevExpress.Utils.Drawing;
-using DevExpress.XtraEditors;
-using DevExpress.XtraGrid.Views.Grid;
+﻿using DevExpress.XtraEditors;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
-using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using System.Data.SQLite;
 
 namespace scale_lite
 {
@@ -26,6 +24,8 @@ namespace scale_lite
         public int izafra;
         public string sUserC;
         public int iPesoB;
+        public string dzafra;
+        public int fzafra;
 
         List<strucdata.users> lUsers = new List<strucdata.users>();
 
@@ -66,6 +66,9 @@ namespace scale_lite
         List<strucdata.headertick> lTicko = new List<strucdata.headertick>();
 
         strucdata procedure = new strucdata();
+
+        public string sConexl = @"Data Source=c:\\data_scale\\scaleinca.db;Version=3;Compress=True;";
+
         public Form1()
         {
             InitializeComponent();
@@ -98,10 +101,18 @@ namespace scale_lite
             sDB = ConfigurationManager.AppSettings.Get("dba");
             sPort = ConfigurationManager.AppSettings.Get("port");
             izafra = Convert.ToInt32(ConfigurationManager.AppSettings.Get("zafra"));
+            dzafra = ConfigurationManager.AppSettings.Get("ddiazafra");
+            fzafra = Convert.ToInt32(ConfigurationManager.AppSettings.Get("fdiazafra"));
 
             sConexion = "Server=" + sServer + ";Port=" + sPort + ";Database=" + sDB + ";Uid=" + sUser + ";password= " + sPassword + ";";
 
-            bLifeconecta = testconnect(sConexion);
+
+
+        bLifeconecta = testconnect(sConexion);
+
+            validate_files();
+
+            procedure.MakeStructure(sConexl);
 
             if (bLifeconecta)
             {
@@ -122,6 +133,19 @@ namespace scale_lite
             }
 
 
+        }
+
+        private void validate_files()
+        {
+
+            if (Directory.Exists(@"c:\data_scale") == false)
+            {
+                Directory.CreateDirectory(@"c:\data_scale");
+            }
+
+            if (!File.Exists(@"c:\data_scale\scaleinca.db"))
+            {
+               SQLiteConnection.CreateFile(@"c:\data_scale\scaleinca.db");           }
         }
 
         public bool testconnect(string sConecta)
@@ -156,8 +180,6 @@ namespace scale_lite
             string sCampos = "ticket,numtra, fecpen, horent,nom_grupo, pesob";
 
             var lheadert = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0", sConexion));
-
-           
 
             foreach(var Itm in lheadert)
             {
@@ -201,9 +223,6 @@ namespace scale_lite
             catch 
             {
             }
-
-
-
         }
 
         private void Totals()
@@ -279,7 +298,7 @@ namespace scale_lite
                 toolStripStatusLabel2.Text = lUserv[0].nombre_full;
                 tabControl1.Enabled = true;
                 gridControl1.Enabled = true;
-                tabPane1.Enabled = true;
+                tabControl2.Enabled = true;
                 sUserC = lUserv[0].user;
             }
             else
@@ -406,8 +425,8 @@ namespace scale_lite
                     sCondicion = sCondicion + ", tpocan = '" + sTipoc ;
                     sCondicion = sCondicion + ", numavi = 20000, material = 1, peson = 0, pesot = 0, pesol = 0, pesob = " + textEdit3.Text;
                     sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") +"'";
-                    sCondicion = sCondicion + ", fecque = '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "', horque = '18:00'" ;
-                    sCondicion = sCondicion + ", nofecha =" +  sNofecha;
+                    sCondicion = sCondicion + ", nofecha =" + sNofecha;
+                    sCondicion = sCondicion + ", fecque = '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "', horque = '18:00'";
                     sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "'";
 
                     string sArmado = procedure.stringexe(2, sCondicion , "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
@@ -456,6 +475,51 @@ namespace scale_lite
 
         private void simpleButton6_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string sOpcion = toolStripComboBox1.SelectedItem.ToString().ToUpper();
+
+            CleanControls();
+
+            switch(sOpcion)
+            {
+                case "CAÑA":
+                    tabPage1.Select();
+                    tabControl1.SelectedTab = tabPage1;
+                    tabControl2.SelectedTab = tabPage3;
+                    break;
+                case "AZUCAR":
+                    tabControl1.SelectedTab = tabPage2;
+                    tabControl2.SelectedTab = tabPage4;
+                    break;
+            }
+        }
+
+        private void tabControl1_Click(object sender, EventArgs e)
+        {
+            string sTabSel = tabControl1.TabPages.ToString();
+        }
+
+        private void textEdit6_EditValueChanged_1(object sender, EventArgs e)
+        {
+            Totals();
+        }
+
+        private void textEdit8_EditValueChanged_1(object sender, EventArgs e)
+        {
+            Totals();
+        }
+
+        private void textEdit9_EditValueChanged_1(object sender, EventArgs e)
+        {
+            Totals();
+        }
+
+        private void simpleButton6_Click_1(object sender, EventArgs e)
+        {
             int iTara;
 
             if (textEdit6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar peso tara..."); textEdit3.Text = string.Empty; return; }
@@ -470,16 +534,19 @@ namespace scale_lite
 
                     int iHorP = lhorlab.Where(x => x.hourd == iHora).ToList()[0].hourt;
 
+                    int iHour = Convert.ToInt32(DateTime.Now.ToString("HH"));
 
-                    var lDz = procedure.ConvertToList<strucdata.dayzafra>(procedure.Predata(1, "max(diazafra) as diazafra", "b_ticket", "zafra = " + izafra, sConexion));
+                    TimeSpan tDifer = Convert.ToDateTime(dzafra) - DateTime.Now;
 
-                    int iHour = Convert.ToInt32( DateTime.Now.ToString("HH"));
+                    string sNofecha = DateTime.Now.ToString("yyMMdd");
 
-                    int iDz = lDz[0].diazafra;
+                    if (iHora < 6) { sNofecha = DateTime.Now.AddDays(-1).ToString("yyMMdd"); }
 
-                    if (iHour < 7) {iDz = (lDz[0].diazafra >= 6) ? lDz[0].diazafra + 1 : lDz[0].diazafra; }
+                    var dFechakk = (iHora < 6) ? DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd");
 
-                    var dFechakk = (iHora < 6) ? DateTime.Now.AddDays(-1).ToString("yyMMdd") : DateTime.Now.ToString("yyyy-MM-dd");
+                    int DiaZa = fzafra + tDifer.Days;
+
+                    if (iHora < 6) { DiaZa = fzafra + (tDifer.Days-1); }
 
                     string sDescto = (textEdit8.Text.Trim().Length > 0) ? textEdit8.Text : "0";
                     string sCast = (textEdit9.Text.Trim().Length > 0) ? textEdit9.Text : "0";
@@ -493,8 +560,9 @@ namespace scale_lite
                     sActualiza = sActualiza + ", castigo = " + sCast;
                     sActualiza = sActualiza + ", totaldescuento = " + sTDescto;
                     sActualiza = sActualiza + ", totalcastigo = " + sTCast;
+                    sActualiza = sActualiza + ", nofecha =" + sNofecha;
                     sActualiza = sActualiza + ", fecpes = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horsal = '" + DateTime.Now.ToString("HH:mm") + "', hora = " + DateTime.Now.ToString("HH");
-                    sActualiza = sActualiza + ", status = 'OK', diazafra = " + iDz.ToString()+ ", hr_code = " + iHorP + ", fechakk = '" + dFechakk + "'";
+                     sActualiza = sActualiza + ", status = 'OK', diazafra = " + DiaZa.ToString()+ ", hr_code = " + iHorP + ", fechakk = '" + dFechakk + "', sal_usuario = '" + sUserC + "'";
 
 
                     string sArmado = procedure.stringexe(2, sActualiza, "b_ticket", " ticket = " + textEdit5.Text + " and zafra = " + izafra);
@@ -513,12 +581,6 @@ namespace scale_lite
                 XtraMessageBox.Show("Debe anotar peso tara...");
             }
 
-
-        }
-
-        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            MessageBox.Show(e.ToString());
         }
     }
 }

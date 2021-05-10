@@ -64,11 +64,23 @@ namespace scale_lite
             this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
             this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
             this.label1 = new System.Windows.Forms.Label();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.simpleButton7 = new DevExpress.XtraEditors.SimpleButton();
+            this.label20 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textEdit11 = new DevExpress.XtraEditors.TextEdit();
+            this.label19 = new System.Windows.Forms.Label();
+            this.comboBoxEdit2 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.label18 = new System.Windows.Forms.Label();
+            this.comboBoxEdit1 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.label17 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-            this.tabPane1 = new DevExpress.XtraBars.Navigation.TabPane();
-            this.tabNavigationPage1 = new DevExpress.XtraBars.Navigation.TabNavigationPage();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label15 = new System.Windows.Forms.Label();
             this.textEdit10 = new DevExpress.XtraEditors.TextEdit();
             this.label14 = new System.Windows.Forms.Label();
@@ -84,7 +96,14 @@ namespace scale_lite
             this.label9 = new System.Windows.Forms.Label();
             this.textEdit5 = new DevExpress.XtraEditors.TextEdit();
             this.label8 = new System.Windows.Forms.Label();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label24 = new System.Windows.Forms.Label();
+            this.simpleButton8 = new DevExpress.XtraEditors.SimpleButton();
+            this.label22 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -96,18 +115,22 @@ namespace scale_lite
             ((System.ComponentModel.ISupportInitialize)(this.groupControl2)).BeginInit();
             this.groupControl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit11.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tabPane1)).BeginInit();
-            this.tabPane1.SuspendLayout();
-            this.tabNavigationPage1.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit10.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit9.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit8.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit7.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit6.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit5.Properties)).BeginInit();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -213,7 +236,6 @@ namespace scale_lite
             this.toolStripComboBox1.Size = new System.Drawing.Size(121, 25);
             this.toolStripComboBox1.Text = "CAÑA";
             this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
-
             // 
             // tableLayoutPanel1
             // 
@@ -241,6 +263,7 @@ namespace scale_lite
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(449, 648);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.Click += new System.EventHandler(this.tabControl1_Click);
             // 
             // tabPage1
             // 
@@ -455,12 +478,143 @@ namespace scale_lite
             this.label1.TabIndex = 0;
             this.label1.Text = "TICKET";
             // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.simpleButton7);
+            this.tabPage2.Controls.Add(this.label20);
+            this.tabPage2.Controls.Add(this.textBox2);
+            this.tabPage2.Controls.Add(this.textEdit11);
+            this.tabPage2.Controls.Add(this.label19);
+            this.tabPage2.Controls.Add(this.comboBoxEdit2);
+            this.tabPage2.Controls.Add(this.label18);
+            this.tabPage2.Controls.Add(this.comboBoxEdit1);
+            this.tabPage2.Controls.Add(this.label17);
+            this.tabPage2.Controls.Add(this.textBox1);
+            this.tabPage2.Controls.Add(this.label16);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(441, 622);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Azucar";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // simpleButton7
+            // 
+            this.simpleButton7.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton7.Appearance.Options.UseFont = true;
+            this.simpleButton7.Location = new System.Drawing.Point(193, 333);
+            this.simpleButton7.Name = "simpleButton7";
+            this.simpleButton7.Size = new System.Drawing.Size(133, 45);
+            this.simpleButton7.TabIndex = 10;
+            this.simpleButton7.Text = "Ingresa";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label20.Location = new System.Drawing.Point(125, 284);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(45, 22);
+            this.label20.TabIndex = 9;
+            this.label20.Text = "Tara";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textBox2.Location = new System.Drawing.Point(190, 278);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox2.Size = new System.Drawing.Size(136, 28);
+            this.textBox2.TabIndex = 8;
+            // 
+            // textEdit11
+            // 
+            this.textEdit11.Location = new System.Drawing.Point(93, 193);
+            this.textEdit11.Name = "textEdit11";
+            this.textEdit11.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textEdit11.Properties.Appearance.Options.UseFont = true;
+            this.textEdit11.Size = new System.Drawing.Size(148, 28);
+            this.textEdit11.TabIndex = 7;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label19.Location = new System.Drawing.Point(20, 199);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(58, 22);
+            this.label19.TabIndex = 6;
+            this.label19.Text = "Placas";
+            // 
+            // comboBoxEdit2
+            // 
+            this.comboBoxEdit2.Location = new System.Drawing.Point(93, 134);
+            this.comboBoxEdit2.Name = "comboBoxEdit2";
+            this.comboBoxEdit2.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.comboBoxEdit2.Properties.Appearance.Options.UseFont = true;
+            this.comboBoxEdit2.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.comboBoxEdit2.Size = new System.Drawing.Size(323, 28);
+            this.comboBoxEdit2.TabIndex = 5;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label18.Location = new System.Drawing.Point(20, 140);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(62, 22);
+            this.label18.TabIndex = 4;
+            this.label18.Text = "Chofer";
+            // 
+            // comboBoxEdit1
+            // 
+            this.comboBoxEdit1.Location = new System.Drawing.Point(93, 77);
+            this.comboBoxEdit1.Name = "comboBoxEdit1";
+            this.comboBoxEdit1.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.comboBoxEdit1.Properties.Appearance.Options.UseFont = true;
+            this.comboBoxEdit1.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.comboBoxEdit1.Size = new System.Drawing.Size(323, 28);
+            this.comboBoxEdit1.TabIndex = 3;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label17.Location = new System.Drawing.Point(20, 80);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(63, 22);
+            this.label17.TabIndex = 2;
+            this.label17.Text = "Cliente";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Enabled = false;
+            this.textBox1.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textBox1.Location = new System.Drawing.Point(93, 20);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox1.Size = new System.Drawing.Size(184, 28);
+            this.textBox1.TabIndex = 1;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label16.Location = new System.Drawing.Point(20, 20);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(47, 22);
+            this.label16.TabIndex = 0;
+            this.label16.Text = "Folio";
+            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.gridControl1, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.tabPane1, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.tabControl2, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(458, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -489,218 +643,293 @@ namespace scale_lite
             this.gridView1.Name = "gridView1";
             this.gridView1.OptionsView.ShowGroupPanel = false;
             // 
-            // tabPane1
+            // tabControl2
             // 
-            this.tabPane1.Controls.Add(this.tabNavigationPage1);
-            this.tabPane1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabPane1.Enabled = false;
-            this.tabPane1.Location = new System.Drawing.Point(3, 249);
-            this.tabPane1.Name = "tabPane1";
-            this.tabPane1.Pages.AddRange(new DevExpress.XtraBars.Navigation.NavigationPageBase[] {
-            this.tabNavigationPage1});
-            this.tabPane1.RegularSize = new System.Drawing.Size(452, 396);
-            this.tabPane1.SelectedPage = this.tabNavigationPage1;
-            this.tabPane1.Size = new System.Drawing.Size(452, 396);
-            this.tabPane1.TabIndex = 1;
-            this.tabPane1.Text = "tabPane1";
+            this.tabControl2.Controls.Add(this.tabPage3);
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl2.Location = new System.Drawing.Point(3, 249);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(452, 396);
+            this.tabControl2.TabIndex = 1;
             // 
-            // tabNavigationPage1
+            // tabPage3
             // 
-            this.tabNavigationPage1.Caption = "Tara Caña";
-            this.tabNavigationPage1.Controls.Add(this.label15);
-            this.tabNavigationPage1.Controls.Add(this.textEdit10);
-            this.tabNavigationPage1.Controls.Add(this.label14);
-            this.tabNavigationPage1.Controls.Add(this.label13);
-            this.tabNavigationPage1.Controls.Add(this.label12);
-            this.tabNavigationPage1.Controls.Add(this.label11);
-            this.tabNavigationPage1.Controls.Add(this.textEdit9);
-            this.tabNavigationPage1.Controls.Add(this.textEdit8);
-            this.tabNavigationPage1.Controls.Add(this.label10);
-            this.tabNavigationPage1.Controls.Add(this.textEdit7);
-            this.tabNavigationPage1.Controls.Add(this.simpleButton6);
-            this.tabNavigationPage1.Controls.Add(this.textEdit6);
-            this.tabNavigationPage1.Controls.Add(this.label9);
-            this.tabNavigationPage1.Controls.Add(this.textEdit5);
-            this.tabNavigationPage1.Controls.Add(this.label8);
-            this.tabNavigationPage1.Name = "tabNavigationPage1";
-            this.tabNavigationPage1.Size = new System.Drawing.Size(452, 367);
+            this.tabPage3.Controls.Add(this.label15);
+            this.tabPage3.Controls.Add(this.textEdit10);
+            this.tabPage3.Controls.Add(this.label14);
+            this.tabPage3.Controls.Add(this.label13);
+            this.tabPage3.Controls.Add(this.label12);
+            this.tabPage3.Controls.Add(this.label11);
+            this.tabPage3.Controls.Add(this.textEdit9);
+            this.tabPage3.Controls.Add(this.textEdit8);
+            this.tabPage3.Controls.Add(this.label10);
+            this.tabPage3.Controls.Add(this.textEdit7);
+            this.tabPage3.Controls.Add(this.simpleButton6);
+            this.tabPage3.Controls.Add(this.textEdit6);
+            this.tabPage3.Controls.Add(this.label9);
+            this.tabPage3.Controls.Add(this.textEdit5);
+            this.tabPage3.Controls.Add(this.label8);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(444, 370);
+            this.tabPage3.TabIndex = 0;
+            this.tabPage3.Text = "Tara Caña";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // label15
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label15.Location = new System.Drawing.Point(12, 231);
+            this.label15.Location = new System.Drawing.Point(11, 239);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(159, 27);
-            this.label15.TabIndex = 23;
+            this.label15.TabIndex = 38;
             this.label15.Text = "PESO LIQUIDO";
             // 
             // textEdit10
             // 
             this.textEdit10.EditValue = "";
             this.textEdit10.Enabled = false;
-            this.textEdit10.Location = new System.Drawing.Point(187, 226);
+            this.textEdit10.Location = new System.Drawing.Point(186, 234);
             this.textEdit10.Name = "textEdit10";
             this.textEdit10.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.textEdit10.Properties.Appearance.Options.UseFont = true;
             this.textEdit10.Properties.NullText = "Peso Final";
             this.textEdit10.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textEdit10.Size = new System.Drawing.Size(151, 32);
-            this.textEdit10.TabIndex = 22;
+            this.textEdit10.TabIndex = 37;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Tahoma", 12F);
-            this.label14.Location = new System.Drawing.Point(105, 198);
+            this.label14.Location = new System.Drawing.Point(104, 206);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(60, 19);
-            this.label14.TabIndex = 21;
+            this.label14.TabIndex = 36;
             this.label14.Text = "label14";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Tahoma", 12F);
-            this.label13.Location = new System.Drawing.Point(15, 198);
+            this.label13.Location = new System.Drawing.Point(14, 206);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(60, 19);
-            this.label13.TabIndex = 20;
+            this.label13.TabIndex = 35;
             this.label13.Text = "label13";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.label12.Location = new System.Drawing.Point(106, 138);
+            this.label12.Location = new System.Drawing.Point(105, 146);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(53, 17);
-            this.label12.TabIndex = 19;
+            this.label12.TabIndex = 34;
             this.label12.Text = "Castigo";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Tahoma", 10F);
-            this.label11.Location = new System.Drawing.Point(14, 138);
+            this.label11.Location = new System.Drawing.Point(13, 146);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(74, 17);
-            this.label11.TabIndex = 18;
+            this.label11.TabIndex = 33;
             this.label11.Text = "Descuento";
             // 
             // textEdit9
             // 
             this.textEdit9.EditValue = "";
-            this.textEdit9.Location = new System.Drawing.Point(109, 158);
+            this.textEdit9.Location = new System.Drawing.Point(108, 166);
             this.textEdit9.Name = "textEdit9";
             this.textEdit9.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 12F);
             this.textEdit9.Properties.Appearance.Options.UseFont = true;
             this.textEdit9.Properties.NullText = "Codigo de barras ";
             this.textEdit9.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textEdit9.Size = new System.Drawing.Size(76, 26);
-            this.textEdit9.TabIndex = 17;
-            this.textEdit9.EditValueChanged += new System.EventHandler(this.textEdit9_EditValueChanged);
+            this.textEdit9.TabIndex = 32;
+            this.textEdit9.EditValueChanged += new System.EventHandler(this.textEdit9_EditValueChanged_1);
             // 
             // textEdit8
             // 
             this.textEdit8.EditValue = "";
-            this.textEdit8.Location = new System.Drawing.Point(17, 158);
+            this.textEdit8.Location = new System.Drawing.Point(16, 166);
             this.textEdit8.Name = "textEdit8";
             this.textEdit8.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 12F);
             this.textEdit8.Properties.Appearance.Options.UseFont = true;
             this.textEdit8.Properties.NullText = "Codigo de barras ";
             this.textEdit8.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textEdit8.Size = new System.Drawing.Size(76, 26);
-            this.textEdit8.TabIndex = 16;
-            this.textEdit8.EditValueChanged += new System.EventHandler(this.textEdit8_EditValueChanged);
+            this.textEdit8.TabIndex = 31;
+            this.textEdit8.EditValueChanged += new System.EventHandler(this.textEdit8_EditValueChanged_1);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label10.Location = new System.Drawing.Point(12, 94);
+            this.label10.Location = new System.Drawing.Point(11, 102);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(127, 27);
-            this.label10.TabIndex = 15;
+            this.label10.TabIndex = 30;
             this.label10.Text = "PESO NETO";
             // 
             // textEdit7
             // 
             this.textEdit7.EditValue = "";
             this.textEdit7.Enabled = false;
-            this.textEdit7.Location = new System.Drawing.Point(187, 89);
+            this.textEdit7.Location = new System.Drawing.Point(186, 97);
             this.textEdit7.Name = "textEdit7";
             this.textEdit7.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.textEdit7.Properties.Appearance.Options.UseFont = true;
             this.textEdit7.Properties.NullText = "Peso Final";
             this.textEdit7.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textEdit7.Size = new System.Drawing.Size(151, 32);
-            this.textEdit7.TabIndex = 14;
+            this.textEdit7.TabIndex = 29;
             // 
             // simpleButton6
             // 
             this.simpleButton6.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.simpleButton6.Appearance.Options.UseFont = true;
-            this.simpleButton6.Location = new System.Drawing.Point(281, 301);
+            this.simpleButton6.Location = new System.Drawing.Point(280, 309);
             this.simpleButton6.Name = "simpleButton6";
             this.simpleButton6.Size = new System.Drawing.Size(153, 36);
-            this.simpleButton6.TabIndex = 13;
+            this.simpleButton6.TabIndex = 28;
             this.simpleButton6.Text = "SALIDA";
-            this.simpleButton6.Click += new System.EventHandler(this.simpleButton6_Click);
+            this.simpleButton6.Click += new System.EventHandler(this.simpleButton6_Click_1);
             // 
             // textEdit6
             // 
             this.textEdit6.EditValue = "";
-            this.textEdit6.Location = new System.Drawing.Point(187, 51);
+            this.textEdit6.Location = new System.Drawing.Point(186, 59);
             this.textEdit6.Name = "textEdit6";
             this.textEdit6.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.textEdit6.Properties.Appearance.Options.UseFont = true;
             this.textEdit6.Properties.NullText = "Peso Final";
             this.textEdit6.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textEdit6.Size = new System.Drawing.Size(151, 32);
-            this.textEdit6.TabIndex = 12;
-            this.textEdit6.EditValueChanged += new System.EventHandler(this.textEdit6_EditValueChanged);
+            this.textEdit6.TabIndex = 27;
+            this.textEdit6.EditValueChanged += new System.EventHandler(this.textEdit6_EditValueChanged_1);
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label9.Location = new System.Drawing.Point(12, 54);
+            this.label9.Location = new System.Drawing.Point(11, 62);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(124, 27);
-            this.label9.TabIndex = 11;
+            this.label9.TabIndex = 26;
             this.label9.Text = "PESO TARA";
             // 
             // textEdit5
             // 
             this.textEdit5.Enabled = false;
-            this.textEdit5.Location = new System.Drawing.Point(62, 18);
+            this.textEdit5.Location = new System.Drawing.Point(61, 26);
             this.textEdit5.Name = "textEdit5";
             this.textEdit5.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 12F);
             this.textEdit5.Properties.Appearance.Options.UseFont = true;
             this.textEdit5.Properties.NullText = "Codigo de barras ";
             this.textEdit5.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textEdit5.Size = new System.Drawing.Size(153, 26);
-            this.textEdit5.TabIndex = 3;
+            this.textEdit5.TabIndex = 25;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(14, 21);
+            this.label8.Location = new System.Drawing.Point(13, 29);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(42, 13);
-            this.label8.TabIndex = 2;
+            this.label8.TabIndex = 24;
             this.label8.Text = "TICKET";
             // 
-            // tabPage2
+            // tabPage4
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(441, 622);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Azucar";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPage4.Controls.Add(this.label24);
+            this.tabPage4.Controls.Add(this.simpleButton8);
+            this.tabPage4.Controls.Add(this.label22);
+            this.tabPage4.Controls.Add(this.textBox4);
+            this.tabPage4.Controls.Add(this.label23);
+            this.tabPage4.Controls.Add(this.label21);
+            this.tabPage4.Controls.Add(this.textBox3);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(444, 370);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "Salida Azucar";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.label24.Location = new System.Drawing.Point(240, 120);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(82, 27);
+            this.label24.TabIndex = 17;
+            this.label24.Text = "label24";
+            // 
+            // simpleButton8
+            // 
+            this.simpleButton8.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton8.Appearance.Options.UseFont = true;
+            this.simpleButton8.Location = new System.Drawing.Point(245, 246);
+            this.simpleButton8.Name = "simpleButton8";
+            this.simpleButton8.Size = new System.Drawing.Size(133, 45);
+            this.simpleButton8.TabIndex = 16;
+            this.simpleButton8.Text = "Salida";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label22.Location = new System.Drawing.Point(177, 187);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(59, 22);
+            this.label22.TabIndex = 15;
+            this.label22.Text = "Bultos";
+            // 
+            // textBox4
+            // 
+            this.textBox4.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textBox4.Location = new System.Drawing.Point(242, 181);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox4.Size = new System.Drawing.Size(136, 28);
+            this.textBox4.TabIndex = 14;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.label23.Location = new System.Drawing.Point(24, 15);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(82, 27);
+            this.label23.TabIndex = 13;
+            this.label23.Text = "label23";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label21.Location = new System.Drawing.Point(177, 76);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(53, 22);
+            this.label21.TabIndex = 11;
+            this.label21.Text = "Bruto";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textBox3.Location = new System.Drawing.Point(242, 70);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox3.Size = new System.Drawing.Size(136, 28);
+            this.textBox3.TabIndex = 10;
             // 
             // Form1
             // 
@@ -731,19 +960,25 @@ namespace scale_lite
             this.groupControl2.ResumeLayout(false);
             this.groupControl2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit1.Properties)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit11.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit1.Properties)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.tabPane1)).EndInit();
-            this.tabPane1.ResumeLayout(false);
-            this.tabNavigationPage1.ResumeLayout(false);
-            this.tabNavigationPage1.PerformLayout();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit10.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit9.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit8.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit7.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit6.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit5.Properties)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -786,16 +1021,11 @@ namespace scale_lite
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private DevExpress.XtraGrid.GridControl gridControl1;
         private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
-        private DevExpress.XtraBars.Navigation.TabPane tabPane1;
-        private DevExpress.XtraBars.Navigation.TabNavigationPage tabNavigationPage1;
-        private DevExpress.XtraEditors.TextEdit textEdit5;
-        private System.Windows.Forms.Label label8;
-        private DevExpress.XtraEditors.TextEdit textEdit6;
-        private System.Windows.Forms.Label label9;
-        private DevExpress.XtraEditors.SimpleButton simpleButton6;
-        private DevExpress.XtraEditors.TextEdit textEdit8;
-        private System.Windows.Forms.Label label10;
-        private DevExpress.XtraEditors.TextEdit textEdit7;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Label label15;
         private DevExpress.XtraEditors.TextEdit textEdit10;
         private System.Windows.Forms.Label label14;
@@ -803,9 +1033,33 @@ namespace scale_lite
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label11;
         private DevExpress.XtraEditors.TextEdit textEdit9;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel3;
-        private System.Windows.Forms.TabPage tabPage2;
+        private DevExpress.XtraEditors.TextEdit textEdit8;
+        private System.Windows.Forms.Label label10;
+        private DevExpress.XtraEditors.TextEdit textEdit7;
+        private DevExpress.XtraEditors.SimpleButton simpleButton6;
+        private DevExpress.XtraEditors.TextEdit textEdit6;
+        private System.Windows.Forms.Label label9;
+        private DevExpress.XtraEditors.TextEdit textEdit5;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label16;
+        private DevExpress.XtraEditors.SimpleButton simpleButton7;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox textBox2;
+        private DevExpress.XtraEditors.TextEdit textEdit11;
+        private System.Windows.Forms.Label label19;
+        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit2;
+        private System.Windows.Forms.Label label18;
+        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit1;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label24;
+        private DevExpress.XtraEditors.SimpleButton simpleButton8;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox textBox3;
     }
 }
 

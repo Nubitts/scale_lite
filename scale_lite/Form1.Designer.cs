@@ -104,6 +104,8 @@ namespace scale_lite
             this.label23 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.comboBoxEdit3 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -131,6 +133,7 @@ namespace scale_lite
             ((System.ComponentModel.ISupportInitialize)(this.textEdit6.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit5.Properties)).BeginInit();
             this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit3.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -480,6 +483,8 @@ namespace scale_lite
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.comboBoxEdit3);
+            this.tabPage2.Controls.Add(this.label25);
             this.tabPage2.Controls.Add(this.simpleButton7);
             this.tabPage2.Controls.Add(this.label20);
             this.tabPage2.Controls.Add(this.textBox2);
@@ -503,7 +508,7 @@ namespace scale_lite
             // 
             this.simpleButton7.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.simpleButton7.Appearance.Options.UseFont = true;
-            this.simpleButton7.Location = new System.Drawing.Point(193, 333);
+            this.simpleButton7.Location = new System.Drawing.Point(193, 539);
             this.simpleButton7.Name = "simpleButton7";
             this.simpleButton7.Size = new System.Drawing.Size(133, 45);
             this.simpleButton7.TabIndex = 10;
@@ -513,7 +518,7 @@ namespace scale_lite
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.label20.Location = new System.Drawing.Point(125, 284);
+            this.label20.Location = new System.Drawing.Point(125, 490);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(45, 22);
             this.label20.TabIndex = 9;
@@ -522,7 +527,7 @@ namespace scale_lite
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.textBox2.Location = new System.Drawing.Point(190, 278);
+            this.textBox2.Location = new System.Drawing.Point(190, 484);
             this.textBox2.Name = "textBox2";
             this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textBox2.Size = new System.Drawing.Size(136, 28);
@@ -931,6 +936,27 @@ namespace scale_lite
             this.textBox3.Size = new System.Drawing.Size(136, 28);
             this.textBox3.TabIndex = 10;
             // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label25.Location = new System.Drawing.Point(9, 269);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(113, 22);
+            this.label25.TabIndex = 11;
+            this.label25.Text = "Transportista";
+            // 
+            // comboBoxEdit3
+            // 
+            this.comboBoxEdit3.Location = new System.Drawing.Point(93, 311);
+            this.comboBoxEdit3.Name = "comboBoxEdit3";
+            this.comboBoxEdit3.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.comboBoxEdit3.Properties.Appearance.Options.UseFont = true;
+            this.comboBoxEdit3.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.comboBoxEdit3.Size = new System.Drawing.Size(323, 28);
+            this.comboBoxEdit3.TabIndex = 12;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -979,6 +1005,7 @@ namespace scale_lite
             ((System.ComponentModel.ISupportInitialize)(this.textEdit5.Properties)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit3.Properties)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1060,6 +1087,8 @@ namespace scale_lite
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.TextBox textBox3;
+        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit3;
+        private System.Windows.Forms.Label label25;
     }
 }
 

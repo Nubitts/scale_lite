@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using System.Data.SQLite;
+using DevExpress.XtraEditors.Controls;
 
 namespace scale_lite
 {
@@ -278,6 +279,79 @@ namespace scale_lite
 
         }
 
+        private void PrepareData(int iOpcion)
+        {
+
+            comboBoxEdit1.Properties.Items.Clear();
+            comboBoxEdit2.Properties.Items.Clear();
+            comboBoxEdit3.Properties.Items.Clear();
+
+            ComboBoxItemCollection coll1 = comboBoxEdit1.Properties.Items;
+            ComboBoxItemCollection coll2 = comboBoxEdit2.Properties.Items;
+            ComboBoxItemCollection coll3 = comboBoxEdit3.Properties.Items;
+
+            switch (iOpcion)
+            {
+                case 1:
+
+                    var ifolioget = procedure.ConvertToList<strucdata.lastfcane>(procedure.Predata(1, "max(ticket) as ufol", "btkt_az", "zafra = " + izafra.ToString() , sConexion));
+
+                    int iFolio = ifolioget[0].ufol + 1;
+
+                    textBox1.Text = iFolio.ToString();
+
+                    var lClients = procedure.ConvertToList<strucdata.clients>(procedure.Predata(1, "cliente", "btkt_az", "zafra = " + izafra.ToString() + " and cliente is not null group by cliente order by cliente", sConexion));
+
+                    foreach(var Itm in lClients)
+                    {
+                        coll1.Add(Itm.cliente);
+                    }
+
+                    var lForw = procedure.ConvertToList<strucdata.forwarders>(procedure.Predata(1, "nombre", "fleteros", "zafra = " + izafra.ToString() + " and nombre is not null group by nombre order by nombre", sConexion));
+
+                    foreach (var Itm in lForw)
+                    {
+                        coll2.Add(Itm.nombre);
+                    }
+
+                    var lCarrier = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = 'AZUCAR'", sConexion));
+
+                    foreach (var Itm in lCarrier)
+                    {
+                        coll3.Add(Itm.transportista);
+                    }
+
+                    tabControl1.SelectedTab = tabPage2;
+                    tabControl2.SelectedTab = tabPage4;
+
+                    break;
+
+            }
+        }
+
+        private BindingList<strucdata.headertick> Headertaz()
+        {
+            BindingList<strucdata.headertick> lResult = new BindingList<strucdata.headertick>();
+
+            string sCampos = "ticket,numtra, fecpen, horent,nom_grupo, pesob";
+
+            var lheadert = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0", sConexion));
+
+            foreach (var Itm in lheadert)
+            {
+                lResult.Add(new strucdata.headertick
+                {
+                    ticket = Itm.ticket,
+                    fecpen = Convert.ToDateTime(Itm.fecpen).ToString("yyyy-MM-dd"),
+                    horent = Itm.horent,
+                    nom_grupo = Itm.nom_grupo,
+                    numtra = Itm.numtra,
+                    pesob = Itm.pesob
+                });
+            }
+
+            return lResult;
+        }
 
         #endregion
 
@@ -494,13 +568,21 @@ namespace scale_lite
                 case "AZUCAR":
                     tabControl1.SelectedTab = tabPage2;
                     tabControl2.SelectedTab = tabPage4;
+                    PrepareData(1);
                     break;
             }
         }
 
         private void tabControl1_Click(object sender, EventArgs e)
         {
-            string sTabSel = tabControl1.TabPages.ToString();
+            TabPage taTabSel = tabControl1.SelectedTab;
+
+            switch (taTabSel.Text.ToUpper().Trim())
+            {
+                case "AZUCAR":
+                    PrepareData(1);
+                    break;
+            }
         }
 
         private void textEdit6_EditValueChanged_1(object sender, EventArgs e)
@@ -536,7 +618,7 @@ namespace scale_lite
 
                     int iHour = Convert.ToInt32(DateTime.Now.ToString("HH"));
 
-                    TimeSpan tDifer = Convert.ToDateTime(dzafra) - DateTime.Now;
+                    TimeSpan tDifer = DateTime.Now - Convert.ToDateTime(dzafra);
 
                     string sNofecha = DateTime.Now.ToString("yyMMdd");
 

@@ -212,6 +212,45 @@ namespace scale_lite
             public int diazafra { get; set; }
         }
 
+        public class lastfcane
+        {
+            public int ufol { get; set; }
+        }
+
+        public class clients
+        {
+            public string cliente { get; set; }
+        }
+
+        public class forwarders
+        {
+            public string nombre { get; set; }
+        }
+
+        public class carriers
+        {
+            public string transportista { get; set; }
+        }
+
+        public class headertickaz
+        {
+            [Display(Name = "TIcket")]
+            public int ticket { get; set; }
+
+            [Display(Name = "Peso Tara")]
+            public int pesot { get; set; }
+
+            [Display(Name = "Entro")]
+            public string entrada { get; set; }
+
+            [Display(Name = "Transportista")]
+            public string transportista { get; set; }
+
+            [Display(Name = "Fletero")]
+            public string fletero { get; set; }
+
+        }
+
         #endregion
 
     }

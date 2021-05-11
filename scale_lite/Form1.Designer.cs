@@ -106,6 +106,10 @@ namespace scale_lite
             this.label23 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -876,6 +880,10 @@ namespace scale_lite
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label29);
+            this.tabPage4.Controls.Add(this.label28);
+            this.tabPage4.Controls.Add(this.label27);
+            this.tabPage4.Controls.Add(this.label26);
             this.tabPage4.Controls.Add(this.label24);
             this.tabPage4.Controls.Add(this.simpleButton8);
             this.tabPage4.Controls.Add(this.label22);
@@ -895,7 +903,7 @@ namespace scale_lite
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label24.Location = new System.Drawing.Point(240, 120);
+            this.label24.Location = new System.Drawing.Point(296, 120);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(82, 27);
             this.label24.TabIndex = 17;
@@ -910,6 +918,7 @@ namespace scale_lite
             this.simpleButton8.Size = new System.Drawing.Size(133, 45);
             this.simpleButton8.TabIndex = 16;
             this.simpleButton8.Text = "Salida";
+            this.simpleButton8.Click += new System.EventHandler(this.simpleButton8_Click);
             // 
             // label22
             // 
@@ -934,7 +943,7 @@ namespace scale_lite
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label23.Location = new System.Drawing.Point(24, 15);
+            this.label23.Location = new System.Drawing.Point(296, 15);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(82, 27);
             this.label23.TabIndex = 13;
@@ -958,6 +967,47 @@ namespace scale_lite
             this.textBox3.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textBox3.Size = new System.Drawing.Size(136, 28);
             this.textBox3.TabIndex = 10;
+            this.textBox3.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label26.Location = new System.Drawing.Point(177, 20);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(45, 22);
+            this.label26.TabIndex = 18;
+            this.label26.Text = "Tara";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label27.Location = new System.Drawing.Point(177, 125);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(47, 22);
+            this.label27.TabIndex = 19;
+            this.label27.Text = "Neto";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label28.Location = new System.Drawing.Point(20, 20);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(57, 22);
+            this.label28.TabIndex = 20;
+            this.label28.Text = "Ticket";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label29.Location = new System.Drawing.Point(20, 55);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(71, 22);
+            this.label29.TabIndex = 21;
+            this.label29.Text = "Label29";
             // 
             // Form1
             // 
@@ -1091,6 +1141,10 @@ namespace scale_lite
         private System.Windows.Forms.TextBox textBox3;
         private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit3;
         private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
     }
 }
 

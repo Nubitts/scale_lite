@@ -205,6 +205,8 @@ namespace scale_lite
         private void GridView1_FocusedRowChanged(object sender, DevExpress.XtraGrid.Views.Base.FocusedRowChangedEventArgs e)
         {
 
+            if (e.FocusedRowHandle < 0) { return; }
+
             try
             {
                 if (this.gridView1.FocusedColumn.FieldName == "ticket")
@@ -215,7 +217,21 @@ namespace scale_lite
                     switch (sOpcion)
                     {
                         case "AZUCAR":
-                            label23.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString(); ;
+
+                            string sCampoz = "ticket, pesot, CONCAT_WS(' ',FECPEN,HORENT)as entrada, transportista, fletero";
+
+                            string sTickz = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
+
+                            label29.Text = sTickz;
+
+                            var lTickz = procedure.ConvertToList<strucdata.headertickaz>(procedure.Predata(1, sCampoz, "btkt_az", "zafra = " + izafra.ToString() + " and ticket = " + sTickz, sConexion));
+
+                            label23.Text = lTickz[0].pesot.ToString();
+
+                            textBox3.Text = string.Empty;
+                            textBox4.Text = string.Empty;
+                            label24.Text = string.Empty;
+
                             break;
                         case "CAÑA":
                             lTicko.Clear();
@@ -298,6 +314,8 @@ namespace scale_lite
         {
             label23.Text = string.Empty;
             label24.Text = string.Empty;
+            label29.Text = string.Empty;
+
             comboBoxEdit1.Properties.Items.Clear();
             comboBoxEdit2.Properties.Items.Clear();
             comboBoxEdit3.Properties.Items.Clear();
@@ -695,6 +713,12 @@ namespace scale_lite
             if (comboBoxEdit3.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener transportista..."); return; }
             if (textBox2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un cliente..."); return; }
 
+
+            if (XtraMessageBox.Show("Procede a dar entrada a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            {
+                return;
+            }
+
             string sInserta = string.Empty;
 
             var lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit3.Text).ToList();
@@ -730,6 +754,61 @@ namespace scale_lite
 
         private void toolStripComboBox1_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+            int iPesob = 0;
+
+            if (textBox3.Text.Trim().Length == 0) { return; }
+
+            if (int.TryParse(textBox3.Text, out iPesob))
+            {
+                label24.Text = (Convert.ToInt32(textBox3.Text) - Convert.ToInt32(label23.Text)).ToString();
+            }
+            else
+            {
+                XtraMessageBox.Show("El peso tara debe ser numerico...");
+            }
+
+
+        }
+
+        private void simpleButton8_Click(object sender, EventArgs e)
+        {
+
+            if (textBox3.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso bruto..."); return; }
+
+            if (textBox4.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener unidades bultos..."); return; }
+
+            if (label24.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso neto..."); return; }
+
+            if (XtraMessageBox.Show("Procede a dar salida a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes) { return; }
+
+            int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
+
+            string sFes = DateTime.Now.ToString("yyyy-MM-dd");
+            string sHes = DateTime.Now.ToString("HH:mm");
+
+            string sNofecha = DateTime.Now.ToString("yyMMdd");
+
+            if (iHora < 6) { sNofecha = DateTime.Now.AddDays(-1).ToString("yyMMdd"); }
+
+            string sActualiza = "pesob = " + textBox3.Text + ", peson = " + label24.Text + ", bultos = " + textBox4.Text + ", fecpes = '" + sFes + "', horsal = '" + sHes + "', status = 'OK'" ;
+
+            sActualiza = sActualiza + ", sal_usuario = '" + sUserC + "', nofecha = " + sNofecha;
+
+            string sArmado = procedure.stringexe(2, sActualiza, "btkt_az", " ticket = " + label29.Text + " and zafra = " + izafra);
+
+            procedure.Executecmm(sArmado, sConexion);
+
+            PrepareData(1);
+
+            textBox3.Text = string.Empty;
+            textBox4.Text = string.Empty;
+            label24.Text = string.Empty;
 
         }
     }

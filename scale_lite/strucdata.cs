@@ -69,7 +69,7 @@ namespace scale_lite
         {
             string sQuery ="";
 
-            string sCondiciona = (sCondicion.Trim().Length > 0) ? " where " + sCondicion : "";
+            string sCondiciona = (sCondicion.Trim().Length > 0) ? ((iOption == 3) ? "": " where ") + sCondicion : "";
 
             switch (iOption)
             {
@@ -78,6 +78,9 @@ namespace scale_lite
                     break;
                 case 2:
                     sQuery = "update " + sTabla + " set " + sCampos + " " + sCondiciona;
+                    break;
+                case 3:
+                    sQuery = "insert " + sTabla + " (" + sCampos + ") values (" + sCondiciona + ")";
                     break;
             }
 
@@ -249,6 +252,12 @@ namespace scale_lite
             [Display(Name = "Fletero")]
             public string fletero { get; set; }
 
+        }
+
+        public class transporter
+        {
+            public int id_transp { get; set; }
+            public string transportista { get; set; }
         }
 
         #endregion

@@ -66,6 +66,8 @@ namespace scale_lite
 
         List<strucdata.headertick> lTicko = new List<strucdata.headertick>();
 
+        List<strucdata.transporter> lTransporter = new List<strucdata.transporter>();
+
         strucdata procedure = new strucdata();
 
         public string sConexl = @"Data Source=c:\\data_scale\\scaleinca.db;Version=3;Compress=True;";
@@ -109,7 +111,7 @@ namespace scale_lite
 
 
 
-        bLifeconecta = testconnect(sConexion);
+            bLifeconecta = testconnect(sConexion);
 
             validate_files();
 
@@ -124,6 +126,8 @@ namespace scale_lite
                 lForward = procedure.ConvertToList<strucdata.forwarder>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'FLET'", sConexion));
 
                 llifting = procedure.ConvertToList<strucdata.lifting>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'ALZD'", sConexion));
+
+                lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista", "transpt", "tipo_transp = 'AZUCAR'", sConexion));
 
                 gridControl1.DataSource = Headert();
 
@@ -205,18 +209,29 @@ namespace scale_lite
             {
                 if (this.gridView1.FocusedColumn.FieldName == "ticket")
                 {
-                    lTicko.Clear();
 
-                    if (gridView1.RowCount > 0)
+                    string sOpcion = toolStripComboBox1.Text.Trim().ToUpper();
+
+                    switch (sOpcion)
                     {
-                        string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob";
+                        case "AZUCAR":
+                            label23.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString(); ;
+                            break;
+                        case "CAÑA":
+                            lTicko.Clear();
 
-                        textEdit5.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
+                            if (gridView1.RowCount > 0)
+                            {
+                                string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob";
 
-                        lTicko = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0 and ticket = " + textEdit5.Text, sConexion));
+                                textEdit5.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
 
-                        textEdit7.Text = lTicko[0].pesob.ToString();
-                        textEdit10.Text = lTicko[0].pesob.ToString();
+                                lTicko = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0 and ticket = " + textEdit5.Text, sConexion));
+
+                                textEdit7.Text = lTicko[0].pesob.ToString();
+                                textEdit10.Text = lTicko[0].pesob.ToString();
+                            }
+                            break;
                     }
 
                 }
@@ -281,10 +296,13 @@ namespace scale_lite
 
         private void PrepareData(int iOpcion)
         {
-
+            label23.Text = string.Empty;
+            label24.Text = string.Empty;
             comboBoxEdit1.Properties.Items.Clear();
             comboBoxEdit2.Properties.Items.Clear();
             comboBoxEdit3.Properties.Items.Clear();
+
+            toolStripComboBox1.Text = "AZUCAR";
 
             ComboBoxItemCollection coll1 = comboBoxEdit1.Properties.Items;
             ComboBoxItemCollection coll2 = comboBoxEdit2.Properties.Items;
@@ -324,29 +342,32 @@ namespace scale_lite
                     tabControl1.SelectedTab = tabPage2;
                     tabControl2.SelectedTab = tabPage4;
 
+                    gridControl1.DataSource = null;
+                    gridView1.Columns.Clear();
+                    gridControl1.DataSource = Headertaz();
+
                     break;
 
             }
         }
 
-        private BindingList<strucdata.headertick> Headertaz()
+        private BindingList<strucdata.headertickaz> Headertaz()
         {
-            BindingList<strucdata.headertick> lResult = new BindingList<strucdata.headertick>();
+            BindingList<strucdata.headertickaz> lResult = new BindingList<strucdata.headertickaz>();
 
-            string sCampos = "ticket,numtra, fecpen, horent,nom_grupo, pesob";
+            string sCampos = "ticket, pesot, CONCAT_WS(' ',FECPEN,HORENT) as entrada, transportista, fletero";
 
-            var lheadert = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0", sConexion));
+            var lheadert = procedure.ConvertToList<strucdata.headertickaz>(procedure.Predata(1, sCampos, "btkt_az", "zafra = " + izafra.ToString() + "  and status = 'PATIO' order by ticket desc", sConexion));
 
             foreach (var Itm in lheadert)
             {
-                lResult.Add(new strucdata.headertick
+                lResult.Add(new strucdata.headertickaz
                 {
                     ticket = Itm.ticket,
-                    fecpen = Convert.ToDateTime(Itm.fecpen).ToString("yyyy-MM-dd"),
-                    horent = Itm.horent,
-                    nom_grupo = Itm.nom_grupo,
-                    numtra = Itm.numtra,
-                    pesob = Itm.pesob
+                    pesot = Itm.pesot,
+                    entrada = Itm.entrada,
+                    transportista = Itm.transportista,
+                    fletero = Itm.fletero
                 });
             }
 
@@ -580,6 +601,7 @@ namespace scale_lite
             switch (taTabSel.Text.ToUpper().Trim())
             {
                 case "AZUCAR":
+                   
                     PrepareData(1);
                     break;
             }
@@ -662,6 +684,52 @@ namespace scale_lite
             {
                 XtraMessageBox.Show("Debe anotar peso tara...");
             }
+
+        }
+
+        private void simpleButton7_Click(object sender, EventArgs e)
+        {
+            if (comboBoxEdit1.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un cliente..."); return; }
+            if (comboBoxEdit2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un chofer..."); return; }
+            if (textEdit11.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
+            if (comboBoxEdit3.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener transportista..."); return; }
+            if (textBox2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un cliente..."); return; }
+
+            string sInserta = string.Empty;
+
+            var lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit3.Text).ToList();
+
+            if (lIdtr.Count() == 0) { XtraMessageBox.Show("El transportista no es valido..."); return; }
+
+
+            int iTara = 0;
+
+            if (int.TryParse(textBox2.Text, out iTara))
+            {
+                int iIdtr = lIdtr[0].id_transp;
+                string sFen = DateTime.Now.ToString("yyyy-MM-dd");
+                string sHen = DateTime.Now.ToString("HH:mm");
+
+                string sCampos = "zafra,ticket,id_transp,transportista,fletero,placas,fecpen,horent,pesot,material,status,ent_usuario";
+
+                sInserta = izafra.ToString().Trim()+","+textBox1.Text.Trim()+","+iIdtr.ToString()+",'"+comboBoxEdit3.Text.Trim()+"','"+comboBoxEdit2.Text+"','"+textEdit11.Text+"',";
+                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iTara.ToString() + ",1,'PATIO', '" + sUserC + "'";
+
+                string sArmado = procedure.stringexe(3, sCampos, "btkt_az", sInserta);
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                PrepareData(1);
+
+            }
+            else
+            {
+                XtraMessageBox.Show("El peso tara debe ser numerico...");
+            }
+        }
+
+        private void toolStripComboBox1_Click(object sender, EventArgs e)
+        {
 
         }
     }

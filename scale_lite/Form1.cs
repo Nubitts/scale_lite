@@ -127,7 +127,7 @@ namespace scale_lite
 
                 llifting = procedure.ConvertToList<strucdata.lifting>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'ALZD'", sConexion));
 
-                lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista", "transpt", "tipo_transp = 'AZUCAR'", sConexion));
+                lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista, tipo_transp", "transpt", "", sConexion));
 
                 gridControl1.DataSource = Headert();
 
@@ -216,6 +216,23 @@ namespace scale_lite
 
                     switch (sOpcion)
                     {
+                        case "PETROLEO":
+
+                            string sCampop = "ticket, pesob, CONCAT_WS(' ',FECPEN,HORENT)as entrada, transportista, fletero";
+
+                            string sTickp = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
+
+                            label37.Text = sTickp;
+
+                            var lTickp = procedure.ConvertToList<strucdata.headertickpt>(procedure.Predata(1, sCampop, "btkt_pet", "zafra = " + izafra.ToString() + " and ticket = " + sTickp, sConexion));
+
+                            label40.Text = lTickp[0].pesob.ToString();
+
+                            textBox10.Text = string.Empty;
+                            textBox9.Text = string.Empty;
+                            label42.Text = string.Empty;
+
+                            break;
                         case "AZUCAR":
 
                             string sCampoz = "ticket, pesot, CONCAT_WS(' ',FECPEN,HORENT)as entrada, transportista, fletero";
@@ -312,23 +329,83 @@ namespace scale_lite
 
         private void PrepareData(int iOpcion)
         {
-            label23.Text = string.Empty;
-            label24.Text = string.Empty;
-            label29.Text = string.Empty;
-
-            comboBoxEdit1.Properties.Items.Clear();
-            comboBoxEdit2.Properties.Items.Clear();
-            comboBoxEdit3.Properties.Items.Clear();
-
-            toolStripComboBox1.Text = "AZUCAR";
-
-            ComboBoxItemCollection coll1 = comboBoxEdit1.Properties.Items;
-            ComboBoxItemCollection coll2 = comboBoxEdit2.Properties.Items;
-            ComboBoxItemCollection coll3 = comboBoxEdit3.Properties.Items;
+            gridControl1.DataSource = null;
+            gridView1.Columns.Clear();
 
             switch (iOpcion)
             {
+                case 2:
+
+                    toolStripComboBox1.Text = "PETROLEO";
+
+                    textBox5.Text = string.Empty; textBox6.Text = string.Empty; textBox7.Text = string.Empty; textBox8.Text = string.Empty;
+                    label40.Text = string.Empty; label42.Text = string.Empty;label37.Text = string.Empty;
+
+                    comboBoxEdit4.Properties.Items.Clear();
+                    comboBoxEdit5.Properties.Items.Clear();
+                    comboBoxEdit6.Properties.Items.Clear();
+
+                    var ifpget = procedure.ConvertToList<strucdata.lastfcane>(procedure.Predata(1, "max(ticket) as ufol", "btkt_pet", "zafra = " + izafra.ToString(), sConexion));
+
+                    int iFpet = ifpget[0].ufol + 1;
+
+                    textBox5.Text = iFpet.ToString();
+
+                    ComboBoxItemCollection coll4 = comboBoxEdit4.Properties.Items;
+                    ComboBoxItemCollection coll5 = comboBoxEdit5.Properties.Items;
+                    ComboBoxItemCollection coll6 = comboBoxEdit6.Properties.Items;
+
+                    var lCarrier1 = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = 'PETROLEO'", sConexion));
+
+                    foreach (var Itm in lCarrier1)
+                    {
+                        coll4.Add(Itm.transportista);
+                    }
+
+                    var lProcede = procedure.ConvertToList<strucdata.procedencias>(procedure.Predata(1, "procedencia", "btkt_pet", "zafra = " + izafra.ToString() + " and procedencia is not null group by procedencia order by procedencia", sConexion));
+
+                    foreach (var Itm in lProcede)
+                    {
+                        coll5.Add(Itm.procedencia);
+                    }
+
+                    var lForw1 = procedure.ConvertToList<strucdata.forwarders>(procedure.Predata(1, "nombre", "fleteros", "zafra = " + izafra.ToString() + " and nombre is not null group by nombre order by nombre", sConexion));
+
+                    foreach (var Itm in lForw1)
+                    {
+                        coll6.Add(Itm.nombre);
+                    }
+
+                    tabControl1.SelectedTab = tabPage5;
+                    tabControl2.SelectedTab = tabPage6;
+
+                    gridControl1.DataSource = Headertpet();
+
+
+                    break;
+                case 0:
+
+                    toolStripComboBox1.Text = "CAÑA";
+
+                    gridControl1.DataSource = Headert();
+                    CleanControls();
+                    break;
                 case 1:
+
+                    label23.Text = string.Empty;
+                    label24.Text = string.Empty;
+                    label29.Text = string.Empty;
+
+                    comboBoxEdit1.Properties.Items.Clear();
+                    comboBoxEdit2.Properties.Items.Clear();
+                    comboBoxEdit3.Properties.Items.Clear();
+
+
+                    ComboBoxItemCollection coll1 = comboBoxEdit1.Properties.Items;
+                    ComboBoxItemCollection coll2 = comboBoxEdit2.Properties.Items;
+                    ComboBoxItemCollection coll3 = comboBoxEdit3.Properties.Items;
+
+                    toolStripComboBox1.Text = "AZUCAR";
 
                     var ifolioget = procedure.ConvertToList<strucdata.lastfcane>(procedure.Predata(1, "max(ticket) as ufol", "btkt_az", "zafra = " + izafra.ToString() , sConexion));
 
@@ -360,8 +437,6 @@ namespace scale_lite
                     tabControl1.SelectedTab = tabPage2;
                     tabControl2.SelectedTab = tabPage4;
 
-                    gridControl1.DataSource = null;
-                    gridView1.Columns.Clear();
                     gridControl1.DataSource = Headertaz();
 
                     break;
@@ -384,6 +459,29 @@ namespace scale_lite
                     ticket = Itm.ticket,
                     pesot = Itm.pesot,
                     entrada = Itm.entrada,
+                    transportista = Itm.transportista,
+                    fletero = Itm.fletero
+                });
+            }
+
+            return lResult;
+        }
+
+        private BindingList<strucdata.headertickpt> Headertpet()
+        {
+            BindingList<strucdata.headertickpt> lResult = new BindingList<strucdata.headertickpt>();
+
+            string sCampos = "ticket, pesob, CONCAT_WS(' ',FECPEN,HORENT) as entrada, transportista, fletero";
+
+            var lheadert = procedure.ConvertToList<strucdata.headertickpt>(procedure.Predata(1, sCampos, "btkt_pet", "zafra = " + izafra.ToString() + "  and status = 'PATIO' order by ticket desc", sConexion));
+
+            foreach (var Itm in lheadert)
+            {
+                lResult.Add(new strucdata.headertickpt
+                {
+                    ticket = Itm.ticket,
+                    pesob = Itm.pesob,
+                    entro = Itm.entro,
                     transportista = Itm.transportista,
                     fletero = Itm.fletero
                 });
@@ -603,11 +701,17 @@ namespace scale_lite
                     tabPage1.Select();
                     tabControl1.SelectedTab = tabPage1;
                     tabControl2.SelectedTab = tabPage3;
+                    PrepareData(0);
                     break;
                 case "AZUCAR":
                     tabControl1.SelectedTab = tabPage2;
                     tabControl2.SelectedTab = tabPage4;
                     PrepareData(1);
+                    break;
+                case "PETROLEO":
+                    PrepareData(2);
+                    tabControl1.SelectedTab = tabPage5;
+                    tabControl2.SelectedTab = tabPage6;
                     break;
             }
         }
@@ -616,11 +720,18 @@ namespace scale_lite
         {
             TabPage taTabSel = tabControl1.SelectedTab;
 
+            toolStripComboBox1.Text = taTabSel.Text.ToUpper().Trim();
+
             switch (taTabSel.Text.ToUpper().Trim())
             {
-                case "AZUCAR":
-                   
+                case "CAÑA":
+                    PrepareData(0);
+                    break;
+                case "AZUCAR":                    
                     PrepareData(1);
+                    break;
+                case "PETROLEO":
+                    PrepareData(2);
                     break;
             }
         }
@@ -707,7 +818,7 @@ namespace scale_lite
 
         private void simpleButton7_Click(object sender, EventArgs e)
         {
-            if (comboBoxEdit1.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un cliente..."); return; }
+
             if (comboBoxEdit2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un chofer..."); return; }
             if (textEdit11.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
             if (comboBoxEdit3.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener transportista..."); return; }
@@ -721,7 +832,7 @@ namespace scale_lite
 
             string sInserta = string.Empty;
 
-            var lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit3.Text).ToList();
+            var lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit3.Text && x.tipo_transp == "AZUCAR").ToList();
 
             if (lIdtr.Count() == 0) { XtraMessageBox.Show("El transportista no es valido..."); return; }
 
@@ -737,7 +848,7 @@ namespace scale_lite
                 string sCampos = "zafra,ticket,id_transp,transportista,fletero,placas,fecpen,horent,pesot,material,status,ent_usuario";
 
                 sInserta = izafra.ToString().Trim()+","+textBox1.Text.Trim()+","+iIdtr.ToString()+",'"+comboBoxEdit3.Text.Trim()+"','"+comboBoxEdit2.Text+"','"+textEdit11.Text+"',";
-                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iTara.ToString() + ",1,'PATIO', '" + sUserC + "'";
+                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iTara.ToString() + ",2,'PATIO', '" + sUserC + "'";
 
                 string sArmado = procedure.stringexe(3, sCampos, "btkt_az", sInserta);
 
@@ -785,6 +896,8 @@ namespace scale_lite
 
             if (label24.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso neto..."); return; }
 
+            if (comboBoxEdit1.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un cliente..."); return; }
+
             if (XtraMessageBox.Show("Procede a dar salida a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes) { return; }
 
             int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
@@ -798,7 +911,7 @@ namespace scale_lite
 
             string sActualiza = "pesob = " + textBox3.Text + ", peson = " + label24.Text + ", bultos = " + textBox4.Text + ", fecpes = '" + sFes + "', horsal = '" + sHes + "', status = 'OK'" ;
 
-            sActualiza = sActualiza + ", sal_usuario = '" + sUserC + "', nofecha = " + sNofecha;
+            sActualiza = sActualiza + ", sal_usuario = '" + sUserC + "', nofecha = " + sNofecha + ", cliente = '" + comboBoxEdit1.Text + "'";
 
             string sArmado = procedure.stringexe(2, sActualiza, "btkt_az", " ticket = " + label29.Text + " and zafra = " + izafra);
 
@@ -809,6 +922,117 @@ namespace scale_lite
             textBox3.Text = string.Empty;
             textBox4.Text = string.Empty;
             label24.Text = string.Empty;
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            if (comboBoxEdit6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener fletero..."); return; }
+            if (textBox7.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
+            if (textBox8.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso definido..."); return; }
+
+
+            if (XtraMessageBox.Show("Procede a dar entrada a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes) { return; }
+
+            string sInserta = string.Empty;
+
+            int iBruto = 0;
+
+            if (int.TryParse(textBox8.Text, out iBruto))
+            {
+
+
+                string sFen = DateTime.Now.ToString("yyyy-MM-dd");
+                string sHen = DateTime.Now.ToString("HH:mm");
+
+
+                string sCampos = "zafra,ticket,fletero,placas,fecpen,horent,pesob,material,status,usuario, procedencia";
+
+                sInserta = izafra.ToString().Trim() + "," + textBox5.Text.Trim() + ", '" + textBox7.Text + "','" + textBox7.Text + "',";
+                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iBruto.ToString() + ",5,'PATIO', '" + sUserC + "', '" + comboBoxEdit5.Text + "'";
+
+                string sArmado = procedure.stringexe(3, sCampos, "btkt_pet", sInserta);
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                PrepareData(2);
+
+
+            }
+            else
+            {
+                XtraMessageBox.Show("El peso bruto debe ser numerico...");
+            }
+
+        }
+
+        private void textBox10_TextChanged(object sender, EventArgs e)
+        {
+            int iPesot = 0;
+
+            if (textBox10.Text.Trim().Length == 0) { return; }
+
+            if (int.TryParse(textBox10.Text, out iPesot))
+            {
+                label42.Text = (Convert.ToInt32(label40.Text) - Convert.ToInt32(textBox10.Text)).ToString();
+            }
+            else
+            {
+                XtraMessageBox.Show("El peso tara debe ser numerico...");
+            }
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            if (comboBoxEdit4.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un transportista..."); return; }
+            if (comboBoxEdit5.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener procedencia..."); return; }
+            if (textBox6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener folio de remision..."); return; }
+
+
+            if (textBox10.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso tara..."); return; }
+
+            if (textBox9.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener unidades litros..."); return; }
+
+            if (label42.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso neto..."); return; }
+
+            if (XtraMessageBox.Show("Procede a dar salida a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes) { return; }
+
+            var lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit4.Text && x.tipo_transp == "PETROLEO").ToList();
+
+            if (lIdtr.Count() == 0) { XtraMessageBox.Show("El transportista no es valido..."); return; }
+
+            int iIdtr = lIdtr[0].id_transp;
+
+            int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
+
+            string sFes = DateTime.Now.ToString("yyyy-MM-dd");
+            string sHes = DateTime.Now.ToString("HH:mm");
+
+            string sNofecha = DateTime.Now.ToString("yyMMdd");
+
+            if (iHora < 6) { sNofecha = DateTime.Now.AddDays(-1).ToString("yyMMdd"); }
+
+            string sActualiza = "pesot = " + textBox10.Text + ", peson = " + label42.Text + ", litros = " + textBox9.Text + ", fecpes = '" + sFes + "', horsal = '" + sHes + "', status = 'OK'";
+
+            sActualiza = sActualiza + ", nofecha = " + sNofecha + ", id_transp = " + iIdtr.ToString() + ", transportista = '" + comboBoxEdit4.Text + "', procedencia = '" + comboBoxEdit5.Text + "' remision = " +  textBox6.Text;
+
+            string sArmado = procedure.stringexe(2, sActualiza, "btkt_pet", " ticket = " + label37.Text + " and zafra = " + izafra);
+
+            procedure.Executecmm(sArmado, sConexion);
+
+            PrepareData(2);
+
+            textBox10.Text = string.Empty;
+            textBox9.Text = string.Empty;
+            label42.Text = string.Empty;
+            label37.Text = string.Empty;
+
+            comboBoxEdit4.Text = string.Empty;
+            comboBoxEdit5.Text = string.Empty;
+            textBox6.Text = string.Empty;
 
         }
     }

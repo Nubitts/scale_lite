@@ -258,6 +258,31 @@ namespace scale_lite
         {
             public int id_transp { get; set; }
             public string transportista { get; set; }
+            public string tipo_transp { get; set; }
+        }
+
+        public class headertickpt
+        {
+            [Display(Name = "TIcket")]
+            public int ticket { get; set; }
+
+            [Display(Name = "Peso Bruto")]
+            public int pesob { get; set; }
+
+            [Display(Name = "Entro")]
+            public string entro { get; set; }
+
+            [Display(Name = "Transportista")]
+            public string transportista { get; set; }
+
+            [Display(Name = "Fletero")]
+            public string fletero { get; set; }
+
+        }
+
+        public class procedencias
+        {
+            public string procedencia { get; set; }
         }
 
         #endregion

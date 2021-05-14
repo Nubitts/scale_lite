@@ -332,6 +332,10 @@ namespace scale_lite
             gridControl1.DataSource = null;
             gridView1.Columns.Clear();
 
+            lTransporter.Clear();
+
+            lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista, tipo_transp", "transpt", "", sConexion));
+
             switch (iOpcion)
             {
                 case 2:
@@ -399,6 +403,11 @@ namespace scale_lite
                     comboBoxEdit1.Properties.Items.Clear();
                     comboBoxEdit2.Properties.Items.Clear();
                     comboBoxEdit3.Properties.Items.Clear();
+
+                    comboBoxEdit2.Text = string.Empty;
+                    textEdit11.Text = string.Empty;
+                    comboBoxEdit3.Text = string.Empty;
+                    textBox2.Text = string.Empty;
 
 
                     ComboBoxItemCollection coll1 = comboBoxEdit1.Properties.Items;

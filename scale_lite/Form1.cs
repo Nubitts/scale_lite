@@ -937,8 +937,6 @@ namespace scale_lite
         private void button1_Click(object sender, EventArgs e)
         {
 
-            if (comboBoxEdit6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener fletero..."); return; }
-            if (textBox7.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
             if (textBox8.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso definido..."); return; }
 
 
@@ -956,10 +954,10 @@ namespace scale_lite
                 string sHen = DateTime.Now.ToString("HH:mm");
 
 
-                string sCampos = "zafra,ticket,fletero,placas,fecpen,horent,pesob,material,status,usuario, procedencia";
+                string sCampos = "zafra,ticket,fletero,placas,fecpen,horent,pesob,material,status,usuario";
 
-                sInserta = izafra.ToString().Trim() + "," + textBox5.Text.Trim() + ", '" + textBox7.Text + "','" + textBox7.Text + "',";
-                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iBruto.ToString() + ",5,'PATIO', '" + sUserC + "', '" + comboBoxEdit5.Text + "'";
+                sInserta = izafra.ToString().Trim() + "," + textBox5.Text.Trim() + ",";
+                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iBruto.ToString() + ",5,'PATIO', '" + sUserC + "'";
 
                 string sArmado = procedure.stringexe(3, sCampos, "btkt_pet", sInserta);
 
@@ -1000,6 +998,10 @@ namespace scale_lite
             if (comboBoxEdit5.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener procedencia..."); return; }
             if (textBox6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener folio de remision..."); return; }
 
+            if (comboBoxEdit6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener Conductor..."); return; }
+            if (textBox7.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
+
+
 
             if (textBox10.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso tara..."); return; }
 
@@ -1028,9 +1030,20 @@ namespace scale_lite
 
             sActualiza = sActualiza + ", nofecha = " + sNofecha + ", id_transp = " + iIdtr.ToString() + ", transportista = '" + comboBoxEdit4.Text + "', procedencia = '" + comboBoxEdit5.Text + "', remision = '" +  textBox6.Text + "'";
 
+            sActualiza = sActualiza + ", fletero = '" + comboBoxEdit6.Text + "', placas = '" + textBox7.Text + "'";
+
             string sArmado = procedure.stringexe(2, sActualiza, "btkt_pet", " ticket = " + label37.Text + " and zafra = " + izafra);
 
-            procedure.Executecmm(sArmado, sConexion);
+            try
+            {
+                procedure.Executecmm(sArmado, sConexion);
+            }
+            catch (Exception erorre)
+            {
+                Console.WriteLine("{0} Avisar a Informatica.", erorre);
+            }
+
+            
 
             PrepareData(2);
 

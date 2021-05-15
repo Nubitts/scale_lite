@@ -459,7 +459,7 @@ namespace scale_lite
 
             string sCampos = "ticket, pesot, CONCAT_WS(' ',FECPEN,HORENT) as entrada, transportista, fletero";
 
-            var lheadert = procedure.ConvertToList<strucdata.headertickaz>(procedure.Predata(1, sCampos, "btkt_az", "zafra = " + izafra.ToString() + "  and status = 'PATIO' order by ticket desc", sConexion));
+            var lheadert = procedure.ConvertToList<strucdata.headertickaz>(procedure.Predata(1, sCampos, "btkt_az", "zafra = " + izafra.ToString() + "  and status = 'PATIO' and pesot>0 order by ticket desc", sConexion));
 
             foreach (var Itm in lheadert)
             {
@@ -480,7 +480,7 @@ namespace scale_lite
         {
             BindingList<strucdata.headertickpt> lResult = new BindingList<strucdata.headertickpt>();
 
-            string sCampos = "ticket, pesob, CONCAT_WS(' ',FECPEN,HORENT) as entrada, transportista, fletero";
+            string sCampos = "ticket, pesob, CONCAT_WS(' ',FECPEN,HORENT) as entro, transportista, fletero";
 
             var lheadert = procedure.ConvertToList<strucdata.headertickpt>(procedure.Predata(1, sCampos, "btkt_pet", "zafra = " + izafra.ToString() + "  and status = 'PATIO' order by ticket desc", sConexion));
 
@@ -1026,7 +1026,7 @@ namespace scale_lite
 
             string sActualiza = "pesot = " + textBox10.Text + ", peson = " + label42.Text + ", litros = " + textBox9.Text + ", fecpes = '" + sFes + "', horsal = '" + sHes + "', status = 'OK'";
 
-            sActualiza = sActualiza + ", nofecha = " + sNofecha + ", id_transp = " + iIdtr.ToString() + ", transportista = '" + comboBoxEdit4.Text + "', procedencia = '" + comboBoxEdit5.Text + "' remision = " +  textBox6.Text;
+            sActualiza = sActualiza + ", nofecha = " + sNofecha + ", id_transp = " + iIdtr.ToString() + ", transportista = '" + comboBoxEdit4.Text + "', procedencia = '" + comboBoxEdit5.Text + "', remision = '" +  textBox6.Text + "'";
 
             string sArmado = procedure.stringexe(2, sActualiza, "btkt_pet", " ticket = " + label37.Text + " and zafra = " + izafra);
 

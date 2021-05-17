@@ -804,7 +804,7 @@ namespace scale_lite
                     sActualiza = sActualiza + ", totalcastigo = " + sTCast;
                     sActualiza = sActualiza + ", nofecha =" + sNofecha;
                     sActualiza = sActualiza + ", fecpes = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horsal = '" + DateTime.Now.ToString("HH:mm") + "', hora = " + DateTime.Now.ToString("HH");
-                     sActualiza = sActualiza + ", status = 'OK', diazafra = " + DiaZa.ToString()+ ", hr_code = " + iHorP + ", fechakk = '" + dFechakk + "', sal_usuario = '" + sUserC + "'";
+                    sActualiza = sActualiza + ", status = 'OK', diazafra = " + DiaZa.ToString()+ ", hr_code = " + iHorP + ", fechakk = '" + dFechakk + "', sal_usuario = '" + sUserC + "'";
 
 
                     string sArmado = procedure.stringexe(2, sActualiza, "b_ticket", " ticket = " + textEdit5.Text + " and zafra = " + izafra);
@@ -954,7 +954,7 @@ namespace scale_lite
                 string sHen = DateTime.Now.ToString("HH:mm");
 
 
-                string sCampos = "zafra,ticket,fletero,placas,fecpen,horent,pesob,material,status,usuario";
+                string sCampos = "zafra,ticket,fecpen,horent,pesob,material,status,usuario";
 
                 sInserta = izafra.ToString().Trim() + "," + textBox5.Text.Trim() + ",";
                 sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iBruto.ToString() + ",5,'PATIO', '" + sUserC + "'";

@@ -1320,12 +1320,61 @@ namespace scale_lite
 
         private void simpleButton9_Click(object sender, EventArgs e)
         {
-            textEdit3.Text= readscales(1);
+
+            int iPuerto = 0;
+
+            switch(toolStripComboBox2.SelectedItem)
+            {
+                case "COM1":
+                    iPuerto = 1;
+                    break;
+                case "COM2":
+                    iPuerto = 2;
+                    break;
+                case "INACTIVO":
+                    iPuerto = 0;
+                    break;
+            }
+
+            if (iPuerto > 0)
+            {
+              textEdit3.Text= readscales(iPuerto);
+            }
+            else
+            {
+                XtraMessageBox.Show("Determine puerto de bascula....");
+            }
+
+            
         }
 
         private void simpleButton10_Click(object sender, EventArgs e)
         {
-            textEdit6.Text= readscales(2);
+
+            int iPuerto = 0;
+
+            switch (toolStripComboBox2.SelectedItem)
+            {
+                case "COM1":
+                    iPuerto = 1;
+                    break;
+                case "COM2":
+                    iPuerto = 2;
+                    break;
+                case "INACTIVO":
+                    iPuerto = 0;
+                    break;
+            }
+
+            if (iPuerto > 0)
+            {
+                textEdit6.Text = readscales(iPuerto);
+            }
+            else
+            {
+                XtraMessageBox.Show("Determine puerto de bascula...");
+            }
+
         }
 
         private void simpleButton3_Click_1(object sender, EventArgs e)

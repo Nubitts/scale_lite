@@ -10,6 +10,8 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Data.SQLite;
 using DevExpress.XtraEditors.Controls;
+using System.IO.Ports;
+using System.Text.RegularExpressions;
 
 namespace scale_lite
 {
@@ -27,6 +29,18 @@ namespace scale_lite
         public int iPesoB;
         public string dzafra;
         public int fzafra;
+
+        public string scaleentry;
+        public string scaleout;
+        public string scalercom1;
+        public string scalercom2;
+        public string sReadScale1;
+        public string sReadScale2;
+
+        public int counter = 0;
+
+        public SerialPort port1 = new SerialPort("COM1", 2400, Parity.None, 8, StopBits.One);
+        public SerialPort port2 = new SerialPort("COM2", 2400, Parity.Even, 7, StopBits.One);
 
         List<strucdata.users> lUsers = new List<strucdata.users>();
 
@@ -84,6 +98,7 @@ namespace scale_lite
         private void Form1_Load(object sender, EventArgs e)
         {
             Valuesconfig();
+          
         }
 
         #region stores_proc
@@ -107,9 +122,17 @@ namespace scale_lite
             dzafra = ConfigurationManager.AppSettings.Get("ddiazafra");
             fzafra = Convert.ToInt32(ConfigurationManager.AppSettings.Get("fdiazafra"));
 
+            scaleentry = ConfigurationManager.AppSettings.Get("scaleentry");
+            scaleout = ConfigurationManager.AppSettings.Get("scaleout");
+            scalercom1 = ConfigurationManager.AppSettings.Get("readlinecom1");
+            scalercom2 = ConfigurationManager.AppSettings.Get("readlinecom2");
+
+            timer1.Interval = 1000;
+            timer1.Enabled = true;
+            // Hook up timer's tick event handler.  
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+
             sConexion = "Server=" + sServer + ";Port=" + sPort + ";Database=" + sDB + ";Uid=" + sUser + ";password= " + sPassword + ";";
-
-
 
             bLifeconecta = testconnect(sConexion);
 
@@ -278,51 +301,60 @@ namespace scale_lite
         {
             int iTara;
 
-            if (textEdit7.Text.Trim().Length == 0)
+            try //boque try con todas las operaciones
             {
-                textEdit7.Text = lTicko[0].pesob.ToString();
-                textEdit10.Text = lTicko[0].pesob.ToString();
+
+                if (textEdit7.Text.Trim().Length == 0)
+                {
+                    textEdit7.Text = lTicko[0].pesob.ToString();
+                    textEdit10.Text = lTicko[0].pesob.ToString();
+                }
+
+                if (int.TryParse(textEdit6.Text, out iTara))
+                {
+
+                    int iPesob = lTicko[0].pesob;
+
+                    double doDesc = (textEdit8.Text.Trim().Length > 0) ? Convert.ToInt32(textEdit8.Text) : 0;
+
+                    double doCast = (textEdit9.Text.Trim().Length > 0) ? Convert.ToInt32(textEdit9.Text) : 0;
+
+                    int iPesoN = iPesob - Convert.ToInt32(textEdit6.Text);
+
+                    int iTd = 0; int iTc = 0;
+
+                    if (doDesc > 0)
+                    {
+
+                        double doTDesc = (doDesc / 100);
+                        iTd = Convert.ToInt32(Math.Round((iPesoN * doTDesc), 0));
+                        label13.Text = iTd.ToString();
+                    }
+                    else
+                    {
+                        label13.Text = string.Empty;
+                    }
+
+                    if (doCast > 0)
+                    {
+                        double doTcast = (doCast / 100);
+                        iTc = Convert.ToInt32(Math.Round((iPesoN * doTcast), 0));
+                        label14.Text = iTc.ToString();
+                    }
+                    else
+                    {
+                        label14.Text = string.Empty;
+                    }
+
+                    textEdit7.Text = iPesoN.ToString();
+                    textEdit10.Text = (iPesoN - (iTd + iTc)).ToString();
+
+                }
+
             }
-
-            if (int.TryParse(textEdit6.Text, out iTara))
+            catch (Exception ex) //bloque catch para captura de error
             {
-
-                int iPesob = lTicko[0].pesob;
-
-                double doDesc = (textEdit8.Text.Trim().Length > 0) ? Convert.ToInt32(textEdit8.Text) : 0;
-
-                double doCast = (textEdit9.Text.Trim().Length > 0) ? Convert.ToInt32(textEdit9.Text) : 0;
-
-                int iPesoN = iPesob - Convert.ToInt32(textEdit6.Text);
-
-                int iTd = 0; int iTc = 0;
-
-                if (doDesc > 0)
-                {
-
-                    double doTDesc = (doDesc / 100);
-                    iTd =  Convert.ToInt32( Math.Round( (iPesoN * doTDesc),0)) ;
-                    label13.Text = iTd.ToString();
-                }
-                else
-                {
-                    label13.Text = string.Empty;
-                }
-
-                if (doCast > 0)
-                {
-                    double doTcast =  (doCast / 100);
-                    iTc = Convert.ToInt32(Math.Round((iPesoN * doTcast), 0));
-                    label14.Text = iTc.ToString();
-                }
-                else
-                {
-                    label14.Text = string.Empty;
-                }
-
-                textEdit7.Text = iPesoN.ToString();
-                textEdit10.Text = (iPesoN - (iTd + iTc)).ToString();
-
+               // string error = ex.Message; //acción para manejar el error
             }
 
         }
@@ -499,7 +531,235 @@ namespace scale_lite
             return lResult;
         }
 
+        private string  connectBasc1()
+        {
+
+            string sPeso = string.Empty;
+
+            try
+            {
+                if (!this.port1.IsOpen)
+                {
+                    this.port1.Open();
+                    sPeso = readscales(1);
+                }                    
+                else
+                {
+                   sPeso = readscales(1);
+                }
+                    
+            }
+            catch (Exception ex)
+            {
+                sReadScale1 = "0";
+
+            }
+
+            return sPeso;
+        }
+
+        private string connectBasc2()
+        {
+
+            string sPeso = string.Empty;
+
+            try
+            {
+                if (!this.port2.IsOpen)
+                {
+                    this.port2.Open();
+                    sPeso = readscales(2);
+                }
+                else
+                {
+                    sPeso = readscales(2);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                sPeso = "0";
+
+            }
+
+            return sPeso;
+        }
+
+        private string readscales(int iBascula)
+        {
+
+            string sPeso = string.Empty;
+
+
+            try
+            {
+                switch (iBascula)
+                {
+                    case 1:
+                        if (this.port1.IsOpen)
+                        {
+                            string str2 = this.port1.ReadExisting();
+
+                            string sResult = "";
+                            if (str2.Length > 0)
+                            {
+
+                                string sTempo = str2.Substring(6, 13);
+
+                                sResult = sTempo;
+
+                                sPeso = CleanInput(sResult).Substring(0, 7);
+                            }
+                            else
+                            {
+                                this.connectBasc1();
+                            }
+
+                        }
+                        else
+                        {
+                            this.connectBasc1();
+                        }
+                        break;
+                    case 2:
+                        if (this.port2.IsOpen)
+                        {
+                            string str2 = this.port2.ReadExisting();
+                            string sResult = "";
+                            if (str2.Length > 0)
+                            {
+                                string sTempo = str2.Substring(4, 11);
+
+                                sPeso = CleanInput(sTempo).Substring(0, 5);
+                            }
+                            else
+                            {
+                                this.connectBasc2();
+                            }
+
+                        }
+                        else
+                        {
+                            this.connectBasc2();
+                        }
+                        break;
+                }
+
+            }
+            catch (Exception erorre)
+            {
+                
+            }
+
+            return sPeso;
+        }
+
+        static string CleanInput(string strIn)
+        {
+            // Replace invalid characters with empty strings.
+            try
+            {
+                return Regex.Replace(strIn, @"[^\w\.@-]", "",
+                                     RegexOptions.None, TimeSpan.FromSeconds(1.5));
+            }
+            // If we timeout when replacing invalid characters,
+            // we should return Empty.
+            catch (RegexMatchTimeoutException)
+            {
+                return String.Empty;
+            }
+        }
+
+        private void evaltkforwarder(string sString)
+        {
+            string sEvalua = sString;
+
+            if (sEvalua.Substring(0, 1) == "Z")
+            {
+                int iZafral = Convert.ToInt32(textEdit2.Text.Substring(1, 4));
+
+                if (iZafral != izafra)
+                {
+                    XtraMessageBox.Show("No corresponde a la zafra actual...");
+                    textEdit2.Text = string.Empty;
+                }
+                else
+                {
+                    int iFletero = Convert.ToInt32(textEdit2.Text.Substring(6, textEdit2.Text.Length - 6));
+
+                    var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
+
+                    textEdit2.Text = iFletero.ToString();
+
+                    label6.Text = lFrw[0].nombre;
+
+                    textEdit1.Focus();
+                }
+            }
+        }
+
+        private void evalticket(string sTicket)
+        {
+
+            int iTicketFr = 0;
+
+            int iPos = sTicket.IndexOf("T")+1;
+
+            string sRTicket = sTicket.Substring(iPos, sTicket.Length - iPos);
+
+            if (sTicket.Substring(0, 1) == "Z")
+            {
+
+                int iZafral = Convert.ToInt32(sTicket.Substring(1, 4));
+
+                if (iZafral != izafra)
+                {
+                    XtraMessageBox.Show("No corresponde a la zafra actual...");
+                    textEdit1.Text = string.Empty;
+                }
+                else
+                {
+
+                    List<strucdata.ticketfree> lTicketf = new List<strucdata.ticketfree>();
+
+                    lTicketf = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob = 0 or pesob is null)", sConexion));
+
+                    iTicketFr = Convert.ToInt32(sRTicket);
+
+                        var lfTicket = lTicketf.Where(x => x.ticket == iTicketFr).ToList();
+
+                        if (lfTicket.Count() > 0)
+                        {
+                            label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
+                            textEdit1.Text = sRTicket;
+
+                            radioButton3.Focus();
+                        }
+                        else
+                        {
+                            XtraMessageBox.Show("No se encuentra ticket...");
+                        }
+
+
+                }
+
+            }
+
+        }
+
         #endregion
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            //port2.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived2);
+
+            // Begin communications
+            //readscales(1);
+            //readscales(2);
+
+
+
+        }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
@@ -520,6 +780,8 @@ namespace scale_lite
                 gridControl1.Enabled = true;
                 tabControl2.Enabled = true;
                 sUserC = lUserv[0].user;
+                textEdit6.Enabled = true;
+                simpleButton10.Enabled = true;
             }
             else
             {
@@ -1043,8 +1305,6 @@ namespace scale_lite
                 Console.WriteLine("{0} Avisar a Informatica.", erorre);
             }
 
-            
-
             PrepareData(2);
 
             textBox10.Text = string.Empty;
@@ -1056,6 +1316,159 @@ namespace scale_lite
             comboBoxEdit5.Text = string.Empty;
             textBox6.Text = string.Empty;
 
+        }
+
+        private void simpleButton9_Click(object sender, EventArgs e)
+        {
+            textEdit3.Text= readscales(1);
+        }
+
+        private void simpleButton10_Click(object sender, EventArgs e)
+        {
+            textEdit6.Text= readscales(2);
+        }
+
+        private void simpleButton3_Click_1(object sender, EventArgs e)
+        {
+            int iPeso = 0;
+
+            if (textEdit3.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar peso inicial..."); textEdit3.Text = string.Empty; return; }
+
+            if (int.TryParse(textEdit3.Text, out iPeso))
+            {
+
+                if (label2.Text.Trim().Length == 0) { XtraMessageBox.Show("No ha focalizado ningun ticket..."); return; }
+
+                if (label6.Text.Trim().Length == 0) { XtraMessageBox.Show("No ha focalizado ningun fletero..."); return; }
+
+
+                if (XtraMessageBox.Show("Procede a guardar datos capturados?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
+                {
+                    string sCondicion = string.Empty;
+                    int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
+                    string sTipoc = (radioButton3.Checked) ? "Q'" : "C'";
+
+                    int iHorP = lhorlab.Where(x => x.hourd == iHora).ToList()[0].hourt;
+
+                    string sNofecha = DateTime.Now.ToString("yyMMdd");
+
+                    if (iHora < 6)
+                    {
+                        sNofecha = DateTime.Now.AddDays(-1).ToString("yyMMdd");
+                    }
+
+                    string sNumtra = (textEdit2.Text.Trim().Length > 0) ? textEdit2.Text : "0";
+                    string sNumalz = (textEdit4.Text.Trim().Length > 0) ? textEdit4.Text : "0";
+
+                    sCondicion = "numtra = " + sNumtra;
+                    sCondicion = sCondicion + ", numalz = " + sNumalz;
+                    sCondicion = sCondicion + ", tipque = 'P'";
+                    sCondicion = sCondicion + ", tpocan = '" + sTipoc;
+                    sCondicion = sCondicion + ", numavi = 20000, material = 1, peson = 0, pesot = 0, pesol = 0, pesob = " + textEdit3.Text;
+                    sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") + "'";
+                    sCondicion = sCondicion + ", nofecha =" + sNofecha;
+                    sCondicion = sCondicion + ", fecque = '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "', horque = '18:00'";
+                    sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "'";
+
+                    string sArmado = procedure.stringexe(2, sCondicion, "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
+
+                    procedure.Executecmm(sArmado, sConexion);
+
+                    gridControl1.DataSource = Headert();
+
+                    CleanControls();
+
+                }
+
+            }
+            else
+            {
+                XtraMessageBox.Show("No es un valor valido Peso Inicial...");
+            }
+        }
+
+        private void textEdit2_EditValueChanged_1(object sender, EventArgs e)
+        {
+
+            
+        }
+
+        private void simpleButton2_Click_1(object sender, EventArgs e)
+        {
+            int iFletero = 0;
+
+            if (textEdit2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar el codigo de fletero a conectar..."); textEdit2.Text = string.Empty; return; }
+
+            if (int.TryParse(textEdit2.Text, out iFletero))
+            {
+
+                var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
+
+                label6.Text = lFrw[0].nombre;
+
+            }
+            else
+            {
+                XtraMessageBox.Show("No es un valor valido identidad fletero...");
+            }
+        }
+
+        private void textEdit2_EditValueChanging(object sender, ChangingEventArgs e)
+        {
+
+        }
+
+        private void textEdit2_KeyDown(object sender, KeyEventArgs e)
+        {
+          
+        }
+
+        private void textEdit2_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode== Keys.Enter)
+            {
+                evaltkforwarder(textEdit2.Text);
+            }
+        }
+
+        private void simpleButton1_Click_1(object sender, EventArgs e)
+        {
+
+            int iTicketFr = 0;
+
+            if (textEdit1.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar el ticket a conectar..."); textEdit1.Text = string.Empty; return; }
+
+            List<strucdata.ticketfree> lTicketf = new List<strucdata.ticketfree>();
+
+            lTicketf = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob = 0 or pesob is null)", sConexion));
+
+            if (int.TryParse(textEdit1.Text, out iTicketFr))
+            {
+
+                var lfTicket = lTicketf.Where(x => x.ticket == iTicketFr).ToList();
+
+                if (lfTicket.Count() > 0)
+                {
+                    label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
+                }
+                else
+                {
+                    XtraMessageBox.Show("No se encuentra ticket...");
+                }
+
+            }
+            else
+            {
+                XtraMessageBox.Show("No es un valor valido de un ticket...");
+            }
+        }
+
+        private void textEdit1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                evalticket(textEdit1.Text);
+            }
         }
     }
 }

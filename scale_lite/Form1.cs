@@ -127,10 +127,6 @@ namespace scale_lite
             scalercom1 = ConfigurationManager.AppSettings.Get("readlinecom1");
             scalercom2 = ConfigurationManager.AppSettings.Get("readlinecom2");
 
-            timer1.Interval = 1000;
-            timer1.Enabled = true;
-            // Hook up timer's tick event handler.  
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
 
             sConexion = "Server=" + sServer + ";Port=" + sPort + ";Database=" + sDB + ";Uid=" + sUser + ";password= " + sPassword + ";";
 
@@ -531,54 +527,44 @@ namespace scale_lite
             return lResult;
         }
 
-        private string  connectBasc1()
+        private string connectBasc(int iPuerto)
         {
 
             string sPeso = string.Empty;
 
             try
             {
-                if (!this.port1.IsOpen)
+
+                switch(iPuerto)
                 {
-                    this.port1.Open();
-                    sPeso = readscales(1);
-                }                    
-                else
-                {
-                   sPeso = readscales(1);
-                }
-                    
-            }
-            catch (Exception ex)
-            {
-                sReadScale1 = "0";
-
-            }
-
-            return sPeso;
-        }
-
-        private string connectBasc2()
-        {
-
-            string sPeso = string.Empty;
-
-            try
-            {
-                if (!this.port2.IsOpen)
-                {
-                    this.port2.Open();
-                    sPeso = readscales(2);
-                }
-                else
-                {
-                    sPeso = readscales(2);
+                    case 1:
+                        if (!this.port1.IsOpen)
+                        {
+                            this.port1.Open();
+                            sPeso = "Vuelva a leer";
+                        }
+                        else
+                        {
+                            sPeso = "Vuelva a leer";
+                        }
+                        break;
+                    case 2:
+                        if (!this.port2.IsOpen)
+                        {
+                            this.port2.Open();
+                            sPeso = "Vuelva a leer";
+                        }
+                        else
+                        {
+                            sPeso = "Vuelva a leer";
+                        }
+                        break;
                 }
 
             }
             catch (Exception ex)
             {
-                sPeso = "0";
+                sPeso = "no logra leer";
 
             }
 
@@ -589,7 +575,6 @@ namespace scale_lite
         {
 
             string sPeso = string.Empty;
-
 
             try
             {
@@ -604,43 +589,68 @@ namespace scale_lite
                             if (str2.Length > 0)
                             {
 
-                                string sTempo = str2.Substring(6, 13);
+                                int iPos1 = str2.IndexOf("+");
+                                int iPos2 = str2.IndexOf("k");
 
-                                sResult = sTempo;
+                                string sTempo = str2.Substring((iPos1+1), iPos2-1);
 
-                                sPeso = CleanInput(sResult).Substring(0, 7);
+                                sResult = sTempo.Substring(0,8);
+
+                                string result = string.Concat(sResult.Where(c => Char.IsDigit(c)));
+
+                                sResult = result;
+
+                                int myInt;
+                                bool isNumerical = int.TryParse(sResult, out myInt);
+
+                                sPeso = (isNumerical) ? CleanInput(sResult).Substring(0, 7) : "Vuelva a leer";
                             }
                             else
                             {
-                                this.connectBasc1();
+                                sPeso = connectBasc(1);
                             }
 
+                            this.port1.Close();
                         }
                         else
                         {
-                            this.connectBasc1();
+                            sPeso = connectBasc(1);
                         }
                         break;
                     case 2:
                         if (this.port2.IsOpen)
                         {
                             string str2 = this.port2.ReadExisting();
-                            string sResult = "";
+
                             if (str2.Length > 0)
                             {
-                                string sTempo = str2.Substring(4, 11);
 
-                                sPeso = CleanInput(sTempo).Substring(0, 5);
+                                int iPos1 = str2.IndexOf(" ");
+
+                                string sTempo = str2.Substring(iPos1+1, 11);
+
+                                string sResult;
+
+                                string result = string.Concat(sTempo.Where(c => Char.IsDigit(c)));
+
+                                sResult = result;
+
+                                int myInt;
+                                bool isNumerical = int.TryParse(sResult, out myInt);
+
+                                sPeso = (isNumerical) ? CleanInput(sResult).Substring(0, 5) : "Vuelva a leer";
                             }
                             else
                             {
-                                this.connectBasc2();
+                                sPeso = connectBasc(2);
                             }
+
+                            this.port2.Close();
 
                         }
                         else
                         {
-                            this.connectBasc2();
+                            sPeso = connectBasc(2);
                         }
                         break;
                 }
@@ -674,7 +684,7 @@ namespace scale_lite
         {
             string sEvalua = sString;
 
-            if (sEvalua.Substring(0, 1) == "Z")
+            if (sEvalua.Substring(0, 1).ToUpper() == "Z")
             {
                 int iZafral = Convert.ToInt32(textEdit2.Text.Substring(1, 4));
 
@@ -701,13 +711,14 @@ namespace scale_lite
         private void evalticket(string sTicket)
         {
 
+            
             int iTicketFr = 0;
 
-            int iPos = sTicket.IndexOf("T")+1;
+            int iPos = sTicket.ToUpper().IndexOf("T")+1;
 
             string sRTicket = sTicket.Substring(iPos, sTicket.Length - iPos);
 
-            if (sTicket.Substring(0, 1) == "Z")
+            if (sTicket.Substring(0, 1).ToUpper() == "Z")
             {
 
                 int iZafral = Convert.ToInt32(sTicket.Substring(1, 4));
@@ -726,40 +737,88 @@ namespace scale_lite
 
                     iTicketFr = Convert.ToInt32(sRTicket);
 
-                        var lfTicket = lTicketf.Where(x => x.ticket == iTicketFr).ToList();
+                    var lfTicket = lTicketf.Where(x => x.ticket == iTicketFr).ToList();
 
-                        if (lfTicket.Count() > 0)
-                        {
+                    if (lfTicket.Count() > 0)
+                    {
                             label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
                             textEdit1.Text = sRTicket;
 
                             radioButton3.Focus();
+                    }
+                    else
+                    {
+                        List<strucdata.ticketfree> lTicketE = new List<strucdata.ticketfree>();
+
+                        lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0)", sConexion));
+
+                        iTicketFr = Convert.ToInt32(sRTicket);
+
+                        var lTicketEE = lTicketE.Where(x => x.ticket == iTicketFr).ToList();
+
+                        if (lTicketEE.Count() > 0)
+                        {
+                            XtraMessageBox.Show("Ya fue utilizado "+ Convert.ToDateTime( lTicketEE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketEE[0].horent);
                         }
                         else
                         {
-                            XtraMessageBox.Show("No se encuentra ticket...");
+                            XtraMessageBox.Show("No se encuentra ticket!!!...");
                         }
+
+                        CleanControls();
+                    }
 
 
                 }
 
             }
+            else
+            {
+                if (int.TryParse(sRTicket, out iTicketFr))
+                {
+                    List<strucdata.ticketfree> lTicketf = new List<strucdata.ticketfree>();
+
+                    lTicketf = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0)", sConexion));
+
+
+                    var lfTicket = lTicketf.Where(x => x.ticket == iTicketFr).ToList();
+
+                    if (lfTicket.Count() > 0)
+                    {
+                        label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
+                    }
+                    else
+                    {
+                        List<strucdata.ticketfree> lTicketE = new List<strucdata.ticketfree>();
+
+                        lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0)", sConexion));
+
+                        iTicketFr = Convert.ToInt32(textEdit1.Text.Trim());
+
+                        var lTicketEE = lTicketE.Where(x => x.ticket == iTicketFr).ToList();
+
+                        if (lTicketEE.Count() > 0)
+                        {
+                            XtraMessageBox.Show("Ya fue utilizado " + Convert.ToDateTime(lTicketEE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketEE[0].horent);
+                        }
+                        else
+                        {
+                            XtraMessageBox.Show("No se encuentra ticket!!!...");
+                        }
+
+                        CleanControls();
+                    }
+
+                }
+                else
+                {
+                    XtraMessageBox.Show("No es un valor valido de un ticket...");
+                }
+            }
 
         }
 
         #endregion
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            //port2.DataReceived += new SerialDataReceivedEventHandler(port_DataReceived2);
-
-            // Begin communications
-            //readscales(1);
-            //readscales(2);
-
-
-
-        }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
@@ -793,61 +852,6 @@ namespace scale_lite
 
         }
 
-        private void simpleButton1_Click(object sender, EventArgs e)
-        {
-
-            int iTicketFr = 0;
-
-            if (textEdit1.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar el ticket a conectar..."); textEdit1.Text = string.Empty; return; }
-
-            List<strucdata.ticketfree> lTicketf = new List<strucdata.ticketfree>();
-
-            lTicketf = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob = 0 or pesob is null)", sConexion));
-
-            if (int.TryParse(textEdit1.Text, out iTicketFr))
-            {
-
-                var lfTicket = lTicketf.Where(x => x.ticket == iTicketFr).ToList();
-
-                if (lfTicket.Count() > 0)
-                {
-                    label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
-                }
-                else
-                {
-                    XtraMessageBox.Show("No se encuentra ticket...");
-                }
-
-            }
-            else
-            {
-                XtraMessageBox.Show("No es un valor valido de un ticket...");
-            }
-
-        }
-
-
-        private void simpleButton2_Click(object sender, EventArgs e)
-        {
-
-            int iFletero = 0;
-
-            if (textEdit2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar el codigo de fletero a conectar..."); textEdit2.Text = string.Empty; return; }
-
-            if (int.TryParse(textEdit2.Text, out iFletero))
-            {
-
-                var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
-
-                label6.Text = lFrw[0].nombre;
-
-            }
-            else
-            {
-                XtraMessageBox.Show("No es un valor valido identidad fletero...");
-            }
-
-        }
 
         private void simpleButton4_Click(object sender, EventArgs e)
         {
@@ -1353,7 +1357,7 @@ namespace scale_lite
 
             int iPuerto = 0;
 
-            switch (toolStripComboBox2.SelectedItem)
+            switch (toolStripComboBox3.SelectedItem)
             {
                 case "COM1":
                     iPuerto = 1;
@@ -1458,7 +1462,8 @@ namespace scale_lite
             }
             else
             {
-                XtraMessageBox.Show("No es un valor valido identidad fletero...");
+                evaltkforwarder(textEdit2.Text);
+
             }
         }
 
@@ -1502,13 +1507,87 @@ namespace scale_lite
                 }
                 else
                 {
-                    XtraMessageBox.Show("No se encuentra ticket...");
+                    List<strucdata.ticketfree> lTicketE = new List<strucdata.ticketfree>();
+
+                    lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0)", sConexion));
+
+                    iTicketFr = Convert.ToInt32(textEdit1.Text.Trim());
+
+                    var lTicketEE = lTicketE.Where(x => x.ticket == iTicketFr).ToList();
+
+                    if (lTicketEE.Count() > 0)
+                    {
+                        XtraMessageBox.Show("Ya fue utilizado " + Convert.ToDateTime(lTicketEE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketEE[0].horent);
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("No se encuentra ticket!!!...");
+                    }
+
+                    CleanControls();
                 }
 
             }
             else
             {
-                XtraMessageBox.Show("No es un valor valido de un ticket...");
+
+                if (textEdit1.Text.Substring(0, 1).ToUpper() == "Z")
+                {
+
+                    int iZafral = Convert.ToInt32(textEdit1.Text.Substring(1, 4));
+
+                    if (iZafral != izafra)
+                    {
+                        XtraMessageBox.Show("No corresponde a la zafra actual...");
+                        textEdit1.Text = string.Empty;
+                    }
+                    else
+                    {
+                        int iPos = textEdit1.Text.ToUpper().IndexOf("T") + 1;
+
+                        string sRTicket = textEdit1.Text.Substring(iPos, textEdit1.Text.Length - iPos);
+
+                        List<strucdata.ticketfree> lTicketf1 = new List<strucdata.ticketfree>();
+
+                        lTicketf1 = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob = 0 or pesob is null)", sConexion));
+
+                        iTicketFr = Convert.ToInt32(sRTicket);
+
+                        var lfTicket = lTicketf.Where(x => x.ticket == iTicketFr).ToList();
+
+                        if (lfTicket.Count() > 0)
+                        {
+                            label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
+                            textEdit1.Text = sRTicket;
+
+                            radioButton3.Focus();
+                        }
+                        else
+                        {
+                            List<strucdata.ticketfree> lTicketE = new List<strucdata.ticketfree>();
+
+                            lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0)", sConexion));
+
+                            iTicketFr = Convert.ToInt32(sRTicket);
+
+                            var lTicketEE = lTicketE.Where(x => x.ticket == iTicketFr).ToList();
+
+                            if (lTicketEE.Count() > 0)
+                            {
+                                XtraMessageBox.Show("Ya fue utilizado " + Convert.ToDateTime(lTicketEE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketEE[0].horent);
+                            }
+                            else
+                            {
+                                XtraMessageBox.Show("No se encuentra ticket!!!...");
+                            }
+
+                            CleanControls();
+                        }
+
+
+                    }
+
+                }
             }
         }
 
@@ -1518,6 +1597,16 @@ namespace scale_lite
             {
                 evalticket(textEdit1.Text);
             }
+        }
+
+        private void simpleButton5_Click_1(object sender, EventArgs e)
+        {
+            CleanControls();
+        }
+
+        private void textEdit1_EditValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -168,6 +168,8 @@ namespace scale_lite
             public string nom_grupo { get; set; }
             public string tabla { get; set; }
             public string ciclo { get; set; }
+            public string fecpes { get; set; }
+            public string horent { get; set; }
         }
 
         public class forwarder

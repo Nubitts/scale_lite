@@ -49,6 +49,7 @@ namespace scale_lite
             this.toolStripComboBox3 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel6 = new System.Windows.Forms.ToolStripLabel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -147,6 +148,8 @@ namespace scale_lite
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.label30 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.toolStripTextBox3 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -189,7 +192,7 @@ namespace scale_lite
             this.toolStripStatusLabel2});
             this.statusStrip1.Location = new System.Drawing.Point(0, 748);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1104, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1250, 22);
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -222,10 +225,13 @@ namespace scale_lite
             this.toolStripLabel5,
             this.toolStripComboBox3,
             this.toolStripButton2,
-            this.toolStripSeparator3});
+            this.toolStripSeparator3,
+            this.toolStripLabel6,
+            this.toolStripTextBox3,
+            this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1104, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1250, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -345,6 +351,12 @@ namespace scale_lite
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripLabel6
+            // 
+            this.toolStripLabel6.Name = "toolStripLabel6";
+            this.toolStripLabel6.Size = new System.Drawing.Size(86, 22);
+            this.toolStripLabel6.Text = "toolStripLabel6";
+            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
@@ -352,12 +364,12 @@ namespace scale_lite
             this.tableLayoutPanel2.Controls.Add(this.gridControl1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.tabControl2, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(549, 13);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(621, 13);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.11728F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.88272F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(552, 707);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(626, 707);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // gridControl1
@@ -367,7 +379,7 @@ namespace scale_lite
             this.gridControl1.Location = new System.Drawing.Point(3, 3);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(546, 263);
+            this.gridControl1.Size = new System.Drawing.Size(620, 263);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -388,7 +400,7 @@ namespace scale_lite
             this.tabControl2.Location = new System.Drawing.Point(3, 272);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(546, 432);
+            this.tabControl2.Size = new System.Drawing.Size(620, 432);
             this.tabControl2.TabIndex = 1;
             // 
             // tabPage3
@@ -412,7 +424,7 @@ namespace scale_lite
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(538, 406);
+            this.tabPage3.Size = new System.Drawing.Size(612, 406);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Tara Caña";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -1002,7 +1014,7 @@ namespace scale_lite
             this.tabControl1.Location = new System.Drawing.Point(3, 13);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(540, 707);
+            this.tabControl1.Size = new System.Drawing.Size(612, 707);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPage1
@@ -1028,7 +1040,7 @@ namespace scale_lite
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(532, 681);
+            this.tabPage1.Size = new System.Drawing.Size(604, 681);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Caña";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1082,6 +1094,7 @@ namespace scale_lite
             this.simpleButton4.Size = new System.Drawing.Size(75, 23);
             this.simpleButton4.TabIndex = 7;
             this.simpleButton4.Text = "Validar";
+            this.simpleButton4.Click += new System.EventHandler(this.simpleButton4_Click_1);
             // 
             // textEdit4
             // 
@@ -1091,6 +1104,8 @@ namespace scale_lite
             this.textEdit4.Properties.NullText = "Codigo de Alzadora";
             this.textEdit4.Size = new System.Drawing.Size(194, 20);
             this.textEdit4.TabIndex = 6;
+            this.textEdit4.EditValueChanged += new System.EventHandler(this.textEdit4_EditValueChanged);
+            this.textEdit4.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textEdit4_KeyUp);
             // 
             // label5
             // 
@@ -1445,14 +1460,30 @@ namespace scale_lite
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 1.521438F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 98.47856F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1104, 723);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1250, 723);
             this.tableLayoutPanel1.TabIndex = 2;
+            // 
+            // toolStripTextBox3
+            // 
+            this.toolStripTextBox3.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripTextBox3.Name = "toolStripTextBox3";
+            this.toolStripTextBox3.Size = new System.Drawing.Size(100, 25);
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(42, 22);
+            this.toolStripButton3.Text = "Ticket";
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1104, 770);
+            this.ClientSize = new System.Drawing.Size(1250, 770);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
@@ -1628,6 +1659,9 @@ namespace scale_lite
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private DevExpress.XtraEditors.SimpleButton simpleButton10;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel6;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox3;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
     }
 }
 

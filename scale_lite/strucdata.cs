@@ -287,6 +287,30 @@ namespace scale_lite
             public string procedencia { get; set; }
         }
 
+        public class printtick
+        {
+            public int ticket { get; set; }
+            public int ordcte { get; set; }
+            public int codigo { get; set; }
+            public string nombre_p { get; set; }
+            public int grupo { get; set; }
+            public string nom_grupo { get; set; }
+            public string tipocanes { get; set; }
+            public int tabla { get; set; }
+            public string ciclo { get; set; }
+            public int fletero { get; set; }
+            public string FECPEN { get; set; }
+            public string horent { get; set; }
+            public double pesob { get; set; }
+            public double peson { get; set; }
+            public double pesotara { get; set; }
+            public double descto { get; set; }
+            public double castigo { get; set; }
+            public string fecpes { get; set; }
+            public string horsal { get; set; }
+
+        }
+
         #endregion
 
     }

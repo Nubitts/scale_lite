@@ -12,6 +12,9 @@ using System.Data.SQLite;
 using DevExpress.XtraEditors.Controls;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
+using System.Drawing;
+using System.Drawing.Printing;
+using System.Runtime.InteropServices;
 
 namespace scale_lite
 {
@@ -36,10 +39,11 @@ namespace scale_lite
         public string scalercom2;
         public string sReadScale1;
         public string sReadScale2;
+        public string sPrinterdev;
 
         public int counter = 0;
 
-        public SerialPort port1 = new SerialPort("COM1", 2400, Parity.None, 8, StopBits.One);
+        public SerialPort port1 = new SerialPort("COM1", 2400, Parity.None, 7, StopBits.One);
         public SerialPort port2 = new SerialPort("COM2", 2400, Parity.Even, 7, StopBits.One);
 
         List<strucdata.users> lUsers = new List<strucdata.users>();
@@ -112,6 +116,7 @@ namespace scale_lite
             label13.Text = string.Empty;
             label14.Text = string.Empty;
             textEdit3.Text = string.Empty;
+            toolStripLabel6.Text = string.Empty;
 
             sServer = ConfigurationManager.AppSettings.Get("server");
             sUser = ConfigurationManager.AppSettings.Get("user");
@@ -126,7 +131,7 @@ namespace scale_lite
             scaleout = ConfigurationManager.AppSettings.Get("scaleout");
             scalercom1 = ConfigurationManager.AppSettings.Get("readlinecom1");
             scalercom2 = ConfigurationManager.AppSettings.Get("readlinecom2");
-
+            sPrinterdev = ConfigurationManager.AppSettings.Get("printer");
 
             sConexion = "Server=" + sServer + ";Port=" + sPort + ";Database=" + sDB + ";Uid=" + sUser + ";password= " + sPassword + ";";
 
@@ -577,13 +582,15 @@ namespace scale_lite
             string sPeso = string.Empty;
 
             try
-            {
+            {           
                 switch (iBascula)
                 {
                     case 1:
                         if (this.port1.IsOpen)
                         {
                             string str2 = this.port1.ReadExisting();
+
+                            toolStripLabel6.Text = str2;
 
                             string sResult = "";
                             if (str2.Length > 0)
@@ -593,6 +600,8 @@ namespace scale_lite
                                 int iPos2 = str2.IndexOf("k");
 
                                 string sTempo = str2.Substring((iPos1+1), iPos2-1);
+
+                                toolStripLabel6.Text = sTempo;
 
                                 sResult = sTempo.Substring(0,8);
 
@@ -622,12 +631,16 @@ namespace scale_lite
                         {
                             string str2 = this.port2.ReadExisting();
 
+                           toolStripLabel6.Text = str2 ;
+
                             if (str2.Length > 0)
                             {
 
                                 int iPos1 = str2.IndexOf(" ");
 
                                 string sTempo = str2.Substring(iPos1+1, 11);
+
+                                toolStripLabel6.Text = sTempo;
 
                                 string sResult;
 
@@ -704,6 +717,34 @@ namespace scale_lite
                     label6.Text = lFrw[0].nombre;
 
                     textEdit1.Focus();
+                }
+            }
+        }
+
+        private void evaltklifting(string sString)
+        {
+            string sEvalua = sString;
+
+            if (sEvalua.Substring(0, 1).ToUpper() == "Z")
+            {
+                int iZafral = Convert.ToInt32(textEdit4.Text.Substring(1, 4));
+
+                if (iZafral != izafra)
+                {
+                    XtraMessageBox.Show("No corresponde a la zafra actual...");
+                    textEdit4.Text = string.Empty;
+                }
+                else
+                {
+                    int iFletero = Convert.ToInt32(textEdit4.Text.Substring(6, textEdit4.Text.Length - 6));
+
+                    var lFrw = llifting.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
+
+                    textEdit4.Text = iFletero.ToString();
+
+                    label7.Text = lFrw[0].nombre;
+
+                    textEdit3.Focus();
                 }
             }
         }
@@ -818,6 +859,79 @@ namespace scale_lite
 
         }
 
+        private void print_ticket(int iTicket)
+        {
+            try
+            {
+                 printticket.CrearTicket ticket = new printticket.CrearTicket();
+
+                string sCampos = "ticket,ordcte,codigo,nombre_p,grupo,nom_grupo,tipocanes,tabla,ciclo,fletero,fecpen,horent,pesob,peson,fecpes,HORSAL,pesotara,descto,castigo";
+
+                var lticketprint = procedure.ConvertToList<strucdata.printtick>(procedure.Predata(1, sCampos, "vb_ticket", "ticket = " + iTicket.ToString(), sConexion));
+
+
+                ticket.TextoIzquierda(" ");
+                ticket.TextoCentro("INGENIO EL CARMEN SA DE CV");
+                ticket.TextoCentro("ZAFRA 21-22");
+                ticket.TextoIzquierda(" ");
+                // ticket.TextoExtremos("FECHA : " + txtFecha.Text, "HORA : " + txtHora.Text);
+                ticket.TextoIzquierda("O. CORTE = " + lticketprint[0].ordcte);
+                ticket.TextoIzquierda("TICKET   = " + iTicket.ToString());
+                ticket.TextoIzquierda("CLAVE    = " + lticketprint[0].codigo);
+                ticket.TextoIzquierda(lticketprint[0].nombre_p);
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda("GRUPO    = " + lticketprint[0].grupo);
+                ticket.TextoIzquierda(lticketprint[0].nom_grupo);
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda("TABLA    = " + lticketprint[0].tabla);
+                ticket.TextoIzquierda("CICLO    = " + lticketprint[0].ciclo);
+                ticket.TextoIzquierda("FLETERO  = " + lticketprint[0].fletero);
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda("FECHA Y HORA ENTRADA");
+                ticket.TextoIzquierda(Convert.ToDateTime(lticketprint[0].FECPEN).ToString("dd/MM/yyyy") +  " " + lticketprint[0].horent);
+                ticket.TextoIzquierda(lticketprint[0].pesob + " KG. BRUTO");
+                ticket.TextoIzquierda("FECHA Y HORA SALIDA");
+                ticket.TextoIzquierda(lticketprint[0].fecpes + " " + lticketprint[0].horsal);
+                ticket.TextoIzquierda(lticketprint[0].peson + " KG. NETO");
+                ticket.TextoIzquierda(lticketprint[0].pesotara + " KG. TARA");
+                ticket.TextoCentro("* * * * ORIGEN Y COPIA * * * *");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(lticketprint[0].pesob + " KG. BRUTO");
+                ticket.TextoIzquierda(lticketprint[0].pesotara + " KG. TARA");
+                ticket.TextoIzquierda("--------------------");
+                ticket.TextoIzquierda(lticketprint[0].peson + " KG. NETO");
+                ticket.TextoIzquierda(lticketprint[0].descto + " DESCTO");
+                ticket.TextoIzquierda(lticketprint[0].castigo + " CASTIGO");
+
+                //ticket.EncabezadoVenta();
+                ticket.lineasGuio();
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                //foreach (DataGridViewRow fila in dataGridView1.Rows)
+                //{
+                //    ticket.AgregaArticulo(fila.Cells[1].Value.ToString(), int.Parse(fila.Cells[0].Value.ToString()), decimal.Parse(fila.Cells[3].Value.ToString()));
+                //}
+                //ticket.lineasIgual();
+                //ticket.AgregarTotales("          TOTAL COMPRADO : $ ", decimal.Parse(txtCompra.Text));
+                //ticket.AgregarTotales("          TOTAL VENDIDO  : $ ", decimal.Parse(txtVenta.Text));
+                //ticket.TextoIzquierda(" ");
+                //ticket.AgregarTotales("          GANANCIA       : $ ", decimal.Parse(txtResultado.Text));
+                //ticket.TextoIzquierda(" ");
+                //ticket.TextoIzquierda(" ");
+                //ticket.TextoIzquierda(" ");
+                //ticket.TextoIzquierda(" ");
+                //ticket.TextoIzquierda(" ");
+                //ticket.TextoIzquierda(" ");
+                //ticket.CortaTicket();
+                ticket.ImprimirTicket(sPrinterdev);
+            }
+            catch (Exception eeee) { }
+
+        }
+
         #endregion
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -850,27 +964,6 @@ namespace scale_lite
 
 
 
-        }
-
-
-        private void simpleButton4_Click(object sender, EventArgs e)
-        {
-            int iAlza = 0;
-
-            if (textEdit4.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar el codigo de Alzadora a conectar..."); textEdit4.Text = string.Empty; return; }
-
-            if (int.TryParse(textEdit4.Text, out iAlza))
-            {
-
-                var lAlzad = llifting.Where(x => Convert.ToInt32(x.num_fle) == iAlza).ToList();
-
-                label7.Text = (iAlza > 0) ? lAlzad[0].nombre : "Sin Alzadora"; 
-
-            }
-            else
-            {
-                XtraMessageBox.Show("No es un valor valido identidad Alzadora...");
-            }
         }
 
         private void simpleButton3_Click(object sender, EventArgs e)
@@ -1076,6 +1169,12 @@ namespace scale_lite
                     string sArmado = procedure.stringexe(2, sActualiza, "b_ticket", " ticket = " + textEdit5.Text + " and zafra = " + izafra);
 
                     procedure.Executecmm(sArmado, sConexion);
+
+                   
+                    if (XtraMessageBox.Show("Imprime Ticket?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    {
+                        print_ticket(Convert.ToInt32(textEdit5.Text)); ;
+                    }
 
                     textEdit6.Text = string.Empty; textEdit8.Text = string.Empty; label13.Text = string.Empty; label14.Text = string.Empty;
                     gridControl1.DataSource = Headert();
@@ -1420,7 +1519,7 @@ namespace scale_lite
                     sCondicion = sCondicion + ", numavi = 20000, material = 1, peson = 0, pesot = 0, pesol = 0, pesob = " + textEdit3.Text;
                     sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") + "'";
                     sCondicion = sCondicion + ", nofecha =" + sNofecha;
-                    sCondicion = sCondicion + ", fecque = '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "', horque = '18:00'";
+                    sCondicion = sCondicion + ",  fecque = case when fecque is null then '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "' else fecque end,horque = case when horque is null then '18:00' else horque end ";
                     sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "'";
 
                     string sArmado = procedure.stringexe(2, sCondicion, "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
@@ -1607,6 +1706,44 @@ namespace scale_lite
         private void textEdit1_EditValueChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void simpleButton4_Click_1(object sender, EventArgs e)
+        {
+            int iAlza = 0;
+
+            if (textEdit4.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar el codigo de Alzadora a conectar..."); textEdit4.Text = string.Empty; return; }
+
+            if (int.TryParse(textEdit4.Text, out iAlza))
+            {
+
+                var lAlzad = llifting.Where(x => Convert.ToInt32(x.num_fle) == iAlza).ToList();
+
+                label7.Text = (iAlza > 0) ? lAlzad[0].nombre : "Sin Alzadora";
+
+            }
+            else
+            {
+                XtraMessageBox.Show("No es un valor valido identidad Alzadora...");
+            }
+        }
+
+        private void textEdit4_EditValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textEdit4_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                evaltklifting(textEdit4.Text);
+            }
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            print_ticket(Convert.ToInt32( toolStripTextBox3.Text));
         }
     }
 }

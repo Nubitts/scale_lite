@@ -308,8 +308,31 @@ namespace scale_lite
             public double castigo { get; set; }
             public string fecpes { get; set; }
             public string horsal { get; set; }
-
+            public double totaldescuento { get; set; }
+            public int alzadora { get; set; }
+            public double pesol { get; set; }
         }
+
+        public class assigndata
+        {
+            public int orden {get;set;}
+	        public int ticket { get; set; }
+	        public int zona { get; set; }
+	        public int fleter { get; set; }
+	        public string fullnamefleter { get; set; }
+	        public int lifting { get; set; }
+	        public string fullnamelifting { get; set; }
+	        public int harvest { get; set; }
+	        public string fullnameharvest { get; set; }
+        }
+
+        public class Root1
+        {
+            public bool error { get; set; }
+            public string message { get; set; }
+            public List<assigndata> registros { get; set; }
+        }
+
 
         #endregion
 

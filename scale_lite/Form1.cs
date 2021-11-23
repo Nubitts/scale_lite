@@ -12,9 +12,7 @@ using System.Data.SQLite;
 using DevExpress.XtraEditors.Controls;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
-using System.Drawing;
-using System.Drawing.Printing;
-using System.Runtime.InteropServices;
+using Newtonsoft.Json.Linq;
 
 namespace scale_lite
 {
@@ -40,6 +38,7 @@ namespace scale_lite
         public string sReadScale1;
         public string sReadScale2;
         public string sPrinterdev;
+        public string sApigetasig;
 
         public int counter = 0;
 
@@ -85,6 +84,8 @@ namespace scale_lite
         List<strucdata.headertick> lTicko = new List<strucdata.headertick>();
 
         List<strucdata.transporter> lTransporter = new List<strucdata.transporter>();
+
+        List<strucdata.assigndata> lasignacion = new List<strucdata.assigndata>();
 
         strucdata procedure = new strucdata();
 
@@ -132,12 +133,15 @@ namespace scale_lite
             scalercom1 = ConfigurationManager.AppSettings.Get("readlinecom1");
             scalercom2 = ConfigurationManager.AppSettings.Get("readlinecom2");
             sPrinterdev = ConfigurationManager.AppSettings.Get("printer");
+            sApigetasig = ConfigurationManager.AppSettings.Get("apiasign");
 
             sConexion = "Server=" + sServer + ";Port=" + sPort + ";Database=" + sDB + ";Uid=" + sUser + ";password= " + sPassword + ";";
 
             bLifeconecta = testconnect(sConexion);
 
             validate_files();
+
+            Obtainassigment();
 
             procedure.MakeStructure(sConexl);
 
@@ -152,6 +156,8 @@ namespace scale_lite
                 llifting = procedure.ConvertToList<strucdata.lifting>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'ALZD'", sConexion));
 
                 lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista, tipo_transp", "transpt", "", sConexion));
+
+                lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata", "", sConexion));
 
                 gridControl1.DataSource = Headert();
 
@@ -712,11 +718,27 @@ namespace scale_lite
 
                     var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
 
-                    textEdit2.Text = iFletero.ToString();
+                    if (lFrw.Count() > 0)
+                    {
+                        var lAsig = lasignacion.Where(x => x.fleter == iFletero).ToList();
 
-                    label6.Text = lFrw[0].nombre;
+                        textEdit2.Text = iFletero.ToString();
 
-                    textEdit1.Focus();
+                        label6.Text = lFrw[0].nombre;
+
+                        if (lAsig.Count() > 0)
+                        {
+                            fulldataticket(lAsig[0].ticket);
+                        }
+
+                        textEdit1.Focus();
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("No se encuentra dato de fletero reportar a Informatica/Credito...");
+                    }
+
+
                 }
             }
         }
@@ -740,11 +762,20 @@ namespace scale_lite
 
                     var lFrw = llifting.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
 
-                    textEdit4.Text = iFletero.ToString();
+                    if (lFrw.Count() > 0 )
+                    {
+                        textEdit4.Text = iFletero.ToString();
 
-                    label7.Text = lFrw[0].nombre;
+                        label7.Text = lFrw[0].nombre;
 
-                    textEdit3.Focus();
+                        textEdit3.Focus();
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("No se encuentra dato de alzadora, reportar a Informatica/Credito...");
+                    }
+
+
                 }
             }
         }
@@ -865,7 +896,7 @@ namespace scale_lite
             {
                  printticket.CrearTicket ticket = new printticket.CrearTicket();
 
-                string sCampos = "ticket,ordcte,codigo,nombre_p,grupo,nom_grupo,tipocanes,tabla,ciclo,fletero,fecpen,horent,pesob,peson,fecpes,HORSAL,pesotara,descto,castigo";
+                string sCampos = "ticket,ordcte,codigo,nombre_p,grupo,nom_grupo,tipocanes,tabla,ciclo,fletero,fecpen,horent,pesob,peson,fecpes,HORSAL as horsal,pesotara,descto,castigo,totaldescuento,alzadora,pesol";
 
                 var lticketprint = procedure.ConvertToList<strucdata.printtick>(procedure.Predata(1, sCampos, "vb_ticket", "ticket = " + iTicket.ToString(), sConexion));
 
@@ -882,26 +913,28 @@ namespace scale_lite
                 ticket.TextoIzquierda(" ");
                 ticket.TextoIzquierda("GRUPO    = " + lticketprint[0].grupo);
                 ticket.TextoIzquierda(lticketprint[0].nom_grupo);
+
                 ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda("TIPO     = " + lticketprint[0].tipocanes);
                 ticket.TextoIzquierda("TABLA    = " + lticketprint[0].tabla);
                 ticket.TextoIzquierda("CICLO    = " + lticketprint[0].ciclo);
                 ticket.TextoIzquierda("FLETERO  = " + lticketprint[0].fletero);
+                ticket.TextoIzquierda("ALZ/COSH = " + lticketprint[0].alzadora);
                 ticket.TextoIzquierda(" ");
                 ticket.TextoIzquierda("FECHA Y HORA ENTRADA");
                 ticket.TextoIzquierda(Convert.ToDateTime(lticketprint[0].FECPEN).ToString("dd/MM/yyyy") +  " " + lticketprint[0].horent);
-                ticket.TextoIzquierda(lticketprint[0].pesob + " KG. BRUTO");
+                ticket.TextoIzquierda(lticketprint[0].pesob.ToString("##,###") + " KG. BRUTO");
                 ticket.TextoIzquierda("FECHA Y HORA SALIDA");
-                ticket.TextoIzquierda(lticketprint[0].fecpes + " " + lticketprint[0].horsal);
-                ticket.TextoIzquierda(lticketprint[0].peson + " KG. NETO");
-                ticket.TextoIzquierda(lticketprint[0].pesotara + " KG. TARA");
-                ticket.TextoCentro("* * * * ORIGEN Y COPIA * * * *");
+                ticket.TextoIzquierda(Convert.ToDateTime( lticketprint[0].fecpes).ToString("dd/MM/yyyy") + " " + lticketprint[0].horsal);
+                ticket.TextoIzquierda(lticketprint[0].pesotara.ToString("##,###") + " KG. TARA");
+
                 ticket.TextoIzquierda(" ");
-                ticket.TextoIzquierda(lticketprint[0].pesob + " KG. BRUTO");
-                ticket.TextoIzquierda(lticketprint[0].pesotara + " KG. TARA");
+                ticket.TextoIzquierda(lticketprint[0].pesob.ToString("##,###") + " KG. BRUTO");
+                ticket.TextoIzquierda(lticketprint[0].pesotara.ToString("##,###") + " KG. TARA");
                 ticket.TextoIzquierda("--------------------");
-                ticket.TextoIzquierda(lticketprint[0].peson + " KG. NETO");
-                ticket.TextoIzquierda(lticketprint[0].descto + " DESCTO");
-                ticket.TextoIzquierda(lticketprint[0].castigo + " CASTIGO");
+                ticket.TextoIzquierda(lticketprint[0].peson.ToString("##,###") + " KG. NETO");
+                ticket.TextoIzquierda(lticketprint[0].totaldescuento.ToString("##,###") + " kgs. " + lticketprint[0].descto.ToString("0#") + "% DESCTO");
+                ticket.TextoIzquierda(lticketprint[0].pesol.ToString("##,###") + " Peso liq");
 
                 //ticket.EncabezadoVenta();
                 ticket.lineasGuio();
@@ -931,6 +964,110 @@ namespace scale_lite
             catch (Exception eeee) { }
 
         }
+
+        private void Obtainassigment()
+        {
+            apilayer Contenedor = new apilayer();
+
+            string sResulta = Contenedor.ObtaingGet(sApigetasig, "getassign", "", "");
+
+            if (sResulta.Trim().Length > 0)
+            {
+                if (!sResulta.Contains("html"))
+                {
+
+                    var vDetails =  JObject.Parse(sResulta);
+
+                    var vRegistros = vDetails["registros"];
+
+                    string sRegistros = string.Empty;
+                    string sQuery = string.Empty;
+
+                    if (vRegistros is object || vRegistros.Count() > 0)
+                    {
+                        var model = Newtonsoft.Json.JsonConvert.DeserializeObject<strucdata.Root1>(sResulta);
+
+                        strucdata.Root1 Content3 = (strucdata.Root1)Container;
+
+                        List<strucdata.assigndata> lAsigFr = model.registros.ToList();
+
+                        List<strucdata.assigndata> lAsigHr = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata", "", sConexion));
+
+                        if (lAsigHr.Count() == 0)
+                        {
+                            foreach (var item in lAsigFr)
+                            {
+                                sRegistros = item.orden + ", " + item.ticket + ", " + item.zona + ", " + item.fleter + ", '" + item.fullnamefleter + "', " + item.lifting + ", '" + item.fullnamelifting + "', " + item.harvest + ", '" + item.fullnameharvest + "'";
+                                
+                                string sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata",sRegistros);
+
+                                procedure.Executecmm(sArmado, sConexion);
+
+                                lAsigHr.Add(new strucdata.assigndata { orden= item.orden, ticket = item.ticket, zona=item.zona,fleter=item.fleter,fullnamefleter=item.fullnamefleter,lifting=item.lifting,fullnamelifting=item.fullnamelifting,harvest=item.harvest,fullnameharvest=item.fullnameharvest});
+
+                            }
+                        }
+
+                        if (lAsigFr.Count() > lAsigHr.Count())
+                        {
+                            var lResulta = lAsigFr.Where(x => !lAsigHr.Any(y => x.ticket == y.ticket)).ToList();
+
+                            foreach (var item in lResulta)
+                            {
+                                sRegistros = item.orden + ", " + item.ticket + ", " + item.zona + ", " + item.fleter + ", '" + item.fullnamefleter + "', " + item.lifting + ", '" + item.fullnamelifting + "', " + item.harvest + ", '" + item.fullnameharvest + "'";
+
+                                string sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata", sRegistros);
+
+                                procedure.Executecmm(sArmado, sConexion);
+
+                            };
+
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+
+        private void fulldataticket(int iTicket)
+        {
+            var lAsig = lasignacion.Where(x => x.ticket ==iTicket).ToList();
+
+            label6.Text = lAsig[0].fullnamefleter;
+            textEdit4.Text = lAsig[0].lifting.ToString();
+            label7.Text = lAsig[0].fullnamelifting;
+
+            var lTicket = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob = 0 or pesob is null) and ticket = " + lAsig[0].ticket , sConexion));
+
+
+                if (lTicket.Count() > 0)
+                {
+                textEdit1.Text = iTicket.ToString();
+                    label2.Text = "Productor: " + lTicket[0].nombre_p + " Orden: " + lTicket[0].ordcte + " Grupo : " + lTicket[0].nom_grupo + " Tabla: " + lTicket[0].tabla + " Ciclo: " + lTicket[0].ciclo;
+                    simpleButton9.Focus();
+                }
+                else
+                {
+                    List<strucdata.ticketfree> lTicketE = new List<strucdata.ticketfree>();
+
+                    lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0) and ticket = " + lAsig[0].ticket, sConexion));
+
+                    if (lTicketE.Count() > 0)
+                    {
+                        XtraMessageBox.Show("Ya fue utilizado " + Convert.ToDateTime(lTicketE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketE[0].horent);
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("No se encuentra ticket!!!...");
+                    }
+
+                    CleanControls();
+                }
+
+        }
+
 
         #endregion
 
@@ -1171,7 +1308,7 @@ namespace scale_lite
                     procedure.Executecmm(sArmado, sConexion);
 
                    
-                    if (XtraMessageBox.Show("Imprime Ticket?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    if (XtraMessageBox.Show("Imprime Ticket?", "Confirme", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         print_ticket(Convert.ToInt32(textEdit5.Text)); ;
                     }
@@ -1187,6 +1324,7 @@ namespace scale_lite
             {
                 XtraMessageBox.Show("Debe anotar peso tara...");
             }
+            Obtainassigment();
 
         }
 
@@ -1537,6 +1675,7 @@ namespace scale_lite
             {
                 XtraMessageBox.Show("No es un valor valido Peso Inicial...");
             }
+            Obtainassigment();
         }
 
         private void textEdit2_EditValueChanged_1(object sender, EventArgs e)
@@ -1553,11 +1692,26 @@ namespace scale_lite
 
             if (int.TryParse(textEdit2.Text, out iFletero))
             {
+                var lAsig = lasignacion.Where(x => x.fleter == Convert.ToInt32(textEdit2.Text)).ToList();
 
-                var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
+                if (lAsig.Count() > 0)
+                {
+                    fulldataticket(lAsig[0].ticket);
+                }
+                else
+                {
+                    var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
 
-                label6.Text = lFrw[0].nombre;
-
+                    if (lFrw.Count() > 0)
+                    {
+                        label6.Text = lFrw[0].nombre;
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("No se encuentra el dato de fletero, reportar a Informatica/Credito...");
+                    }
+                    
+                }
             }
             else
             {
@@ -1719,7 +1873,14 @@ namespace scale_lite
 
                 var lAlzad = llifting.Where(x => Convert.ToInt32(x.num_fle) == iAlza).ToList();
 
-                label7.Text = (iAlza > 0) ? lAlzad[0].nombre : "Sin Alzadora";
+                if (lAlzad.Count() > 0)
+                {
+                    label7.Text = (iAlza > 0) ? lAlzad[0].nombre : "Sin Alzadora";
+                }
+                else
+                {
+                    XtraMessageBox.Show("No se encuentra dato de alzadora, reportar a Informatica/Credito...");
+                }
 
             }
             else

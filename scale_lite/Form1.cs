@@ -13,6 +13,7 @@ using DevExpress.XtraEditors.Controls;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace scale_lite
 {
@@ -178,9 +179,15 @@ namespace scale_lite
                 Directory.CreateDirectory(@"c:\data_scale");
             }
 
+            if (Directory.Exists(@"c:\logs") == false)
+            {
+                Directory.CreateDirectory(@"c:\logs");
+            }
+
             if (!File.Exists(@"c:\data_scale\scaleinca.db"))
             {
-               SQLiteConnection.CreateFile(@"c:\data_scale\scaleinca.db");           }
+               SQLiteConnection.CreateFile(@"c:\data_scale\scaleinca.db");               
+            }
         }
 
         public bool testconnect(string sConecta)
@@ -959,6 +966,9 @@ namespace scale_lite
                 //ticket.TextoIzquierda(" ");
                 //ticket.TextoIzquierda(" ");
                 //ticket.CortaTicket();
+
+                auditstrip(ticket.Contenidoticket());
+
                 ticket.ImprimirTicket(sPrinterdev);
             }
             catch (Exception eeee) { }
@@ -1052,19 +1062,50 @@ namespace scale_lite
                 {
                     List<strucdata.ticketfree> lTicketE = new List<strucdata.ticketfree>();
 
-                    lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0) and ticket = " + lAsig[0].ticket, sConexion));
+                    lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0 and peson == 0) and ticket = " + lAsig[0].ticket, sConexion));
 
                     if (lTicketE.Count() > 0)
                     {
-                        XtraMessageBox.Show("Ya fue utilizado " + Convert.ToDateTime(lTicketE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketE[0].horent);
+
+                        XtraMessageBox.Show("Ticket " + lTicketE[0].ticket + " en Batey " + Convert.ToDateTime(lTicketE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketE[0].horent);
+                        CleanControls();
                     }
                     else
                     {
-                        XtraMessageBox.Show("No se encuentra ticket!!!...");
+                      textEdit1.Focus();
                     }
 
-                    CleanControls();
+                    
                 }
+
+        }
+
+        public void auditstrip(string sContent)
+        {
+            string fileName = @"C:\logs\t" + DateTime.Today.ToString("yyyyMMdd") + ".log";
+            FileStream stream = null;
+            try
+            {
+                // Create a FileStream with mode CreateNew  
+                stream = new FileStream(fileName, FileMode.OpenOrCreate);
+                // Create a StreamWriter from FileStream  
+                using (StreamWriter writer = new StreamWriter(stream, Encoding.UTF8))
+                {
+                    writer.Write(sContent);
+                    //writer.WriteLine("C# Corner Authors");
+                    //writer.WriteLine("==================");
+                    //writer.WriteLine("Monica Rathbun");
+                    //writer.WriteLine("Vidya Agarwal");
+                    //writer.WriteLine("Mahesh Chand");
+                    //writer.WriteLine("Vijay Anand");
+                    //writer.WriteLine("Jignesh Trivedi");
+                }
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Dispose();
+            }
 
         }
 
@@ -1262,6 +1303,8 @@ namespace scale_lite
 
             if (textEdit6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar peso tara..."); textEdit3.Text = string.Empty; return; }
 
+            if (Convert.ToInt32( textEdit6.Text.Trim()) < 1) { XtraMessageBox.Show("Debe anotar peso tara...");return; }
+
             if (int.TryParse(textEdit6.Text, out iTara))
             {
                 if (XtraMessageBox.Show("Procede a dar salida a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
@@ -1300,7 +1343,7 @@ namespace scale_lite
                     sActualiza = sActualiza + ", totalcastigo = " + sTCast;
                     sActualiza = sActualiza + ", nofecha =" + sNofecha;
                     sActualiza = sActualiza + ", fecpes = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horsal = '" + DateTime.Now.ToString("HH:mm") + "', hora = " + DateTime.Now.ToString("HH");
-                    sActualiza = sActualiza + ", status = 'OK', diazafra = " + DiaZa.ToString()+ ", hr_code = " + iHorP + ", fechakk = '" + dFechakk + "', sal_usuario = '" + sUserC + "'";
+                    sActualiza = sActualiza + ", status = 'OK', diazafra = " + DiaZa.ToString()+ ", hr_code = " + iHorP + ", fechakk = '" + dFechakk + "', sal_usuario = '" + sUserC + "', exittime=now()";
 
 
                     string sArmado = procedure.stringexe(2, sActualiza, "b_ticket", " ticket = " + textEdit5.Text + " and zafra = " + izafra);
@@ -1658,7 +1701,7 @@ namespace scale_lite
                     sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") + "'";
                     sCondicion = sCondicion + ", nofecha =" + sNofecha;
                     sCondicion = sCondicion + ",  fecque = case when fecque is null then '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "' else fecque end,horque = case when horque is null then '18:00' else horque end ";
-                    sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "'";
+                    sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "', entrytime = now()";
 
                     string sArmado = procedure.stringexe(2, sCondicion, "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
 

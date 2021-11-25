@@ -50,6 +50,8 @@ namespace scale_lite
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel6 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripTextBox3 = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.gridControl1 = new DevExpress.XtraGrid.GridControl();
             this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
@@ -148,8 +150,6 @@ namespace scale_lite
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.label30 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.toolStripTextBox3 = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -357,6 +357,26 @@ namespace scale_lite
             this.toolStripLabel6.Size = new System.Drawing.Size(86, 22);
             this.toolStripLabel6.Text = "toolStripLabel6";
             // 
+            // toolStripTextBox3
+            // 
+            this.toolStripTextBox3.Enabled = false;
+            this.toolStripTextBox3.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.toolStripTextBox3.Name = "toolStripTextBox3";
+            this.toolStripTextBox3.Size = new System.Drawing.Size(100, 25);
+            this.toolStripTextBox3.Visible = false;
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton3.Enabled = false;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(42, 22);
+            this.toolStripButton3.Text = "Ticket";
+            this.toolStripButton3.Visible = false;
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
+            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 1;
@@ -364,12 +384,12 @@ namespace scale_lite
             this.tableLayoutPanel2.Controls.Add(this.gridControl1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.tabControl2, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(621, 13);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(504, 13);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 38.11728F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 61.88272F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(626, 707);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(743, 707);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
             // gridControl1
@@ -379,7 +399,7 @@ namespace scale_lite
             this.gridControl1.Location = new System.Drawing.Point(3, 3);
             this.gridControl1.MainView = this.gridView1;
             this.gridControl1.Name = "gridControl1";
-            this.gridControl1.Size = new System.Drawing.Size(620, 263);
+            this.gridControl1.Size = new System.Drawing.Size(737, 263);
             this.gridControl1.TabIndex = 0;
             this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
             this.gridView1});
@@ -400,7 +420,7 @@ namespace scale_lite
             this.tabControl2.Location = new System.Drawing.Point(3, 272);
             this.tabControl2.Name = "tabControl2";
             this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(620, 432);
+            this.tabControl2.Size = new System.Drawing.Size(737, 432);
             this.tabControl2.TabIndex = 1;
             // 
             // tabPage3
@@ -424,7 +444,7 @@ namespace scale_lite
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(612, 406);
+            this.tabPage3.Size = new System.Drawing.Size(729, 406);
             this.tabPage3.TabIndex = 0;
             this.tabPage3.Text = "Tara Caña";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -627,7 +647,7 @@ namespace scale_lite
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(538, 406);
+            this.tabPage4.Size = new System.Drawing.Size(729, 406);
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Salida Azucar";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -789,7 +809,7 @@ namespace scale_lite
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(538, 406);
+            this.tabPage6.Size = new System.Drawing.Size(729, 406);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "Petroleo";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1014,7 +1034,7 @@ namespace scale_lite
             this.tabControl1.Location = new System.Drawing.Point(3, 13);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(612, 707);
+            this.tabControl1.Size = new System.Drawing.Size(495, 707);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPage1
@@ -1040,7 +1060,7 @@ namespace scale_lite
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(604, 681);
+            this.tabPage1.Size = new System.Drawing.Size(487, 681);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Caña";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -1049,7 +1069,7 @@ namespace scale_lite
             // 
             this.simpleButton9.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.simpleButton9.Appearance.Options.UseFont = true;
-            this.simpleButton9.Location = new System.Drawing.Point(354, 502);
+            this.simpleButton9.Location = new System.Drawing.Point(250, 505);
             this.simpleButton9.Name = "simpleButton9";
             this.simpleButton9.Size = new System.Drawing.Size(153, 36);
             this.simpleButton9.TabIndex = 18;
@@ -1060,7 +1080,7 @@ namespace scale_lite
             // 
             this.simpleButton5.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.simpleButton5.Appearance.Options.UseFont = true;
-            this.simpleButton5.Location = new System.Drawing.Point(68, 593);
+            this.simpleButton5.Location = new System.Drawing.Point(68, 563);
             this.simpleButton5.Name = "simpleButton5";
             this.simpleButton5.Size = new System.Drawing.Size(153, 36);
             this.simpleButton5.TabIndex = 17;
@@ -1081,7 +1101,7 @@ namespace scale_lite
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label6.Location = new System.Drawing.Point(29, 50);
+            this.label6.Location = new System.Drawing.Point(29, 48);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(70, 27);
             this.label6.TabIndex = 15;
@@ -1120,7 +1140,7 @@ namespace scale_lite
             // 
             this.simpleButton3.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.simpleButton3.Appearance.Options.UseFont = true;
-            this.simpleButton3.Location = new System.Drawing.Point(268, 593);
+            this.simpleButton3.Location = new System.Drawing.Point(268, 563);
             this.simpleButton3.Name = "simpleButton3";
             this.simpleButton3.Size = new System.Drawing.Size(153, 36);
             this.simpleButton3.TabIndex = 10;
@@ -1129,7 +1149,7 @@ namespace scale_lite
             // 
             // textEdit3
             // 
-            this.textEdit3.Location = new System.Drawing.Point(197, 505);
+            this.textEdit3.Location = new System.Drawing.Point(93, 508);
             this.textEdit3.Name = "textEdit3";
             this.textEdit3.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.textEdit3.Properties.Appearance.Options.UseFont = true;
@@ -1142,7 +1162,7 @@ namespace scale_lite
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label4.Location = new System.Drawing.Point(22, 508);
+            this.label4.Location = new System.Drawing.Point(17, 478);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(160, 27);
             this.label4.TabIndex = 9;
@@ -1152,7 +1172,7 @@ namespace scale_lite
             // 
             this.simpleButton2.Location = new System.Drawing.Point(299, 19);
             this.simpleButton2.Name = "simpleButton2";
-            this.simpleButton2.Size = new System.Drawing.Size(75, 23);
+            this.simpleButton2.Size = new System.Drawing.Size(75, 22);
             this.simpleButton2.TabIndex = 5;
             this.simpleButton2.Text = "Validar";
             this.simpleButton2.Click += new System.EventHandler(this.simpleButton2_Click_1);
@@ -1162,8 +1182,10 @@ namespace scale_lite
             this.textEdit2.EditValue = "";
             this.textEdit2.Location = new System.Drawing.Point(82, 21);
             this.textEdit2.Name = "textEdit2";
+            this.textEdit2.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 11F);
+            this.textEdit2.Properties.Appearance.Options.UseFont = true;
             this.textEdit2.Properties.NullText = "Codigo de Fletero";
-            this.textEdit2.Size = new System.Drawing.Size(194, 20);
+            this.textEdit2.Size = new System.Drawing.Size(194, 24);
             this.textEdit2.TabIndex = 1;
             this.textEdit2.EditValueChanged += new System.EventHandler(this.textEdit2_EditValueChanged_1);
             this.textEdit2.EditValueChanging += new DevExpress.XtraEditors.Controls.ChangingEventHandler(this.textEdit2_EditValueChanging);
@@ -1183,7 +1205,7 @@ namespace scale_lite
             // 
             this.groupControl2.Controls.Add(this.radioButton4);
             this.groupControl2.Controls.Add(this.radioButton3);
-            this.groupControl2.Location = new System.Drawing.Point(307, 261);
+            this.groupControl2.Location = new System.Drawing.Point(150, 272);
             this.groupControl2.Name = "groupControl2";
             this.groupControl2.Size = new System.Drawing.Size(200, 100);
             this.groupControl2.TabIndex = 3;
@@ -1214,7 +1236,7 @@ namespace scale_lite
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label2.Location = new System.Drawing.Point(28, 129);
+            this.label2.Location = new System.Drawing.Point(29, 143);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(393, 115);
             this.label2.TabIndex = 3;
@@ -1222,7 +1244,7 @@ namespace scale_lite
             // 
             // simpleButton1
             // 
-            this.simpleButton1.Location = new System.Drawing.Point(299, 85);
+            this.simpleButton1.Location = new System.Drawing.Point(299, 93);
             this.simpleButton1.Name = "simpleButton1";
             this.simpleButton1.Size = new System.Drawing.Size(75, 23);
             this.simpleButton1.TabIndex = 2;
@@ -1232,7 +1254,7 @@ namespace scale_lite
             // textEdit1
             // 
             this.textEdit1.EditValue = "";
-            this.textEdit1.Location = new System.Drawing.Point(79, 84);
+            this.textEdit1.Location = new System.Drawing.Point(79, 92);
             this.textEdit1.Name = "textEdit1";
             this.textEdit1.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 11F);
             this.textEdit1.Properties.Appearance.Options.UseFont = true;
@@ -1267,7 +1289,7 @@ namespace scale_lite
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(532, 681);
+            this.tabPage2.Size = new System.Drawing.Size(487, 681);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Azucar";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1392,7 +1414,7 @@ namespace scale_lite
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(532, 681);
+            this.tabPage5.Size = new System.Drawing.Size(487, 681);
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "Petroleo";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -1450,8 +1472,8 @@ namespace scale_lite
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 49.51034F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.48966F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40.08F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 59.92F));
             this.tableLayoutPanel1.Controls.Add(this.tabControl1, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1462,22 +1484,6 @@ namespace scale_lite
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 98.47856F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1250, 723);
             this.tableLayoutPanel1.TabIndex = 2;
-            // 
-            // toolStripTextBox3
-            // 
-            this.toolStripTextBox3.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.toolStripTextBox3.Name = "toolStripTextBox3";
-            this.toolStripTextBox3.Size = new System.Drawing.Size(100, 25);
-            // 
-            // toolStripButton3
-            // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(42, 22);
-            this.toolStripButton3.Text = "Ticket";
-            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
             // Form1
             // 

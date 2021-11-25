@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -341,6 +342,11 @@ namespace scale_lite
                 RawPrinterHelper.SendStringToPrinter(impresora, linea.ToString()); //Imprime texto.
                                                                                    //linea.Clear();//Al cabar de imprimir limpia la linea de todo el texto agregado.
             }
+
+            public string Contenidoticket()
+            {
+                return linea.ToString();
+            }
         }
 
         //Clase para mandara a imprimir texto plano a la impresora
@@ -432,7 +438,9 @@ namespace scale_lite
                 SendBytesToPrinter(szPrinterName, pBytes, dwCount);
                 Marshal.FreeCoTaskMem(pBytes);
                 return true;
-            }
+            } 
+
+
         }
     }
 }

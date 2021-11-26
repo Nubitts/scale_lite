@@ -211,6 +211,13 @@ namespace scale_lite
         {
             textEdit1.Text = string.Empty; textEdit2.Text = string.Empty; textEdit3.Text = string.Empty; textEdit4.Text = string.Empty;
             label2.Text = string.Empty; label6.Text = string.Empty; label7.Text = string.Empty;
+
+            string sArmado = procedure.stringexe(4, "", "assigndata","");
+
+            procedure.Executecmm(sArmado, sConexion);
+
+            Obtainassigment();
+
             textEdit1.Focus();
 
         }
@@ -1062,7 +1069,7 @@ namespace scale_lite
                 {
                     List<strucdata.ticketfree> lTicketE = new List<strucdata.ticketfree>();
 
-                    lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0 and peson == 0) and ticket = " + lAsig[0].ticket, sConexion));
+                    lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0 and peson = 0) and ticket = " + lAsig[0].ticket, sConexion));
 
                     if (lTicketE.Count() > 0)
                     {
@@ -1546,8 +1553,6 @@ namespace scale_lite
 
             if (comboBoxEdit6.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener Conductor..."); return; }
             if (textBox7.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
-
-
 
             if (textBox10.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso tara..."); return; }
 

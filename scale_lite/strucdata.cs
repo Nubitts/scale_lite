@@ -82,6 +82,9 @@ namespace scale_lite
                 case 3:
                     sQuery = "insert " + sTabla + " (" + sCampos + ") values (" + sCondiciona + ")";
                     break;
+                case 4:
+                    sQuery = "delete from " + sTabla + sCondiciona;
+                    break;
             }
 
             return sQuery;

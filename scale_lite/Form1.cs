@@ -43,8 +43,8 @@ namespace scale_lite
 
         public int counter = 0;
 
-        public SerialPort port1 = new SerialPort("COM1", 2400, Parity.None, 7, StopBits.One);
-        public SerialPort port2 = new SerialPort("COM2", 2400, Parity.Even, 7, StopBits.One);
+        public SerialPort port1 = new SerialPort("COM3", 2400, Parity.None, 7, StopBits.One);
+        public SerialPort port2 = new SerialPort("COM4", 2400, Parity.Even, 7, StopBits.One);
 
         List<strucdata.users> lUsers = new List<strucdata.users>();
 
@@ -87,6 +87,10 @@ namespace scale_lite
         List<strucdata.transporter> lTransporter = new List<strucdata.transporter>();
 
         List<strucdata.assigndata> lasignacion = new List<strucdata.assigndata>();
+
+        List<strucdata.databurni> lticketburn = new List<strucdata.databurni>();
+
+        List<strucdata.tpunishment> lTablep = new List<strucdata.tpunishment>();
 
         strucdata procedure = new strucdata();
 
@@ -142,7 +146,7 @@ namespace scale_lite
 
             validate_files();
 
-            Obtainassigment();
+            CleanControls();
 
             procedure.MakeStructure(sConexl);
 
@@ -159,6 +163,10 @@ namespace scale_lite
                 lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista, tipo_transp", "transpt", "", sConexion));
 
                 lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata", "", sConexion));
+
+                lticketburn = procedure.ConvertToList<strucdata.databurni>(procedure.Predata(1, "ticket,tpocan,fecque,horque,typeburn", "databurn", "", sConexion));
+
+                lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
 
                 gridControl1.DataSource = Headert();
 
@@ -216,7 +224,12 @@ namespace scale_lite
 
             procedure.Executecmm(sArmado, sConexion);
 
+            sArmado = procedure.stringexe(4, "", "databurn", "");
+
+            procedure.Executecmm(sArmado, sConexion);
+
             Obtainassigment();
+            Obtaindataburn();
 
             textEdit1.Focus();
 
@@ -562,7 +575,7 @@ namespace scale_lite
 
                 switch(iPuerto)
                 {
-                    case 1:
+                    case 3:
                         if (!this.port1.IsOpen)
                         {
                             this.port1.Open();
@@ -573,7 +586,7 @@ namespace scale_lite
                             sPeso = "Vuelva a leer";
                         }
                         break;
-                    case 2:
+                    case 4:
                         if (!this.port2.IsOpen)
                         {
                             this.port2.Open();
@@ -605,7 +618,7 @@ namespace scale_lite
             {           
                 switch (iBascula)
                 {
-                    case 1:
+                    case 3:
                         if (this.port1.IsOpen)
                         {
                             string str2 = this.port1.ReadExisting();
@@ -636,17 +649,17 @@ namespace scale_lite
                             }
                             else
                             {
-                                sPeso = connectBasc(1);
+                                sPeso = connectBasc(3);
                             }
 
                             this.port1.Close();
                         }
                         else
                         {
-                            sPeso = connectBasc(1);
+                            sPeso = connectBasc(3);
                         }
                         break;
-                    case 2:
+                    case 4:
                         if (this.port2.IsOpen)
                         {
                             string str2 = this.port2.ReadExisting();
@@ -675,7 +688,7 @@ namespace scale_lite
                             }
                             else
                             {
-                                sPeso = connectBasc(2);
+                                sPeso = connectBasc(4);
                             }
 
                             this.port2.Close();
@@ -683,7 +696,7 @@ namespace scale_lite
                         }
                         else
                         {
-                            sPeso = connectBasc(2);
+                            sPeso = connectBasc(4);
                         }
                         break;
                 }
@@ -753,6 +766,19 @@ namespace scale_lite
                     }
 
 
+                }
+            }
+            else
+            {
+                var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == Convert.ToInt32(sString)).ToList();
+
+                if (lFrw.Count() > 0)
+                {
+                    label6.Text = lFrw[0].nombre;
+                }
+                else
+                {
+                    XtraMessageBox.Show("No se encuentra el dato de fletero, reportar a Informatica/Credito...");
                 }
             }
         }
@@ -910,7 +936,7 @@ namespace scale_lite
             {
                  printticket.CrearTicket ticket = new printticket.CrearTicket();
 
-                string sCampos = "ticket,ordcte,codigo,nombre_p,grupo,nom_grupo,tipocanes,tabla,ciclo,fletero,fecpen,horent,pesob,peson,fecpes,HORSAL as horsal,pesotara,descto,castigo,totaldescuento,alzadora,pesol";
+                string sCampos = "ticket,ordcte,codigo,nombre_p,grupo,nom_grupo,tipocanes,tabla,ciclo,fletero,fecpen,horent,pesob,peson,fecpes,HORSAL as horsal,pesotara,descto,castigo,totaldescuento,alzadora,pesol,totalcastigo";
 
                 var lticketprint = procedure.ConvertToList<strucdata.printtick>(procedure.Predata(1, sCampos, "vb_ticket", "ticket = " + iTicket.ToString(), sConexion));
 
@@ -948,6 +974,11 @@ namespace scale_lite
                 ticket.TextoIzquierda("--------------------");
                 ticket.TextoIzquierda(lticketprint[0].peson.ToString("##,###") + " KG. NETO");
                 ticket.TextoIzquierda(lticketprint[0].totaldescuento.ToString("##,###") + " kgs. " + lticketprint[0].descto.ToString("0#") + "% DESCTO");
+                if (lticketprint[0].castigo >1)
+                {
+                   ticket.TextoIzquierda(lticketprint[0].totalcastigo.ToString("##,###") + " kgs. " + lticketprint[0].castigo.ToString("0#") + "% CASTIGO");
+                }
+                
                 ticket.TextoIzquierda(lticketprint[0].pesol.ToString("##,###") + " Peso liq");
 
                 //ticket.EncabezadoVenta();
@@ -1048,38 +1079,111 @@ namespace scale_lite
 
         }
 
+        private void Obtaindataburn()
+        {
+            apilayer Contenedor = new apilayer();
+
+            string sResulta = Contenedor.ObtaingGet(sApigetasig, "getdataburn", "", "");
+
+            if (sResulta.Trim().Length > 0)
+            {
+                if (!sResulta.Contains("html"))
+                {
+
+                    var vDetails = JObject.Parse(sResulta);
+
+                    var vRegistros = vDetails["registros"];
+
+                    string sRegistros = string.Empty;
+                    string sQuery = string.Empty;
+
+                    if (vRegistros is object || vRegistros.Count() > 0)
+                    {
+                        var model = Newtonsoft.Json.JsonConvert.DeserializeObject<strucdata.Root2>(sResulta);
+
+                        strucdata.Root2 Content3 = (strucdata.Root2)Container;
+
+                        List<strucdata.databurni> lAsigFr = model.registros.ToList();
+
+                        List<strucdata.databurni> lAsigHr = procedure.ConvertToList<strucdata.databurni>(procedure.Predata(1, "ticket,tpocan,fecque,horque,typeburn", "databurn", "", sConexion));
+
+                        if (lAsigHr.Count() == 0)
+                        {
+                            foreach (var item in lAsigFr)
+                            {
+                                sRegistros = item.ticket + ", '" + item.tpocan + "', '" + item.fecque + "', '" + item.horque + "', '" + item.typeburn + "'";
+
+                                string sArmado = procedure.stringexe(3, "ticket,tpocan,fecque,horque,typeburn", "databurn", sRegistros);
+
+                                procedure.Executecmm(sArmado, sConexion);
+
+                                lAsigHr.Add(new strucdata.databurni { ticket = item.ticket, tpocan = item.tpocan, fecque = item.fecque, horque = item.horque, typeburn = item.typeburn });
+
+                            }
+                        }
+
+                        if (lAsigFr.Count() > lAsigHr.Count())
+                        {
+                            var lResulta = lAsigFr.Where(x => !lAsigHr.Any(y => x.ticket == y.ticket)).ToList();
+
+                            foreach (var item in lResulta)
+                            {
+                                sRegistros = item.ticket + ", '" + item.tpocan + "', '" + item.fecque + "', '" + item.horque + "', '" + item.typeburn + "'";
+
+                                string sArmado = procedure.stringexe(3, "ticket,tpocan,fecque,horque,typeburn", "databurn", sRegistros);
+
+                                procedure.Executecmm(sArmado, sConexion);
+
+                            };
+
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+
         private void fulldataticket(int iTicket)
         {
             var lAsig = lasignacion.Where(x => x.ticket ==iTicket).ToList();
 
-            label6.Text = lAsig[0].fullnamefleter;
-            textEdit4.Text = lAsig[0].lifting.ToString();
-            label7.Text = lAsig[0].fullnamelifting;
-
-            var lTicket = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob = 0 or pesob is null) and ticket = " + lAsig[0].ticket , sConexion));
+            var lTicket = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (IFNULL(pesob,0) = 0 and IFNULL(peson,0) = 0) and ticket = " + lAsig[0].ticket , sConexion));
 
 
                 if (lTicket.Count() > 0)
                 {
-                textEdit1.Text = iTicket.ToString();
+
+                    var ltburn = lticketburn.Where(x => x.ticket == lTicket[0].ticket);
+
+                    if (ltburn.Count() > 0)
+                    {
+                       bool boResp =  Punishment(lAsig[0].ticket, ltburn.ToList());
+                    }
+
+                    textEdit1.Text = iTicket.ToString();
                     label2.Text = "Productor: " + lTicket[0].nombre_p + " Orden: " + lTicket[0].ordcte + " Grupo : " + lTicket[0].nom_grupo + " Tabla: " + lTicket[0].tabla + " Ciclo: " + lTicket[0].ciclo;
+                    label6.Text = lAsig[0].fullnamefleter;
+                    textEdit4.Text = lAsig[0].lifting.ToString();
+                    label7.Text = lAsig[0].fullnamelifting;
+
                     simpleButton9.Focus();
                 }
                 else
                 {
                     List<strucdata.ticketfree> lTicketE = new List<strucdata.ticketfree>();
 
-                    lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (pesob >0 and peson = 0) and ticket = " + lAsig[0].ticket, sConexion));
+                    lTicketE = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo, fecpes,horent", "b_ticket", "zafra = " + izafra.ToString() + " and (IFNULL(pesob,0) >0 and IFNULL(peson,0) = 0) and ticket = " + lAsig[0].ticket, sConexion));
 
                     if (lTicketE.Count() > 0)
                     {
-
-                        XtraMessageBox.Show("Ticket " + lTicketE[0].ticket + " en Batey " + Convert.ToDateTime(lTicketE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketE[0].horent);
+                        XtraMessageBox.Show("El Fletero tiene Ticket " + lTicketE[0].ticket + " en Batey " + Convert.ToDateTime(lTicketE[0].fecpes).ToString("dd/MM/yyyy") + " hora " + lTicketE[0].horent);
                         CleanControls();
                     }
                     else
                     {
-                      textEdit1.Focus();
+                        textEdit1.Focus();
                     }
 
                     
@@ -1116,6 +1220,69 @@ namespace scale_lite
 
         }
 
+        private Boolean Punishment(int iTicket, List<strucdata.databurni> daTicketmark)
+        {
+            bool boResp = false;
+
+            switch(daTicketmark[0].tpocan)
+            {
+                case "Q":
+                    radioButton3.Checked = true;
+                    break;
+                case "C":
+                    radioButton4.Checked = true;
+                    break;
+            }
+
+            string sV = "yyyy/MM/dd";
+
+            DateTime sDburn = Convert.ToDateTime(daTicketmark[0].fecque);
+
+            DateTime dtDateburn = DateTime.Parse(sDburn.ToString("yyyy/MM/dd") + " " + daTicketmark[0].horque);
+
+            int iDifhours = ((int)DateTime.Now.Subtract(dtDateburn).TotalHours);
+
+            var lTabpsiniend = lTablep.Where(x => x.typecane == daTicketmark[0].tpocan && x.typebourn == daTicketmark[0].typeburn && x.at_hour == 0).ToList();
+
+            int hoursmin = lTabpsiniend.Min(x => x.to_hour);
+            int hoursmax = lTabpsiniend.Max(x => x.to_hour);
+
+            var lTabps1 = lTablep.Where(x => x.typecane == daTicketmark[0].tpocan && x.typebourn == daTicketmark[0].typeburn &&  (iDifhours >= x.at_hour &&  iDifhours <= x.to_hour) ).ToList();
+
+            if (lTabps1.Count() > 0)
+            {
+                int iPdesc = lTabps1[0].percent_punish;
+
+                string sArmado = procedure.stringexe(2, "fecque = '" + dtDateburn.ToString("yyyy/MM/dd")+"', horque = '" + dtDateburn.ToString("HH:mm")  + "', exceedtimebourn = 0, percentpunish = " + iPdesc +", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+
+                procedure.Executecmm(sArmado, sConexion);
+
+            }
+            else
+            {
+                var lResul1 = lTabpsiniend.Where(x => x.to_hour <= iDifhours).ToList();
+                if (lResul1.Count> 0)
+                {
+                    int iPdesc = lResul1[0].percent_punish;
+
+                    string sArmado = procedure.stringexe(2, "fecque = '" + dtDateburn.ToString("yyyy/MM/dd") + "', horque = '" + dtDateburn.ToString("HH:mm") + "', exceedtimebourn = 0, percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+
+                    procedure.Executecmm(sArmado, sConexion);
+
+                }
+                else
+                {
+                   // XtraMessageBox.Show("Este ticket rebasa el tiempo maximo de horas definido en Orden de Quema....");
+
+                    string sArmado = procedure.stringexe(2, "fecque = '" + dtDateburn.ToString("yyyy/MM/dd") + "', horque = '" + dtDateburn.ToString("HH:mm") + "', exceedtimebourn = 1, diffhoursbourn = " + iDifhours , "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+
+                    procedure.Executecmm(sArmado, sConexion);
+
+                }
+            }
+
+            return boResp;
+        }
 
         #endregion
 
@@ -1318,6 +1485,22 @@ namespace scale_lite
                 {
                     string sActualiza = string.Empty;
 
+                    var lTicketS = procedure.ConvertToList<strucdata.tickettmp>(procedure.Predata(1, "ticket,pesob", "b_ticket", "zafra = " + izafra.ToString() + " and (IFNULL(pesob,0) >0 and IFNULL(peson,0) = 0) and ticket = " + textEdit5.Text, sConexion));
+
+                    if (lTicketS.Count() >0)
+                    {
+                        if (lTicketS[0].pesob == Convert.ToDouble( textEdit7.Text))
+                        {
+                            XtraMessageBox.Show("Existe error en Peso Bruto y Peso Neto favor de clarificar Peso Tara para continuar...");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("Existe un fallo en el ticket favor de avisar a Informatica...");
+                        return;
+                    }
+
                     int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
 
                     int iHorP = lhorlab.Where(x => x.hourd == iHora).ToList()[0].hourt;
@@ -1365,6 +1548,8 @@ namespace scale_lite
 
                     textEdit6.Text = string.Empty; textEdit8.Text = string.Empty; label13.Text = string.Empty; label14.Text = string.Empty;
                     gridControl1.DataSource = Headert();
+
+                    CleanControls();
 
 
                 }
@@ -1614,11 +1799,11 @@ namespace scale_lite
 
             switch(toolStripComboBox2.SelectedItem)
             {
-                case "COM1":
-                    iPuerto = 1;
+                case "COM3":
+                    iPuerto = 3;
                     break;
-                case "COM2":
-                    iPuerto = 2;
+                case "COM4":
+                    iPuerto = 4;
                     break;
                 case "INACTIVO":
                     iPuerto = 0;
@@ -1644,11 +1829,11 @@ namespace scale_lite
 
             switch (toolStripComboBox3.SelectedItem)
             {
-                case "COM1":
-                    iPuerto = 1;
+                case "COM3":
+                    iPuerto = 3;
                     break;
-                case "COM2":
-                    iPuerto = 2;
+                case "COM4":
+                    iPuerto = 4;
                     break;
                 case "INACTIVO":
                     iPuerto = 0;
@@ -1745,6 +1930,11 @@ namespace scale_lite
                 if (lAsig.Count() > 0)
                 {
                     fulldataticket(lAsig[0].ticket);
+
+                    if (label2.Text.Trim().Length == 0)
+                    {
+                        evaltkforwarder(textEdit2.Text);
+                    }
                 }
                 else
                 {
@@ -1804,6 +1994,14 @@ namespace scale_lite
 
                 if (lfTicket.Count() > 0)
                 {
+
+                    var ltburn = lticketburn.Where(x => x.ticket == iTicketFr).ToList();
+
+                    if (ltburn.Count() > 0)
+                    {
+                        bool boResp = Punishment(iTicketFr, ltburn.ToList());
+                    }
+
                     label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
                 }
                 else
@@ -1858,6 +2056,13 @@ namespace scale_lite
 
                         if (lfTicket.Count() > 0)
                         {
+                            var ltburn = lticketburn.Where(x => x.ticket == iTicketFr);
+
+                            if (ltburn.Count() > 0)
+                            {
+                               bool boResp = Punishment(iTicketFr, ltburn.ToList());
+                            }
+
                             label2.Text = "Productor: " + lfTicket[0].nombre_p + " Orden: " + lfTicket[0].ordcte + " Grupo : " + lfTicket[0].nom_grupo + " Tabla: " + lfTicket[0].tabla + " Ciclo: " + lfTicket[0].ciclo;
                             textEdit1.Text = sRTicket;
 

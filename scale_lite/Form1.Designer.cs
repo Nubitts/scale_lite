@@ -314,12 +314,12 @@ namespace scale_lite
             // toolStripComboBox2
             // 
             this.toolStripComboBox2.Items.AddRange(new object[] {
-            "COM1",
-            "COM2",
+            "COM3",
+            "COM4",
             "INACTIVO"});
             this.toolStripComboBox2.Name = "toolStripComboBox2";
             this.toolStripComboBox2.Size = new System.Drawing.Size(121, 25);
-            this.toolStripComboBox2.Text = "COM1";
+            this.toolStripComboBox2.Text = "COM3";
             // 
             // toolStripLabel5
             // 
@@ -330,12 +330,12 @@ namespace scale_lite
             // toolStripComboBox3
             // 
             this.toolStripComboBox3.Items.AddRange(new object[] {
-            "COM1",
-            "COM2",
+            "COM3",
+            "COM4",
             "INACTIVO"});
             this.toolStripComboBox3.Name = "toolStripComboBox3";
             this.toolStripComboBox3.Size = new System.Drawing.Size(121, 25);
-            this.toolStripComboBox3.Text = "COM2";
+            this.toolStripComboBox3.Text = "COM4";
             // 
             // toolStripButton2
             // 
@@ -1069,9 +1069,9 @@ namespace scale_lite
             // 
             this.simpleButton9.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.simpleButton9.Appearance.Options.UseFont = true;
-            this.simpleButton9.Location = new System.Drawing.Point(250, 505);
+            this.simpleButton9.Location = new System.Drawing.Point(359, 429);
             this.simpleButton9.Name = "simpleButton9";
-            this.simpleButton9.Size = new System.Drawing.Size(153, 36);
+            this.simpleButton9.Size = new System.Drawing.Size(104, 36);
             this.simpleButton9.TabIndex = 18;
             this.simpleButton9.Text = " LECTURA";
             this.simpleButton9.Click += new System.EventHandler(this.simpleButton9_Click);
@@ -1080,7 +1080,7 @@ namespace scale_lite
             // 
             this.simpleButton5.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.simpleButton5.Appearance.Options.UseFont = true;
-            this.simpleButton5.Location = new System.Drawing.Point(68, 563);
+            this.simpleButton5.Location = new System.Drawing.Point(65, 495);
             this.simpleButton5.Name = "simpleButton5";
             this.simpleButton5.Size = new System.Drawing.Size(153, 36);
             this.simpleButton5.TabIndex = 17;
@@ -1091,7 +1091,7 @@ namespace scale_lite
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label7.Location = new System.Drawing.Point(17, 421);
+            this.label7.Location = new System.Drawing.Point(23, 381);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(70, 27);
             this.label7.TabIndex = 16;
@@ -1109,7 +1109,7 @@ namespace scale_lite
             // 
             // simpleButton4
             // 
-            this.simpleButton4.Location = new System.Drawing.Point(285, 379);
+            this.simpleButton4.Location = new System.Drawing.Point(293, 352);
             this.simpleButton4.Name = "simpleButton4";
             this.simpleButton4.Size = new System.Drawing.Size(75, 23);
             this.simpleButton4.TabIndex = 7;
@@ -1119,10 +1119,12 @@ namespace scale_lite
             // textEdit4
             // 
             this.textEdit4.EditValue = "";
-            this.textEdit4.Location = new System.Drawing.Point(68, 381);
+            this.textEdit4.Location = new System.Drawing.Point(82, 354);
             this.textEdit4.Name = "textEdit4";
+            this.textEdit4.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 11F);
+            this.textEdit4.Properties.Appearance.Options.UseFont = true;
             this.textEdit4.Properties.NullText = "Codigo de Alzadora";
-            this.textEdit4.Size = new System.Drawing.Size(194, 20);
+            this.textEdit4.Size = new System.Drawing.Size(194, 24);
             this.textEdit4.TabIndex = 6;
             this.textEdit4.EditValueChanged += new System.EventHandler(this.textEdit4_EditValueChanged);
             this.textEdit4.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textEdit4_KeyUp);
@@ -1130,7 +1132,7 @@ namespace scale_lite
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(17, 384);
+            this.label5.Location = new System.Drawing.Point(25, 357);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(49, 13);
             this.label5.TabIndex = 12;
@@ -1140,7 +1142,7 @@ namespace scale_lite
             // 
             this.simpleButton3.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.simpleButton3.Appearance.Options.UseFont = true;
-            this.simpleButton3.Location = new System.Drawing.Point(268, 563);
+            this.simpleButton3.Location = new System.Drawing.Point(242, 495);
             this.simpleButton3.Name = "simpleButton3";
             this.simpleButton3.Size = new System.Drawing.Size(153, 36);
             this.simpleButton3.TabIndex = 10;
@@ -1149,7 +1151,7 @@ namespace scale_lite
             // 
             // textEdit3
             // 
-            this.textEdit3.Location = new System.Drawing.Point(93, 508);
+            this.textEdit3.Location = new System.Drawing.Point(189, 432);
             this.textEdit3.Name = "textEdit3";
             this.textEdit3.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
             this.textEdit3.Properties.Appearance.Options.UseFont = true;
@@ -1162,7 +1164,7 @@ namespace scale_lite
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label4.Location = new System.Drawing.Point(17, 478);
+            this.label4.Location = new System.Drawing.Point(23, 435);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(160, 27);
             this.label4.TabIndex = 9;
@@ -1170,7 +1172,7 @@ namespace scale_lite
             // 
             // simpleButton2
             // 
-            this.simpleButton2.Location = new System.Drawing.Point(299, 19);
+            this.simpleButton2.Location = new System.Drawing.Point(299, 22);
             this.simpleButton2.Name = "simpleButton2";
             this.simpleButton2.Size = new System.Drawing.Size(75, 22);
             this.simpleButton2.TabIndex = 5;
@@ -1205,16 +1207,16 @@ namespace scale_lite
             // 
             this.groupControl2.Controls.Add(this.radioButton4);
             this.groupControl2.Controls.Add(this.radioButton3);
-            this.groupControl2.Location = new System.Drawing.Point(150, 272);
+            this.groupControl2.Location = new System.Drawing.Point(274, 272);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(200, 100);
+            this.groupControl2.Size = new System.Drawing.Size(189, 63);
             this.groupControl2.TabIndex = 3;
             this.groupControl2.Text = "Tipo de caña";
             // 
             // radioButton4
             // 
             this.radioButton4.AutoSize = true;
-            this.radioButton4.Location = new System.Drawing.Point(94, 46);
+            this.radioButton4.Location = new System.Drawing.Point(118, 35);
             this.radioButton4.Name = "radioButton4";
             this.radioButton4.Size = new System.Drawing.Size(54, 17);
             this.radioButton4.TabIndex = 4;
@@ -1225,7 +1227,7 @@ namespace scale_lite
             // 
             this.radioButton3.AutoSize = true;
             this.radioButton3.Checked = true;
-            this.radioButton3.Location = new System.Drawing.Point(16, 46);
+            this.radioButton3.Location = new System.Drawing.Point(23, 35);
             this.radioButton3.Name = "radioButton3";
             this.radioButton3.Size = new System.Drawing.Size(71, 17);
             this.radioButton3.TabIndex = 3;
@@ -1238,7 +1240,7 @@ namespace scale_lite
             this.label2.Font = new System.Drawing.Font("Tahoma", 16F);
             this.label2.Location = new System.Drawing.Point(29, 143);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(393, 115);
+            this.label2.Size = new System.Drawing.Size(434, 115);
             this.label2.TabIndex = 3;
             this.label2.Text = "label2";
             // 

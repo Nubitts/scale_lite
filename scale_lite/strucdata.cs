@@ -314,6 +314,7 @@ namespace scale_lite
             public double totaldescuento { get; set; }
             public int alzadora { get; set; }
             public double pesol { get; set; }
+            public double totalcastigo { get; set; }
         }
 
         public class assigndata
@@ -336,6 +337,39 @@ namespace scale_lite
             public List<assigndata> registros { get; set; }
         }
 
+        public class databurni
+        {
+            public int ticket { get; set; }
+            public string tpocan { get; set; }
+            public string fecque { get; set; }
+            public string horque { get; set; }
+            public string typeburn { get; set; }
+        }
+
+        public class Root2
+        {
+            public bool error { get; set; }
+            public string message { get; set; }
+            public List<databurni> registros { get; set; }
+        }
+
+        public class tickettmp
+        {
+            public int ticket { get; set; }
+            public double pesob { get; set; }
+            public string fecque { get; set; }
+            public string horque { get; set; }
+        }
+
+        public class tpunishment
+        {
+            public string  typecane { get; set; }
+            public string typebourn { get; set; }
+            public int at_hour { get; set; }
+            public int to_hour { get; set; }
+            public int percent_punish { get; set; }
+            public int subject_analisis { get; set; }
+        }
 
         #endregion
 

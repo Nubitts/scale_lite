@@ -1247,13 +1247,20 @@ namespace scale_lite
             int hoursmin = lTabpsiniend.Min(x => x.to_hour);
             int hoursmax = lTabpsiniend.Max(x => x.to_hour);
 
+            var lfticketbr = daTicketmark.Where(x => x.ticket == iTicket).ToList();
+
+            string sArmadopr = procedure.stringexe(2, "fecque = '" + dtDateburn.ToString("yyyy/MM/dd") + "', horque = '" + dtDateburn.ToString("HH:mm") + "'", "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+
+            procedure.Executecmm(sArmadopr, sConexion);
+
+
             var lTabps1 = lTablep.Where(x => x.typecane == daTicketmark[0].tpocan && x.typebourn == daTicketmark[0].typeburn &&  (iDifhours >= x.at_hour &&  iDifhours <= x.to_hour) ).ToList();
 
             if (lTabps1.Count() > 0)
             {
                 int iPdesc = lTabps1[0].percent_punish;
 
-                string sArmado = procedure.stringexe(2, "fecque = '" + dtDateburn.ToString("yyyy/MM/dd")+"', horque = '" + dtDateburn.ToString("HH:mm")  + "', exceedtimebourn = 0, percentpunish = " + iPdesc +", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                string sArmado = procedure.stringexe(2, "exceedtimebourn = 0, percentpunish = " + iPdesc +", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
                 procedure.Executecmm(sArmado, sConexion);
 
@@ -1265,16 +1272,16 @@ namespace scale_lite
                 {
                     int iPdesc = lResul1[0].percent_punish;
 
-                    string sArmado = procedure.stringexe(2, "fecque = '" + dtDateburn.ToString("yyyy/MM/dd") + "', horque = '" + dtDateburn.ToString("HH:mm") + "', exceedtimebourn = 0, percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                    string sArmado = procedure.stringexe(2, "exceedtimebourn = 0, percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
                     procedure.Executecmm(sArmado, sConexion);
 
                 }
                 else
                 {
-                   // XtraMessageBox.Show("Este ticket rebasa el tiempo maximo de horas definido en Orden de Quema....");
+                    XtraMessageBox.Show("Este ticket rebasa el tiempo maximo de horas definido en Orden de Quema....");
 
-                    string sArmado = procedure.stringexe(2, "fecque = '" + dtDateburn.ToString("yyyy/MM/dd") + "', horque = '" + dtDateburn.ToString("HH:mm") + "', exceedtimebourn = 1, diffhoursbourn = " + iDifhours , "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                    string sArmado = procedure.stringexe(2, "exceedtimebourn = 1, diffhoursbourn = " + iDifhours , "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
                     procedure.Executecmm(sArmado, sConexion);
 

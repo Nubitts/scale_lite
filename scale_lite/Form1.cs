@@ -162,7 +162,7 @@ namespace scale_lite
 
                 lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista, tipo_transp", "transpt", "", sConexion));
 
-                lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata", "", sConexion));
+                lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
 
                 lticketburn = procedure.ConvertToList<strucdata.databurni>(procedure.Predata(1, "ticket,tpocan,fecque,horque,typeburn", "databurn", "", sConexion));
 
@@ -217,8 +217,8 @@ namespace scale_lite
 
         private void CleanControls()
         {
-            textEdit1.Text = string.Empty; textEdit2.Text = string.Empty; textEdit3.Text = string.Empty; textEdit4.Text = string.Empty;
-            label2.Text = string.Empty; label6.Text = string.Empty; label7.Text = string.Empty;
+            textEdit1.Text = string.Empty; textEdit2.Text = string.Empty; textEdit3.Text = string.Empty; textEdit4.Text = string.Empty;textEdit8.Text = string.Empty;
+            label2.Text = string.Empty; label6.Text = string.Empty; label7.Text = string.Empty;textEdit9.Text = string.Empty;textEdit10.Text = string.Empty;
 
             string sArmado = procedure.stringexe(4, "", "assigndata","");
 
@@ -312,7 +312,7 @@ namespace scale_lite
 
                             if (gridView1.RowCount > 0)
                             {
-                                string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob";
+                                string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob, castigo";
 
                                 textEdit5.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
 
@@ -320,6 +320,7 @@ namespace scale_lite
 
                                 textEdit7.Text = lTicko[0].pesob.ToString();
                                 textEdit10.Text = lTicko[0].pesob.ToString();
+                                textEdit9.Text = lTicko[0].castigo.ToString();
                             }
                             break;
                     }
@@ -730,6 +731,22 @@ namespace scale_lite
         {
             string sEvalua = sString;
 
+            string sArmado = procedure.stringexe(4, "", "assigndata", "");
+
+            procedure.Executecmm(sArmado, sConexion);
+
+            Obtainassigment();
+
+            lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
+
+            sArmado = procedure.stringexe(4, "", "databurn", "");
+
+            procedure.Executecmm(sArmado, sConexion);
+
+            Obtaindataburn();
+
+            lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
+
             if (sEvalua.Substring(0, 1).ToUpper() == "Z")
             {
                 int iZafral = Convert.ToInt32(textEdit2.Text.Substring(1, 4));
@@ -830,6 +847,15 @@ namespace scale_lite
 
             string sRTicket = sTicket.Substring(iPos, sTicket.Length - iPos);
 
+            string sArmado = procedure.stringexe(4, "", "databurn", "");
+
+            procedure.Executecmm(sArmado, sConexion);
+
+            Obtaindataburn();
+
+            lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
+
+
             if (sTicket.Substring(0, 1).ToUpper() == "Z")
             {
 
@@ -842,6 +868,13 @@ namespace scale_lite
                 }
                 else
                 {
+
+                    var ltburn = lticketburn.Where(x => x.ticket == Convert.ToInt32(sRTicket)).ToList();
+
+                    if (ltburn.Count() > 0)
+                    {
+                        bool boResp = Punishment(Convert.ToInt32(sRTicket), ltburn.ToList());
+                    }
 
                     List<strucdata.ticketfree> lTicketf = new List<strucdata.ticketfree>();
 
@@ -1039,7 +1072,7 @@ namespace scale_lite
 
                         List<strucdata.assigndata> lAsigFr = model.registros.ToList();
 
-                        List<strucdata.assigndata> lAsigHr = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata", "", sConexion));
+                        List<strucdata.assigndata> lAsigHr = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
 
                         if (lAsigHr.Count() == 0)
                         {
@@ -1047,7 +1080,7 @@ namespace scale_lite
                             {
                                 sRegistros = item.orden + ", " + item.ticket + ", " + item.zona + ", " + item.fleter + ", '" + item.fullnamefleter + "', " + item.lifting + ", '" + item.fullnamelifting + "', " + item.harvest + ", '" + item.fullnameharvest + "'";
                                 
-                                string sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata",sRegistros);
+                                string sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata",sRegistros);
 
                                 procedure.Executecmm(sArmado, sConexion);
 
@@ -1064,7 +1097,7 @@ namespace scale_lite
                             {
                                 sRegistros = item.orden + ", " + item.ticket + ", " + item.zona + ", " + item.fleter + ", '" + item.fullnamefleter + "', " + item.lifting + ", '" + item.fullnamelifting + "', " + item.harvest + ", '" + item.fullnameharvest + "'";
 
-                                string sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "assigndata", sRegistros);
+                                string sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", sRegistros);
 
                                 procedure.Executecmm(sArmado, sConexion);
 
@@ -1147,6 +1180,7 @@ namespace scale_lite
 
         private void fulldataticket(int iTicket)
         {
+
             var lAsig = lasignacion.Where(x => x.ticket ==iTicket).ToList();
 
             var lTicket = procedure.ConvertToList<strucdata.ticketfree>(procedure.Predata(1, "ticket,nombre_p,ordcte, nom_grupo, tabla, ciclo", "b_ticket", "zafra = " + izafra.ToString() + " and (IFNULL(pesob,0) = 0 and IFNULL(peson,0) = 0) and ticket = " + lAsig[0].ticket , sConexion));
@@ -1244,49 +1278,54 @@ namespace scale_lite
 
             var lTabpsiniend = lTablep.Where(x => x.typecane == daTicketmark[0].tpocan && x.typebourn == daTicketmark[0].typeburn && x.at_hour == 0).ToList();
 
-            int hoursmin = lTabpsiniend.Min(x => x.to_hour);
-            int hoursmax = lTabpsiniend.Max(x => x.to_hour);
-
-            var lfticketbr = daTicketmark.Where(x => x.ticket == iTicket).ToList();
-
-            string sArmadopr = procedure.stringexe(2, "fecque = '" + dtDateburn.ToString("yyyy/MM/dd") + "', horque = '" + dtDateburn.ToString("HH:mm") + "'", "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
-
-            procedure.Executecmm(sArmadopr, sConexion);
-
-
-            var lTabps1 = lTablep.Where(x => x.typecane == daTicketmark[0].tpocan && x.typebourn == daTicketmark[0].typeburn &&  (iDifhours >= x.at_hour &&  iDifhours <= x.to_hour) ).ToList();
-
-            if (lTabps1.Count() > 0)
+            if (lTabpsiniend.Count() > 0)
             {
-                int iPdesc = lTabps1[0].percent_punish;
+                int hoursmin = lTabpsiniend.Min(x => x.to_hour);
+                int hoursmax = lTabpsiniend.Max(x => x.to_hour);
 
-                string sArmado = procedure.stringexe(2, "exceedtimebourn = 0, percentpunish = " + iPdesc +", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                var lfticketbr = daTicketmark.Where(x => x.ticket == iTicket).ToList();
 
-                procedure.Executecmm(sArmado, sConexion);
+                string sArmadopr = procedure.stringexe(2, "numavi = 1, fecque = '" + dtDateburn.ToString("yyyy/MM/dd") + "', horque = '" + dtDateburn.ToString("HH:mm") + "'", "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
-            }
-            else
-            {
-                var lResul1 = lTabpsiniend.Where(x => x.to_hour <= iDifhours).ToList();
-                if (lResul1.Count> 0)
+                procedure.Executecmm(sArmadopr, sConexion);
+
+
+                var lTabps1 = lTablep.Where(x => x.typecane == daTicketmark[0].tpocan && x.typebourn == daTicketmark[0].typeburn && (iDifhours >= x.at_hour && iDifhours <= x.to_hour)).ToList();
+
+                if (lTabps1.Count() > 0)
                 {
-                    int iPdesc = lResul1[0].percent_punish;
+                    int iPdesc = lTabps1[0].percent_punish;
 
-                    string sArmado = procedure.stringexe(2, "exceedtimebourn = 0, percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                    string sArmado = procedure.stringexe(2, "exceedtimebourn = 0,castigo = " + iPdesc + ", percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
                     procedure.Executecmm(sArmado, sConexion);
 
                 }
                 else
                 {
-                    XtraMessageBox.Show("Este ticket rebasa el tiempo maximo de horas definido en Orden de Quema....");
+                    var lResul1 = lTabpsiniend.Where(x => iDifhours <= x.to_hour ).ToList();
+                    if (lResul1.Count > 0)
+                    {
+                        int iPdesc = lResul1[0].percent_punish;
 
-                    string sArmado = procedure.stringexe(2, "exceedtimebourn = 1, diffhoursbourn = " + iDifhours , "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                        string sArmado = procedure.stringexe(2, "exceedtimebourn = 0, castigo = " + iPdesc + ", percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
-                    procedure.Executecmm(sArmado, sConexion);
+                        procedure.Executecmm(sArmado, sConexion);
 
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("Este ticket rebasa el tiempo maximo de horas definido en Orden de Quema....");
+
+                        string sArmado = procedure.stringexe(2, "exceedtimebourn = 1, percentpunish = 20, castigo = 20, diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+
+                        procedure.Executecmm(sArmado, sConexion);
+
+                    }
                 }
+
             }
+
 
             return boResp;
         }
@@ -1876,7 +1915,13 @@ namespace scale_lite
                 {
                     string sCondicion = string.Empty;
                     int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
-                    string sTipoc = (radioButton3.Checked) ? "Q'" : "C'";
+                    string sTipoc = (radioButton3.Checked==true) ? "Q'" : "C'";
+
+                    if (sTipoc.Trim().Length == 0)
+                    {
+                        XtraMessageBox.Show("Defina el tipo de caña antes de proseguir...");
+                        return;
+                    }
 
                     int iHorP = lhorlab.Where(x => x.hourd == iHora).ToList()[0].hourt;
 
@@ -1894,10 +1939,10 @@ namespace scale_lite
                     sCondicion = sCondicion + ", numalz = " + sNumalz;
                     sCondicion = sCondicion + ", tipque = 'P'";
                     sCondicion = sCondicion + ", tpocan = '" + sTipoc;
-                    sCondicion = sCondicion + ", numavi = 20000, material = 1, peson = 0, pesot = 0, pesol = 0, pesob = " + textEdit3.Text;
+                    sCondicion = sCondicion + ", numavi = case when fecque is null then 2000 else 1 end, material = 1, peson = 0, pesot = 0, pesol = 0, pesob = " + textEdit3.Text;
                     sCondicion = sCondicion + ", fecpen = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horent = '" + DateTime.Now.ToString("HH:mm") + "'";
                     sCondicion = sCondicion + ", nofecha =" + sNofecha;
-                    sCondicion = sCondicion + ",  fecque = case when fecque is null then '" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "' else fecque end,horque = case when horque is null then '18:00' else horque end ";
+                    sCondicion = sCondicion + ",  fecque = ifnull(fecque,'" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "'),horque = ifnull(horque,'18:00')";
                     sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "', entrytime = now()";
 
                     string sArmado = procedure.stringexe(2, sCondicion, "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
@@ -1932,6 +1977,23 @@ namespace scale_lite
 
             if (int.TryParse(textEdit2.Text, out iFletero))
             {
+
+                string sArmado = procedure.stringexe(4, "", "assigndata", "");
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                Obtainassigment();
+
+                lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
+
+                sArmado = procedure.stringexe(4, "", "databurn", "");
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                Obtaindataburn();
+
+                lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
+
                 var lAsig = lasignacion.Where(x => x.fleter == Convert.ToInt32(textEdit2.Text)).ToList();
 
                 if (lAsig.Count() > 0)
@@ -2001,6 +2063,13 @@ namespace scale_lite
 
                 if (lfTicket.Count() > 0)
                 {
+                    string sArmado = procedure.stringexe(4, "", "databurn", "");
+
+                    procedure.Executecmm(sArmado, sConexion);
+
+                    Obtaindataburn();
+
+                    lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
 
                     var ltburn = lticketburn.Where(x => x.ticket == iTicketFr).ToList();
 

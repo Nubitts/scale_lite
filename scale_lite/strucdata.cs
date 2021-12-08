@@ -213,6 +213,9 @@ namespace scale_lite
             [Display(Name = "Peso Bruto")]
             public int pesob { get; set; }
 
+            [Display(Name = "Castigo")]
+            public double castigo { get; set; }
+
         }
 
         public class dayzafra

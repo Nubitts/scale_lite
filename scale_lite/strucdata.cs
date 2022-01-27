@@ -173,6 +173,7 @@ namespace scale_lite
             public string ciclo { get; set; }
             public string fecpes { get; set; }
             public string horent { get; set; }
+            
         }
 
         public class forwarder
@@ -215,6 +216,37 @@ namespace scale_lite
 
             [Display(Name = "Castigo")]
             public double castigo { get; set; }
+
+            [Display(Name = "Descto")]
+            public double descto { get; set; }
+
+        }
+
+        public class headertick1
+        {
+            [Display(Name = "TIcket")]
+            public int ticket { get; set; }
+
+            [Display(Name = "Fletero")]
+            public string numtra { get; set; }
+
+            [Display(Name = "F. Entr")]
+            public string fecpen { get; set; }
+
+            [Display(Name = "H. Entr")]
+            public string horent { get; set; }
+
+            [Display(Name = "Grupo")]
+            public string nom_grupo { get; set; }
+
+            [Display(Name = "Peso Bruto")]
+            public int pesob { get; set; }
+
+            //[Display(Name = "Castigo")]
+            //public double castigo { get; set; }
+
+            //[Display(Name = "Descto")]
+            //public double descto { get; set; }
 
         }
 
@@ -362,6 +394,7 @@ namespace scale_lite
             public double pesob { get; set; }
             public string fecque { get; set; }
             public string horque { get; set; }
+            public double pesot { get; set; }
         }
 
         public class tpunishment
@@ -372,6 +405,65 @@ namespace scale_lite
             public int to_hour { get; set; }
             public int percent_punish { get; set; }
             public int subject_analisis { get; set; }
+        }
+
+        public class ticketot
+        {
+            public int ticket { get; set; }
+            public string tipo { get; set; }
+            public int bultos { get; set; }
+            public string transporte { get; set; }
+            public string chofer { get; set; }
+            public string placas { get; set; }
+            public string cliente { get; set; }
+            public string procedencia { get; set; }
+            public string remision { get; set; }
+            public int litros { get; set; }
+            public double pesob { get; set; }
+            public double pesot { get; set; }
+            public double peson { get; set; }
+            public double densidad { get; set; }
+            public string fecha { get; set; }
+            public string hora { get; set; }
+            public string producto { get; set; }
+        }
+
+        public class datazafra
+        {
+            public int zafra { get; set; }
+            public string zafra_ { get; set; }
+        }
+
+        public class others
+        {
+            public string producto { get; set; }
+        }
+
+        public class headerother
+        {
+            [Display(Name = "TIcket")]
+            public int ticket { get; set; }
+
+            [Display(Name = "Peso")]
+            public int peso { get; set; }
+
+            [Display(Name = "Entro")]
+            public string entro { get; set; }
+
+            [Display(Name = "Transportista")]
+            public string transportista { get; set; }
+
+            [Display(Name = "Fletero")]
+            public string fletero { get; set; }
+
+        }
+
+        public class qdrivers
+        {
+            public int id_transp { get; set; }
+            public string plates { get; set; }
+            public string driver { get; set; }
+            public int tarew { get; set; }
         }
 
         #endregion

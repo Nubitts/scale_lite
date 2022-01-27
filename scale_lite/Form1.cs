@@ -92,6 +92,10 @@ namespace scale_lite
 
         List<strucdata.tpunishment> lTablep = new List<strucdata.tpunishment>();
 
+        List<strucdata.datazafra> lDatazafra = new List<strucdata.datazafra>();
+
+        List<strucdata.qdrivers> lDroth = new List<strucdata.qdrivers>();
+
         strucdata procedure = new strucdata();
 
         public string sConexl = @"Data Source=c:\\data_scale\\scaleinca.db;Version=3;Compress=True;";
@@ -144,11 +148,11 @@ namespace scale_lite
 
             bLifeconecta = testconnect(sConexion);
 
-            validate_files();
+            //validate_files();
 
             CleanControls();
 
-            procedure.MakeStructure(sConexl);
+            //procedure.MakeStructure(sConexl);
 
             if (bLifeconecta)
             {
@@ -158,7 +162,7 @@ namespace scale_lite
 
                 lForward = procedure.ConvertToList<strucdata.forwarder>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'FLET'", sConexion));
 
-                llifting = procedure.ConvertToList<strucdata.lifting>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'ALZD'", sConexion));
+                llifting = procedure.ConvertToList<strucdata.lifting>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo in('ALZD','COSCH')", sConexion));
 
                 lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista, tipo_transp", "transpt", "", sConexion));
 
@@ -167,6 +171,10 @@ namespace scale_lite
                 lticketburn = procedure.ConvertToList<strucdata.databurni>(procedure.Predata(1, "ticket,tpocan,fecque,horque,typeburn", "databurn", "", sConexion));
 
                 lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
+
+                lDatazafra = procedure.ConvertToList<strucdata.datazafra>(procedure.Predata(1, "zafra,zafra_", "zafra", "actual = 1", sConexion));
+
+                lDroth = procedure.ConvertToList<strucdata.qdrivers>(procedure.Predata(1, "id_transp,plates,driver,tarew", "qdrivers", "", sConexion));
 
                 gridControl1.DataSource = Headert();
 
@@ -235,24 +243,27 @@ namespace scale_lite
 
         }
 
-        private BindingList<strucdata.headertick> Headert()
+        private BindingList<strucdata.headertick1> Headert()
         {
-            BindingList<strucdata.headertick> lResult = new BindingList<strucdata.headertick>();
+            BindingList<strucdata.headertick1> lResult = new BindingList<strucdata.headertick1>();
 
-            string sCampos = "ticket,numtra, fecpen, horent,nom_grupo, pesob";
+            string sCampos = "ticket,numtra, fecpen, horent,nom_grupo, pesob, castigo, descto";
 
             var lheadert = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, sCampos, "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0", sConexion));
 
             foreach(var Itm in lheadert)
             {
-                lResult.Add(new strucdata.headertick
+                lResult.Add(new strucdata.headertick1
                 {
                     ticket = Itm.ticket,
                     fecpen = Convert.ToDateTime( Itm.fecpen).ToString("yyyy-MM-dd"),
                     horent = Itm.horent,
                     nom_grupo = Itm.nom_grupo,
                     numtra = Itm.numtra,
-                    pesob = Itm.pesob
+                    pesob = Itm.pesob,
+                    //castigo = Itm.castigo,
+                    //descto = Itm.descto
+                   
                 });
             }
 
@@ -312,7 +323,7 @@ namespace scale_lite
 
                             if (gridView1.RowCount > 0)
                             {
-                                string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob, castigo";
+                                string sCampos = "ticket, fecpen, horent,nom_grupo,(select nombre from fleteros where num_fle = b.NUMTRA and seltipo = 'FLET' ) as fletero, pesob, castigo,descto";
 
                                 textEdit5.Text = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
 
@@ -321,7 +332,45 @@ namespace scale_lite
                                 textEdit7.Text = lTicko[0].pesob.ToString();
                                 textEdit10.Text = lTicko[0].pesob.ToString();
                                 textEdit9.Text = lTicko[0].castigo.ToString();
+                                textEdit8.Text = lTicko[0].descto.ToString();
                             }
+                            break;
+                        default:
+                            string sOpcions = toolStripComboBox1.Text;
+                            string sTable = string.Empty;
+
+                            string sFcampo = "pesot";
+
+                            switch (label50.Text.Trim().ToUpper())
+                            {
+                                case "MIEL":
+                                    sTable = "btkt_miel";
+                                    break;
+                                case "BIOMASA":
+                                    sTable = "btkt_bm";
+                                    sFcampo = "pesob";
+                                    break;
+                                case "CACHAZA":
+                                    sTable = "btkt_chz";
+                                    break;
+                                case "PROD QUIMICOS":
+                                    sTable = "btkt_otr";
+                                    break;
+                                case "OTROS":
+                                    sTable = "btkt_otr";
+                                    break;
+                            }
+
+                            string sCampozz = "ticket, " + sFcampo + " as peso, CONCAT_WS(' ',FECPEN,HORENT)as entrada, transportista, fletero";
+
+                            string sTickzz = this.gridView1.GetRowCellValue(e.FocusedRowHandle, gridView1.FocusedColumn).ToString();
+
+                            label51.Text = sTickzz;
+
+                            var lTickzz = procedure.ConvertToList<strucdata.headerother>(procedure.Predata(1, sCampozz, sTable, "zafra = " + izafra.ToString() + " and ticket = " + sTickzz, sConexion));
+
+                            label57.Text = lTickzz[0].peso.ToString();
+
                             break;
                     }
 
@@ -356,24 +405,27 @@ namespace scale_lite
 
                     int iPesoN = iPesob - Convert.ToInt32(textEdit6.Text);
 
-                    int iTd = 0; int iTc = 0;
+                    int iTd = 0; int iTc = 0; int iTpar = 0;
 
                     if (doDesc > 0)
                     {
 
                         double doTDesc = (doDesc / 100);
                         iTd = Convert.ToInt32(Math.Round((iPesoN * doTDesc), 0));
+                        iTpar = iPesoN - iTd;
                         label13.Text = iTd.ToString();
                     }
                     else
                     {
+                        iTpar = iPesoN;
                         label13.Text = string.Empty;
                     }
 
                     if (doCast > 0)
                     {
                         double doTcast = (doCast / 100);
-                        iTc = Convert.ToInt32(Math.Round((iPesoN * doTcast), 0));
+                        iTc = Convert.ToInt32(Math.Round((iTpar * doTcast), 0));
+                        iTpar = iTpar - iTc;
                         label14.Text = iTc.ToString();
                     }
                     else
@@ -382,7 +434,7 @@ namespace scale_lite
                     }
 
                     textEdit7.Text = iPesoN.ToString();
-                    textEdit10.Text = (iPesoN - (iTd + iTc)).ToString();
+                    textEdit10.Text = (iTpar).ToString();
 
                 }
 
@@ -393,6 +445,72 @@ namespace scale_lite
             }
 
         }
+
+        private void Totals1()
+        {
+            int iTara;
+
+            try //boque try con todas las operaciones
+            {
+
+                if (textEdit7.Text.Trim().Length == 0)
+                {
+                    textEdit7.Text = lTicko[0].pesob.ToString();
+                    textEdit10.Text = lTicko[0].pesob.ToString();
+                }
+
+                if (int.TryParse(textEdit6.Text, out iTara))
+                {
+
+                    int iPesob = lTicko[0].pesob;
+
+                    double doDesc = (textEdit8.Text.Trim().Length > 0) ? Convert.ToInt32(textEdit8.Text) : 0;
+
+                    double doCast = (textEdit9.Text.Trim().Length > 0) ? Convert.ToInt32(textEdit9.Text) : 0;
+
+                    int iPesoN = iPesob - Convert.ToInt32(textEdit6.Text);
+
+                    int iTd = 0; int iTc = 0; int iTpar = 0;
+
+                    if (doDesc > 0)
+                    {
+
+                        double doTDesc = (doDesc / 100);
+                        iTd = Convert.ToInt32(Math.Round((iPesoN * doTDesc), 0));
+                        iTpar = iPesoN - iTd;
+                        label13.Text = iTd.ToString();
+                    }
+                    else
+                    {
+                        iTpar = iPesoN;
+                        label13.Text = string.Empty;
+                    }
+
+                    if (doCast > 0)
+                    {
+                        double doTcast = (doCast / 100);
+                        iTc = Convert.ToInt32(Math.Round((iTpar * doTcast), 0));
+                        label14.Text = iTc.ToString();
+                    }
+                    else
+                    {
+                        label14.Text = string.Empty;
+                    }
+
+                    textEdit7.Text = iPesoN.ToString();
+                    textEdit10.Text = (iTpar).ToString();
+
+                }
+
+            }
+            catch (Exception ex) //bloque catch para captura de error
+            {
+                // string error = ex.Message; //acción para manejar el error
+            }
+
+        }
+
+
 
         private void PrepareData(int iOpcion)
         {
@@ -405,6 +523,86 @@ namespace scale_lite
 
             switch (iOpcion)
             {
+                case 3:
+
+                    textBox12.Text = string.Empty; comboBoxEdit8.Text = string.Empty;textEdit12.Text = string.Empty;comboBoxEdit7.Text = string.Empty;
+                    textBox14.Text = string.Empty;textBox14.Text = string.Empty;comboBoxEdit9.Text = string.Empty;label57.Text = string.Empty;label51.Text = string.Empty;label55.Text = string.Empty;
+
+                    comboBoxEdit7.Properties.Items.Clear();
+                    comboBoxEdit8.Properties.Items.Clear();
+                    comboBoxEdit9.Properties.Items.Clear();
+
+                    string sTabla = string.Empty;
+                    string sFieldcb = string.Empty;
+                    string sCondicion = string.Empty;
+                    int iFlOtros = 0;
+
+                    string sTipo = toolStripComboBox1.Text.Trim().ToUpper();
+
+                    switch (sTipo)
+                    {
+                        case "MIEL":
+                            sTabla = "btkt_miel";
+                            label58.Visible = false; comboBoxEdit9.Visible = false;
+                            break;
+                        case "BIOMASA":
+                            sTabla = "btkt_bm";
+                            label58.Visible = true; comboBoxEdit9.Visible = true; iFlOtros = 1;sFieldcb = "biomasa";
+                            break;
+                        case "CACHAZA":
+                            sTabla = "btkt_chz";
+                            label58.Visible = false; comboBoxEdit9.Visible = false;
+                            break;
+                        case "PROD QUIMICOS":
+                            sTabla = "btkt_otr";
+                            sCondicion = " and producto = 'PROD QUIMICOS'";
+                            label58.Visible = true;comboBoxEdit9.Visible = true;iFlOtros = 1; sFieldcb = "producto";
+                            break;
+                        case "OTROS":
+                            sTabla = "btkt_otr";
+                            label58.Visible = true; comboBoxEdit9.Visible = true;iFlOtros = 1; sFieldcb = "producto";
+                            break;
+                    }
+
+                    var ifpget1 = procedure.ConvertToList<strucdata.lastfcane>(procedure.Predata(1, "max(ticket) as ufol", sTabla, "zafra = " + izafra.ToString() + sCondicion, sConexion));
+
+                    int iFpet1= ifpget1[0].ufol + 1;
+
+                    textBox12.Text = iFpet1.ToString();
+
+                    ComboBoxItemCollection coll8 = comboBoxEdit8.Properties.Items;
+                    ComboBoxItemCollection coll7 = comboBoxEdit7.Properties.Items;
+                    ComboBoxItemCollection coll9 = comboBoxEdit9.Properties.Items;
+
+                    var lCarrier2 = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = '" +  sTipo + "'", sConexion));
+
+                    foreach (var Itm in lCarrier2)
+                    {
+                        coll7.Add(Itm.transportista);
+                    }
+
+                    var lForw2 = procedure.ConvertToList<strucdata.forwarders>(procedure.Predata(1, "nombre", "fleteros", "zafra = " + izafra.ToString() + " and nombre is not null group by nombre order by nombre", sConexion));
+
+                    foreach (var Itm in lForw2)
+                    {
+                        coll8.Add(Itm.nombre);
+                    }
+
+                    if ( iFlOtros ==1)
+                    {
+                        var lOthers = procedure.ConvertToList<strucdata.others>(procedure.Predata(1,sFieldcb  + " as producto ", sTabla, sFieldcb + " is not null group by " + sFieldcb + " order by " + sFieldcb, sConexion));
+
+                        foreach(var Itm in lOthers)
+                        {
+                            coll9.Add(Itm.producto);
+                        }
+
+                    }
+
+                    gridControl1.DataSource = HeaderOther(sTabla);
+
+
+                    break;
                 case 2:
 
                     toolStripComboBox1.Text = "PETROLEO";
@@ -426,9 +624,9 @@ namespace scale_lite
                     ComboBoxItemCollection coll5 = comboBoxEdit5.Properties.Items;
                     ComboBoxItemCollection coll6 = comboBoxEdit6.Properties.Items;
 
-                    var lCarrier1 = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = 'PETROLEO'", sConexion));
+                    var lCarrier = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = 'PETROLEO'", sConexion));
 
-                    foreach (var Itm in lCarrier1)
+                    foreach (var Itm in lCarrier)
                     {
                         coll4.Add(Itm.transportista);
                     }
@@ -503,9 +701,9 @@ namespace scale_lite
                         coll2.Add(Itm.nombre);
                     }
 
-                    var lCarrier = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = 'AZUCAR'", sConexion));
+                    var lCarrierx = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = 'AZUCAR'", sConexion));
 
-                    foreach (var Itm in lCarrier)
+                    foreach (var Itm in lCarrierx)
                     {
                         coll3.Add(Itm.transportista);
                     }
@@ -542,6 +740,30 @@ namespace scale_lite
 
             return lResult;
         }
+
+        private BindingList<strucdata.headerother> HeaderOther(string sTabla)
+        {
+            BindingList<strucdata.headerother> lResult = new BindingList<strucdata.headerother>();
+
+            string sCampos = "ticket, ifnull(pesob,pesot) as peso,CONCAT_WS(' ',FECPEN,HORENT) as entro,transportista,fletero";
+
+            var lheadert = procedure.ConvertToList<strucdata.headerother>(procedure.Predata(1, sCampos, sTabla, "zafra = " + izafra.ToString() + " and horsal is null order by ticket desc", sConexion));
+
+            foreach (var Itm in lheadert)
+            {
+                lResult.Add(new strucdata.headerother
+                {
+                    ticket = Itm.ticket,
+                    peso = Itm.peso,
+                    entro = Itm.entro,
+                    transportista = Itm.transportista,
+                    fletero = Itm.fletero
+                });
+            }
+
+            return lResult;
+        }
+
 
         private BindingList<strucdata.headertickpt> Headertpet()
         {
@@ -646,7 +868,7 @@ namespace scale_lite
                                 int myInt;
                                 bool isNumerical = int.TryParse(sResult, out myInt);
 
-                                sPeso = (isNumerical) ? CleanInput(sResult).Substring(0, 7) : "Vuelva a leer";
+                                sPeso = (isNumerical) ? CleanInput(sResult).Substring(0, 7) : "Vuelva a leer " + sTempo ;
                             }
                             else
                             {
@@ -685,7 +907,7 @@ namespace scale_lite
                                 int myInt;
                                 bool isNumerical = int.TryParse(sResult, out myInt);
 
-                                sPeso = (isNumerical) ? CleanInput(sResult).Substring(0, 5) : "Vuelva a leer";
+                                sPeso = (isNumerical) ? CleanInput(sResult).Substring(0, 5) : "Vuelva a leer " + sTempo; 
                             }
                             else
                             {
@@ -731,19 +953,19 @@ namespace scale_lite
         {
             string sEvalua = sString;
 
-            string sArmado = procedure.stringexe(4, "", "assigndata", "");
+            string sArmado = procedure.stringexe(4, "", "databurn", "");
+
+            procedure.Executecmm(sArmado, sConexion);
+
+            Obtaindataburn();
+
+            sArmado = procedure.stringexe(4, "", "assigndata", "");
 
             procedure.Executecmm(sArmado, sConexion);
 
             Obtainassigment();
 
             lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
-
-            sArmado = procedure.stringexe(4, "", "databurn", "");
-
-            procedure.Executecmm(sArmado, sConexion);
-
-            Obtaindataburn();
 
             lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
 
@@ -1296,7 +1518,7 @@ namespace scale_lite
                 {
                     int iPdesc = lTabps1[0].percent_punish;
 
-                    string sArmado = procedure.stringexe(2, "exceedtimebourn = 0,castigo = " + iPdesc + ", percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                    string sArmado = procedure.stringexe(2, "exceedtimebourn = 0,/* castigo = " + iPdesc + ",*/ percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
                     procedure.Executecmm(sArmado, sConexion);
 
@@ -1308,7 +1530,7 @@ namespace scale_lite
                     {
                         int iPdesc = lResul1[0].percent_punish;
 
-                        string sArmado = procedure.stringexe(2, "exceedtimebourn = 0, castigo = " + iPdesc + ", percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                        string sArmado = procedure.stringexe(2, "exceedtimebourn = 0, /* castigo = " + iPdesc + ",*/ percentpunish = " + iPdesc + ", diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
                         procedure.Executecmm(sArmado, sConexion);
 
@@ -1317,7 +1539,7 @@ namespace scale_lite
                     {
                         XtraMessageBox.Show("Este ticket rebasa el tiempo maximo de horas definido en Orden de Quema....");
 
-                        string sArmado = procedure.stringexe(2, "exceedtimebourn = 1, percentpunish = 20, castigo = 20, diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
+                        string sArmado = procedure.stringexe(2, "exceedtimebourn = 1, percentpunish = 20, /* castigo = 20 ,*/ diffhoursbourn = " + iDifhours, "b_ticket", "ticket = " + iTicket + " and zafra = " + izafra);
 
                         procedure.Executecmm(sArmado, sConexion);
 
@@ -1328,6 +1550,160 @@ namespace scale_lite
 
 
             return boResp;
+        }
+
+        private void print_ticket_o(int iTicket, string sTipo)
+        {
+
+            string sCampos = string.Empty;
+            string sTabla = string.Empty;
+
+            switch (sTipo.Trim().ToUpper())
+            {
+                case "AZUCAR":
+                    sTabla = "btkt_az";
+                    sCampos = "ticket, bultos,transportista as transporte,fletero as chofer,placas,cliente,pesot,pesob,peson,fecpes as fecha,horsal as hora";
+                    break;
+                case "PETROLEO":
+                    sTabla = "btkt_pet";
+                    sCampos = "ticket,transportista as transporte,fletero as chofer,placas,procedencia,remision,litros,pesob,pesot,peson,fecpes as fecha,horsal as hora,densidad";
+                    break;
+                default:
+
+                    switch (sTipo.Trim().ToUpper())
+                    {
+                        case "MIEL":
+                            sTabla = "btkt_miel";
+                            break;
+                        case "BIOMASA":
+                            sTabla = "btkt_bm";
+                            break;
+                        case "CACHAZA":
+                            sTabla = "btkt_chz";
+                            break;
+                        case "PROD QUIMICOS":
+                            sTabla = "btkt_otr";
+                            break;
+                        case "OTROS":
+                            sTabla = "btkt_otr";
+                            break;
+                    }
+
+                    sCampos = "ticket,transportista as transporte,fletero as chofer,placas,cliente,pesot,pesob,peson,fecpes as fecha,horsal as hora" + (sTipo.Trim().ToUpper() == "OTROS" || sTipo.Trim().ToUpper() == "PROD QUIMICOS" ? ", producto" :"" ) ;
+                    break;
+            }
+
+            var lticketprint = procedure.ConvertToList<strucdata.ticketot>(procedure.Predata(1, sCampos, sTabla, "ticket = " + iTicket.ToString() + " and zafra = (select zafra from zafra where actual = 1)", sConexion));
+
+            try
+            {
+                printticket.CrearTicket ticket = new printticket.CrearTicket();
+
+                ticket.TextoIzquierda(" ");
+                ticket.TextoCentro("INGENIO EL CARMEN SA DE CV");
+                ticket.TextoCentro("ZAFRA " + lDatazafra[0].zafra_);
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoCentro(sTipo.Trim().ToUpper());
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda("TICKET   = " + iTicket.ToString());
+
+                switch (sTipo.Trim().ToUpper())
+                {
+                    case "AZUCAR":
+                        ticket.TextoIzquierda("BULTOS   = " + lticketprint[0].bultos.ToString());
+                        break;
+                    case "OTROS": 
+                    case "PROD QUIMICOS":
+                        ticket.TextoIzquierda("PRODUCTO = " + lticketprint[0].producto.ToString());
+                        break;
+                }
+
+                ticket.TextoIzquierda("TRANSPORTISTA");
+                ticket.TextoIzquierda(lticketprint[0].transporte);
+                ticket.TextoIzquierda("OPERADOR");
+                ticket.TextoIzquierda(lticketprint[0].chofer);
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda("PLACAS    = " + lticketprint[0].placas);
+
+                switch (sTipo.Trim().ToUpper())
+                {
+                    case "AZUCAR":
+                        ticket.TextoIzquierda(" ");
+                        ticket.TextoIzquierda("CLIENTE");
+                        ticket.TextoIzquierda(lticketprint[0].cliente);
+                        ticket.TextoIzquierda(" ");
+                        ticket.TextoIzquierda("TARA  = " + lticketprint[0].pesot);
+                        ticket.TextoIzquierda("BRUTO = " + lticketprint[0].pesob);
+                        ticket.TextoIzquierda("NETO  = " + lticketprint[0].peson);
+                        break;
+                    case "PETROLEO":
+                        ticket.TextoIzquierda(" ");
+                        ticket.TextoIzquierda("PROCEDENCIA");
+                        ticket.TextoIzquierda(lticketprint[0].procedencia);
+                        ticket.TextoIzquierda("REMISION  = " + lticketprint[0].remision);
+                        ticket.TextoIzquierda("LITROS    = " + lticketprint[0].litros);
+                        ticket.TextoIzquierda(" ");
+                        ticket.TextoIzquierda("BRUTO = " + lticketprint[0].pesob);
+                        ticket.TextoIzquierda("TARA  = " + lticketprint[0].pesot);
+                        ticket.TextoIzquierda("NETO  = " + lticketprint[0].peson);
+                        ticket.TextoIzquierda(" ");
+                        ticket.TextoIzquierda("DENSIDAD = " + lticketprint[0].densidad);
+                        break;
+                    case "BIOMASA":
+                        ticket.TextoIzquierda(" ");
+                        ticket.TextoIzquierda("BRUTO = " + lticketprint[0].pesob);
+                        ticket.TextoIzquierda("TARA  = " + lticketprint[0].pesot);
+                        ticket.TextoIzquierda("NETO  = " + lticketprint[0].peson);
+                        break;
+                    default:
+                        ticket.TextoIzquierda(" ");
+                        ticket.TextoIzquierda("TARA  = " + lticketprint[0].pesot);
+                        ticket.TextoIzquierda("BRUTO = " + lticketprint[0].pesob);
+                        ticket.TextoIzquierda("NETO  = " + lticketprint[0].peson);
+                        break;
+                }
+
+                ticket.TextoIzquierda(" ");
+                ticket.TextoExtremos("FECHA : " + lticketprint[0].fecha, "HORA : " + lticketprint[0].hora);
+
+
+
+                //ticket.EncabezadoVenta();
+                ticket.lineasGuio();
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+                ticket.TextoIzquierda(" ");
+
+                auditstrip(ticket.Contenidoticket());
+
+                ticket.ImprimirTicket(sPrinterdev);
+            }
+            catch (Exception eeee) { }
+
+        }
+
+        private string readscaleauto()
+        {
+            string sPuerto = (string)toolStripComboBox2.SelectedItem;
+
+            int iPuerto = Convert.ToInt32(sPuerto.Substring(3, 1));
+
+            string sRespuesta = string.Empty;
+
+            if (iPuerto >0)
+            {
+                sRespuesta = readscales(iPuerto);
+            }
+            else
+            {
+                sRespuesta = "Determine puerto de bascula....";
+            }
+
+            return sRespuesta;
         }
 
         #endregion
@@ -1461,6 +1837,8 @@ namespace scale_lite
 
             CleanControls();
 
+            simpleButton13.Visible = false;
+
             switch(sOpcion)
             {
                 case "CAÑA":
@@ -1478,6 +1856,27 @@ namespace scale_lite
                     PrepareData(2);
                     tabControl1.SelectedTab = tabPage5;
                     tabControl2.SelectedTab = tabPage6;
+                    break;
+                default:
+                    tabControl1.SelectedTab = tabPage7;
+                    tabControl2.SelectedTab = tabPage8;
+                    label50.Text = sOpcion;
+
+                    if (sOpcion == "CACHAZA" || sOpcion == "OTROS")
+                    {
+                        simpleButton13.Visible = true;
+                    }
+
+                    if (sOpcion == "BIOMASA")
+                    {
+                        label46.Text = "Bruto"; label54.Text = "Bruto"; label59.Text = "Tara";label45.Text = "Proveedor";
+                    }
+                    else
+                    {
+                        label46.Text = "Tara"; label54.Text = "Tara"; label59.Text = "Bruto";label45.Text = "Transportista";
+                    }
+
+                    PrepareData(3);
                     break;
             }
         }
@@ -1530,6 +1929,12 @@ namespace scale_lite
                 if (XtraMessageBox.Show("Procede a dar salida a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
                 {
                     string sActualiza = string.Empty;
+
+                    //string sArmado = procedure.stringexe(4, "", "databurn", "");
+
+                    //procedure.Executecmm(sArmado, sConexion);
+
+                    Obtaindataburn();
 
                     var lTicketS = procedure.ConvertToList<strucdata.tickettmp>(procedure.Predata(1, "ticket,pesob", "b_ticket", "zafra = " + izafra.ToString() + " and (IFNULL(pesob,0) >0 and IFNULL(peson,0) = 0) and ticket = " + textEdit5.Text, sConexion));
 
@@ -1612,48 +2017,7 @@ namespace scale_lite
         private void simpleButton7_Click(object sender, EventArgs e)
         {
 
-            if (comboBoxEdit2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un chofer..."); return; }
-            if (textEdit11.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
-            if (comboBoxEdit3.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener transportista..."); return; }
-            if (textBox2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un cliente..."); return; }
 
-
-            if (XtraMessageBox.Show("Procede a dar entrada a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes)
-            {
-                return;
-            }
-
-            string sInserta = string.Empty;
-
-            var lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit3.Text && x.tipo_transp == "AZUCAR").ToList();
-
-            if (lIdtr.Count() == 0) { XtraMessageBox.Show("El transportista no es valido..."); return; }
-
-
-            int iTara = 0;
-
-            if (int.TryParse(textBox2.Text, out iTara))
-            {
-                int iIdtr = lIdtr[0].id_transp;
-                string sFen = DateTime.Now.ToString("yyyy-MM-dd");
-                string sHen = DateTime.Now.ToString("HH:mm");
-
-                string sCampos = "zafra,ticket,id_transp,transportista,fletero,placas,fecpen,horent,pesot,material,status,ent_usuario";
-
-                sInserta = izafra.ToString().Trim()+","+textBox1.Text.Trim()+","+iIdtr.ToString()+",'"+comboBoxEdit3.Text.Trim()+"','"+comboBoxEdit2.Text+"','"+textEdit11.Text+"',";
-                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iTara.ToString() + ",2,'PATIO', '" + sUserC + "'";
-
-                string sArmado = procedure.stringexe(3, sCampos, "btkt_az", sInserta);
-
-                procedure.Executecmm(sArmado, sConexion);
-
-                PrepareData(1);
-
-            }
-            else
-            {
-                XtraMessageBox.Show("El peso tara debe ser numerico...");
-            }
         }
 
         private void toolStripComboBox1_Click(object sender, EventArgs e)
@@ -1710,11 +2074,15 @@ namespace scale_lite
 
             procedure.Executecmm(sArmado, sConexion);
 
+            print_ticket_o(Convert.ToInt32(label29.Text), "AZUCAR");
+
             PrepareData(1);
 
             textBox3.Text = string.Empty;
             textBox4.Text = string.Empty;
             label24.Text = string.Empty;
+
+            
 
         }
 
@@ -1816,6 +2184,8 @@ namespace scale_lite
 
             string sArmado = procedure.stringexe(2, sActualiza, "btkt_pet", " ticket = " + label37.Text + " and zafra = " + izafra);
 
+            print_ticket_o(Convert.ToInt32(label37.Text), "PETROLEO");
+
             try
             {
                 procedure.Executecmm(sArmado, sConexion);
@@ -1840,59 +2210,33 @@ namespace scale_lite
 
         private void simpleButton9_Click(object sender, EventArgs e)
         {
+            string sRespuesta = readscaleauto();
+            int iLectura = 0;
 
-            int iPuerto = 0;
-
-            switch(toolStripComboBox2.SelectedItem)
+            if (int.TryParse(sRespuesta, out iLectura))
             {
-                case "COM3":
-                    iPuerto = 3;
-                    break;
-                case "COM4":
-                    iPuerto = 4;
-                    break;
-                case "INACTIVO":
-                    iPuerto = 0;
-                    break;
-            }
-
-            if (iPuerto > 0)
-            {
-              textEdit3.Text= readscales(iPuerto);
+                textEdit3.Text = sRespuesta;
             }
             else
             {
-                XtraMessageBox.Show("Determine puerto de bascula....");
+                
+                XtraMessageBox.Show(sRespuesta);
             }
-
-            
         }
 
         private void simpleButton10_Click(object sender, EventArgs e)
         {
+            string sRespuesta = readscaleauto();
+            int iLectura = 0;
 
-            int iPuerto = 0;
-
-            switch (toolStripComboBox3.SelectedItem)
+            if (int.TryParse(sRespuesta, out iLectura))
             {
-                case "COM3":
-                    iPuerto = 3;
-                    break;
-                case "COM4":
-                    iPuerto = 4;
-                    break;
-                case "INACTIVO":
-                    iPuerto = 0;
-                    break;
-            }
-
-            if (iPuerto > 0)
-            {
-                textEdit6.Text = readscales(iPuerto);
+                textEdit6.Text = sRespuesta;
             }
             else
             {
-                XtraMessageBox.Show("Determine puerto de bascula...");
+               
+                XtraMessageBox.Show(sRespuesta);
             }
 
         }
@@ -1913,6 +2257,13 @@ namespace scale_lite
 
                 if (XtraMessageBox.Show("Procede a guardar datos capturados?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
                 {
+
+                    string sArmado = procedure.stringexe(4, "", "databurn", "");
+
+                    procedure.Executecmm(sArmado, sConexion);
+
+                    Obtaindataburn();
+
                     string sCondicion = string.Empty;
                     int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
                     string sTipoc = (radioButton3.Checked==true) ? "Q'" : "C'";
@@ -1945,7 +2296,7 @@ namespace scale_lite
                     sCondicion = sCondicion + ",  fecque = ifnull(fecque,'" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "'),horque = ifnull(horque,'18:00')";
                     sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "', entrytime = now()";
 
-                    string sArmado = procedure.stringexe(2, sCondicion, "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
+                    sArmado = procedure.stringexe(2, sCondicion, "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
 
                     procedure.Executecmm(sArmado, sConexion);
 
@@ -1977,20 +2328,19 @@ namespace scale_lite
 
             if (int.TryParse(textEdit2.Text, out iFletero))
             {
+                string sArmado = procedure.stringexe(4, "", "databurn", "");
 
-                string sArmado = procedure.stringexe(4, "", "assigndata", "");
+                procedure.Executecmm(sArmado, sConexion);
+
+                Obtaindataburn();
+
+                sArmado = procedure.stringexe(4, "", "assigndata", "");
 
                 procedure.Executecmm(sArmado, sConexion);
 
                 Obtainassigment();
 
                 lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
-
-                sArmado = procedure.stringexe(4, "", "databurn", "");
-
-                procedure.Executecmm(sArmado, sConexion);
-
-                Obtaindataburn();
 
                 lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
 
@@ -2233,7 +2583,522 @@ namespace scale_lite
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            print_ticket(Convert.ToInt32( toolStripTextBox3.Text));
+            print_ticket_o(1,"AZUCAR");
+        }
+
+        private void simpleButton7_Click_1(object sender, EventArgs e)
+        {
+            if (comboBoxEdit2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un chofer..."); return; }
+            if (textEdit11.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
+            if (comboBoxEdit3.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener transportista..."); return; }
+            if (textBox2.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un cliente..."); return; }
+
+
+            if (XtraMessageBox.Show("Procede a dar entrada a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            string sInserta = string.Empty;
+
+            var lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit3.Text && x.tipo_transp == "AZUCAR").ToList();
+
+            if (lIdtr.Count() == 0) { XtraMessageBox.Show("El transportista no es valido..."); return; }
+
+
+            int iTara = 0;
+
+            if (int.TryParse(textBox2.Text, out iTara))
+            {
+                int iIdtr = lIdtr[0].id_transp;
+                string sFen = DateTime.Now.ToString("yyyy-MM-dd");
+                string sHen = DateTime.Now.ToString("HH:mm");
+
+                string sCampos = "zafra,ticket,id_transp,transportista,fletero,placas,fecpen,horent,pesot,material,status,ent_usuario";
+
+                sInserta = izafra.ToString().Trim() + "," + textBox1.Text.Trim() + "," + iIdtr.ToString() + ",'" + comboBoxEdit3.Text.Trim() + "','" + comboBoxEdit2.Text + "','" + textEdit11.Text + "',";
+                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iTara.ToString() + ",2,'PATIO', '" + sUserC + "'";
+
+                string sArmado = procedure.stringexe(3, sCampos, "btkt_az", sInserta);
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                PrepareData(1);
+
+            }
+            else
+            {
+                XtraMessageBox.Show("El peso tara debe ser numerico...");
+            }
+        }
+
+        private void simpleButton11_Click(object sender, EventArgs e)
+        {
+            if (comboBoxEdit8.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener un chofer..."); return; }
+            if (textEdit12.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener placas de la unidad..."); return; }
+            if (comboBoxEdit7.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener transportista..."); return; }
+            if (textBox11.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso ..."); return; }
+
+
+            if (XtraMessageBox.Show("Procede a dar entrada a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            string sInserta = string.Empty;
+
+            String sTipotr = (label50.Text.Trim().Length >= 12) ? label50.Text.Trim().Substring(0, 12): label50.Text;
+
+            var lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit7.Text && x.tipo_transp == sTipotr).ToList();
+
+            if (lIdtr.Count() == 0) {
+
+                if (XtraMessageBox.Show("No se encuentra el Transportista, se agrega al Catalogo?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
+                {
+                    string sFields = "id_transp,transportista,tipo_transp";
+
+                    string sTypeTag = string.Empty;
+
+                    if (label50.Text.Trim().Length >= 12)
+                    {
+                        sTypeTag = label50.Text.Substring(0, 12);
+                    }
+                    else
+                    {
+                        sTypeTag = label50.Text;
+                    }
+
+                    string sValues = "maxtranspt(), '" + comboBoxEdit7.Text + "', '" + sTypeTag + "'" ;
+
+                    string sArmy = procedure.stringexe(3, sFields, "transpt", sValues);
+
+                    procedure.Executecmm(sArmy, sConexion);
+
+                    lTransporter.Clear();
+
+                    lTransporter = procedure.ConvertToList<strucdata.transporter>(procedure.Predata(1, "id_transp, transportista, tipo_transp", "transpt", "", sConexion));
+
+                    lIdtr = lTransporter.Where(x => x.transportista == comboBoxEdit7.Text && x.tipo_transp == label50.Text).ToList();
+
+                }
+                   
+            }
+
+            var lDatot = lDroth.Where(x => x.plates == textEdit12.Text).ToList();
+
+            if (lDatot.Count() == 0 && label50.Text != "PROD QUIMICOS" )
+            {
+                if (XtraMessageBox.Show("Conservar la tara y el transportista para la proxima pesada?", "Confirme", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    string sCamposr = "id_transp,plates,driver,tarew";
+
+                    var lTransptt = lTransporter.Where(x => x.transportista == comboBoxEdit7.Text).ToList();
+
+                    string sValores = lTransptt[0].id_transp + ", '" + textEdit12.Text + "','" + comboBoxEdit8.Text + "'," + textBox11.Text;
+
+                    string sExetrns = procedure.stringexe(3, sCamposr, "qdrivers", sValores);
+
+                    procedure.Executecmm(sExetrns, sConexion);
+
+                    lDroth.Clear();
+
+                    lDroth = procedure.ConvertToList<strucdata.qdrivers>(procedure.Predata(1, "id_transp,plates,driver,tarew", "qdrivers", "", sConexion));
+
+                }
+            }
+            else
+            {
+
+                if (label50.Text != "PROD QUIMICOS")
+                {
+                    string sActua = "tarew = " + textBox11.Text;
+
+                    string sExetrns = procedure.stringexe(2, sActua, "qdrivers", "plates = '" + textEdit12.Text + "'");
+
+                    procedure.Executecmm(sExetrns, sConexion);
+
+                    lDroth.Clear();
+
+                    lDroth = procedure.ConvertToList<strucdata.qdrivers>(procedure.Predata(1, "id_transp,plates,driver,tarew", "qdrivers", "", sConexion));
+
+                }
+
+            }
+
+            int iTara = 0;
+
+            if (int.TryParse(textBox11.Text, out iTara))
+            {
+                string sTabdest = string.Empty;
+                string sMaterial = string.Empty;
+                string sFPeso = "pesot";
+
+                switch (label50.Text.Trim().ToUpper())
+                {
+                    case "MIEL":
+                        sTabdest = "btkt_miel";
+                        sMaterial = "7";
+                        break;
+                    case "BIOMASA":
+                        sTabdest = "btkt_bm";
+                        sMaterial = "6";
+                        sFPeso = "pesob";
+                        break;
+                    case "CACHAZA":
+                        sTabdest = "btkt_chz";
+                        sMaterial = "7";
+                        break;
+                    case "PROD QUIMICOS":
+                        sTabdest = "btkt_otr";
+                        sMaterial = "8";
+                        break;
+                    case "OTROS":
+                        sTabdest = "btkt_otr";
+                        sMaterial = "12";
+                        break;
+                }
+
+                int iIdtr = lIdtr[0].id_transp;
+                string sFen = DateTime.Now.ToString("yyyy-MM-dd");
+                string sHen = DateTime.Now.ToString("HH:mm");
+
+                string sCampos = "zafra,ticket,id_transp,transportista,fletero,placas,fecpen,horent,"+ sFPeso.Trim() + ",material,status,ent_usuario";
+
+                sInserta = izafra.ToString().Trim() + "," + textBox12.Text.Trim() + "," + iIdtr.ToString() + ",'" + comboBoxEdit7.Text.Trim() + "','" + comboBoxEdit8.Text + "','" + textEdit12.Text + "',";
+                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iTara.ToString() + "," + sMaterial + ",'PATIO', '" + sUserC + "'";
+
+                string sArmado = procedure.stringexe(3, sCampos, sTabdest, sInserta);
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                PrepareData(3);
+
+            }
+            else
+            {
+                XtraMessageBox.Show("El peso tara debe ser numerico...");
+            }
+        }
+
+        private void simpleButton12_Click(object sender, EventArgs e)
+        {
+            int iTara;
+
+            if (textBox14.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar peso tara...");  return; }
+
+            if (Convert.ToInt32(textBox14.Text.Trim()) < 1) { XtraMessageBox.Show("Debe anotar peso tara..."); return; }
+
+            if (label50.Text.Trim().ToUpper() == "OTROS" || label50.Text.Trim().ToUpper() == "PROD QUIMICOS")
+            {
+                if (comboBoxEdit9.Text.Trim().Length == 0) { XtraMessageBox.Show("Defina producto de salida..."); return; }
+            }
+
+            if (int.TryParse(textBox14.Text, out iTara))
+            {
+                if (XtraMessageBox.Show("Procede a dar salida a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
+                {
+                    string sActualiza = string.Empty;
+                    string sTabdest = string.Empty;
+                    string sFpeso = "pesot";
+
+
+
+                    switch(label50.Text.Trim().ToUpper())
+                    {
+                        case "MIEL":
+                            sTabdest = "btkt_miel";
+                            break;
+                        case "BIOMASA":
+                            sTabdest = "btkt_bm";
+                            break;
+                        case "CACHAZA":
+                            sTabdest = "btkt_chz";
+                            break;
+                        case "PROD QUIMICOS":
+                            sTabdest = "btkt_otr";
+                            break;
+                        case "OTROS":
+                            sTabdest = "btkt_otr";
+                            break;
+                    }
+
+                    if (label50.Text == "BIOMASA")
+                    {
+                        sFpeso = "pesob";
+                    }
+
+
+                    var lTicketS = procedure.ConvertToList<strucdata.tickettmp>(procedure.Predata(1, "ticket,"+ sFpeso , sTabdest, "zafra = " + izafra.ToString() + " and (IFNULL(" +sFpeso+ ",0) >0 and IFNULL(peson,0) = 0) and ticket = " + label51.Text, sConexion));
+
+                    if (lTicketS.Count() > 0)
+                    {
+                        if (lTicketS[0].pesot == Convert.ToDouble(textBox14.Text))
+                        {
+                            XtraMessageBox.Show("Existe error en Peso Bruto y Peso Neto favor de clarificar Peso...");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("Existe un fallo en el ticket favor de avisar a Informatica...");
+                        return;
+                    }
+
+                    int iHora = Convert.ToInt32(DateTime.Now.ToString("HH"));
+
+                    int iHorP = lhorlab.Where(x => x.hourd == iHora).ToList()[0].hourt;
+
+                    int iHour = Convert.ToInt32(DateTime.Now.ToString("HH"));
+
+                    TimeSpan tDifer = DateTime.Now - Convert.ToDateTime(dzafra);
+
+                    string sNofecha = DateTime.Now.ToString("yyMMdd");
+
+                    if (iHora < 6) { sNofecha = DateTime.Now.AddDays(-1).ToString("yyMMdd"); }
+
+                    var dFechakk = (iHora < 6) ? DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") : DateTime.Now.ToString("yyyy-MM-dd");
+
+                    int DiaZa = fzafra + tDifer.Days;
+
+                    if (iHora < 6) { DiaZa = fzafra + (tDifer.Days - 1); }
+
+                    if (label50.Text == "BIOMASA")
+                    {
+                        sFpeso = "pesot";
+                    }
+                    else
+                    {
+                        sFpeso = "pesob";
+                    }
+
+                    sActualiza = sFpeso + " = " + textBox14.Text; 
+                    sActualiza = sActualiza + ", peson = " + label55.Text;
+                    sActualiza = sActualiza + ", nofecha =" + sNofecha;
+
+                    if (label50.Text.Trim().ToUpper() == "OTROS" || label50.Text.Trim().ToUpper() == "PROD QUIMICOS")
+                    {
+                        sActualiza = sActualiza + ", producto = '" + comboBoxEdit9.Text + "'" ;
+                    }
+
+                    if (label50.Text.Trim().ToUpper() == "BIOMASA")
+                    {
+                        sActualiza = sActualiza + ", biomasa = '" + comboBoxEdit9.Text + "'";
+                    }
+
+
+                    sActualiza = sActualiza + ", fecpes = '" + DateTime.Now.ToString("yyyy-MM-dd") + "', horsal = '" + DateTime.Now.ToString("HH:mm") + "', hora = " + DateTime.Now.ToString("HH");
+                    sActualiza = sActualiza + ", status = 'OK', diazafra = " + DiaZa.ToString() + ", hr_code = " + iHorP + ", sal_usuario = '" + sUserC + "'";
+
+
+                    string sArmado = procedure.stringexe(2, sActualiza, sTabdest, " ticket = " + label51.Text + " and zafra = " + izafra);
+
+                    procedure.Executecmm(sArmado, sConexion);
+
+
+                    if (XtraMessageBox.Show("Imprime Ticket?", "Confirme", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        print_ticket_o(Convert.ToInt32(label51.Text),label50.Text); ;
+                    }
+
+                    label51.Text = string.Empty;label57.Text = string.Empty;textBox14.Text = string.Empty;label55.Text = string.Empty;comboBoxEdit9.Text = string.Empty;
+                    gridControl1.DataSource = HeaderOther(sTabdest);
+
+                    CleanControls();
+
+                }
+
+            }
+            else
+            {
+                XtraMessageBox.Show("Debe anotar peso tara...");
+            }
+            Obtainassigment();
+        }
+
+        private void textBox14_TextChanged(object sender, EventArgs e)
+        {
+            int iPesob = 0;
+
+            if (textBox14.Text.Trim().Length == 0) { return; }
+
+            if (int.TryParse(textBox14.Text, out iPesob))
+            {
+                if (label50.Text == "BIOMASA")
+                {
+                    label55.Text = (Convert.ToInt32(label57.Text) -  Convert.ToInt32(textBox14.Text)).ToString();
+                }
+                else
+                {
+                    label55.Text = (Convert.ToInt32(textBox14.Text) - Convert.ToInt32(label57.Text)).ToString();
+                }
+                
+            }
+            else
+            {
+                XtraMessageBox.Show("El peso debe ser numerico...");
+            }
+
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if (textBox8.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe contener peso definido..."); return; }
+
+
+            if (XtraMessageBox.Show("Procede a dar entrada a la unidad?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes) { return; }
+
+            string sInserta = string.Empty;
+
+            int iBruto = 0;
+
+            if (int.TryParse(textBox8.Text, out iBruto))
+            {
+
+
+                string sFen = DateTime.Now.ToString("yyyy-MM-dd");
+                string sHen = DateTime.Now.ToString("HH:mm");
+
+
+                string sCampos = "zafra,ticket,fecpen,horent,pesob,material,status,usuario";
+
+                sInserta = izafra.ToString().Trim() + "," + textBox5.Text.Trim() + ",";
+                sInserta = sInserta + "'" + sFen + "', '" + sHen + "', " + iBruto.ToString() + ",5,'PATIO', '" + sUserC + "'";
+
+                string sArmado = procedure.stringexe(3, sCampos, "btkt_pet", sInserta);
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                PrepareData(2);
+
+
+            }
+            else
+            {
+                XtraMessageBox.Show("El peso bruto debe ser numerico...");
+            }
+
+        }
+
+        private void simpleButton13_Click(object sender, EventArgs e)
+        {
+            if (comboBoxEdit7.Text.Trim().Length == 0) { XtraMessageBox.Show("Debe anotar codigo de transportista..."); return; }
+
+            int iTransp = 0;
+
+            if (int.TryParse(comboBoxEdit7.Text, out iTransp))
+            {
+                var lDataTr = lDroth.Where(x => x.id_transp == iTransp).ToList();
+
+                if (lDataTr.Count() == 0) { XtraMessageBox.Show("No existe el transportista, anote la descripcion en el mismo campo..."); simpleButton13.Visible = false;  return; }
+
+                textEdit12.Text = lDataTr[0].plates;
+                comboBoxEdit8.Text = lDataTr[0].driver;
+                textBox11.Text = lDataTr[0].tarew.ToString();
+                comboBoxEdit7.Text = lTransporter.Where(x => x.id_transp == iTransp).ToList()[0].transportista;
+            }
+
+
+        }
+
+        private void simpleButton14_Click(object sender, EventArgs e)
+        {
+            string sRespuesta = readscaleauto();
+            int iLectura = 0;
+
+            if (int.TryParse(sRespuesta, out iLectura))
+            {
+                textBox2.Text = sRespuesta;
+            }
+            else
+            {
+                
+                XtraMessageBox.Show(sRespuesta);
+            }
+
+        }
+
+        private void simpleButton15_Click(object sender, EventArgs e)
+        {
+            string sRespuesta = readscaleauto();
+            int iLectura = 0;
+
+            if (int.TryParse(sRespuesta, out iLectura))
+            {
+                textBox8.Text = sRespuesta;
+            }
+            else
+            {
+                
+                XtraMessageBox.Show(sRespuesta);
+            }
+
+        }
+
+        private void simpleButton16_Click(object sender, EventArgs e)
+        {
+            string sRespuesta = readscaleauto();
+            int iLectura = 0;
+
+            if (int.TryParse(sRespuesta, out iLectura))
+            {                
+                textBox11.Text = sRespuesta;
+            }
+            else
+            {
+                XtraMessageBox.Show(sRespuesta);
+            }
+
+        }
+
+        private void simpleButton17_Click(object sender, EventArgs e)
+        {
+            string sRespuesta = readscaleauto();
+            int iLectura = 0;
+
+            if (int.TryParse(sRespuesta, out iLectura))
+            {
+                
+                textBox3.Text = sRespuesta;
+            }
+            else
+            {
+                XtraMessageBox.Show(sRespuesta);
+            }
+        }
+
+        private void simpleButton18_Click(object sender, EventArgs e)
+        {
+            string sRespuesta = readscaleauto();
+            int iLectura = 0;
+
+            if (int.TryParse(sRespuesta, out iLectura))
+            {
+                textBox10.Text = sRespuesta;
+            }
+            else
+            {
+                
+                XtraMessageBox.Show(sRespuesta);
+            }
+
+        }
+
+        private void simpleButton19_Click(object sender, EventArgs e)
+        {
+
+            string sRespuesta = readscaleauto();
+            int iLectura = 0;
+
+            if (int.TryParse(sRespuesta, out iLectura))
+            {
+               
+                textBox14.Text = sRespuesta;
+            }
+            else
+            {
+                XtraMessageBox.Show(sRespuesta);
+            }
+
         }
     }
 }

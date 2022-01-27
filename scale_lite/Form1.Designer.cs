@@ -74,6 +74,7 @@ namespace scale_lite
             this.textEdit5 = new DevExpress.XtraEditors.TextEdit();
             this.label8 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.simpleButton17 = new DevExpress.XtraEditors.SimpleButton();
             this.label29 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
@@ -88,6 +89,7 @@ namespace scale_lite
             this.label21 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.simpleButton18 = new DevExpress.XtraEditors.SimpleButton();
             this.button2 = new System.Windows.Forms.Button();
             this.label43 = new System.Windows.Forms.Label();
             this.textBox9 = new System.Windows.Forms.TextBox();
@@ -109,6 +111,19 @@ namespace scale_lite
             this.label32 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
+            this.tabPage8 = new System.Windows.Forms.TabPage();
+            this.simpleButton19 = new DevExpress.XtraEditors.SimpleButton();
+            this.label51 = new System.Windows.Forms.Label();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label54 = new System.Windows.Forms.Label();
+            this.label55 = new System.Windows.Forms.Label();
+            this.simpleButton12 = new DevExpress.XtraEditors.SimpleButton();
+            this.label57 = new System.Windows.Forms.Label();
+            this.comboBoxEdit9 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.label58 = new System.Windows.Forms.Label();
+            this.label59 = new System.Windows.Forms.Label();
+            this.textBox14 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.simpleButton9 = new DevExpress.XtraEditors.SimpleButton();
@@ -132,6 +147,7 @@ namespace scale_lite
             this.textEdit1 = new DevExpress.XtraEditors.TextEdit();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.simpleButton14 = new DevExpress.XtraEditors.SimpleButton();
             this.comboBoxEdit3 = new DevExpress.XtraEditors.ComboBoxEdit();
             this.label25 = new System.Windows.Forms.Label();
             this.simpleButton7 = new DevExpress.XtraEditors.SimpleButton();
@@ -144,11 +160,27 @@ namespace scale_lite
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.simpleButton15 = new DevExpress.XtraEditors.SimpleButton();
             this.button1 = new System.Windows.Forms.Button();
             this.label36 = new System.Windows.Forms.Label();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.label30 = new System.Windows.Forms.Label();
+            this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.simpleButton16 = new DevExpress.XtraEditors.SimpleButton();
+            this.simpleButton13 = new DevExpress.XtraEditors.SimpleButton();
+            this.label50 = new System.Windows.Forms.Label();
+            this.comboBoxEdit7 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.label45 = new System.Windows.Forms.Label();
+            this.simpleButton11 = new DevExpress.XtraEditors.SimpleButton();
+            this.label46 = new System.Windows.Forms.Label();
+            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.textEdit12 = new DevExpress.XtraEditors.TextEdit();
+            this.label47 = new System.Windows.Forms.Label();
+            this.comboBoxEdit8 = new DevExpress.XtraEditors.ComboBoxEdit();
+            this.label48 = new System.Windows.Forms.Label();
+            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.label49 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -169,6 +201,8 @@ namespace scale_lite
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit6.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit5.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit4.Properties)).BeginInit();
+            this.tabPage8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit9.Properties)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEdit4.Properties)).BeginInit();
@@ -182,6 +216,10 @@ namespace scale_lite
             ((System.ComponentModel.ISupportInitialize)(this.textEdit11.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).BeginInit();
             this.tabPage5.SuspendLayout();
+            this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit7.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit12.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit8.Properties)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -359,22 +397,18 @@ namespace scale_lite
             // 
             // toolStripTextBox3
             // 
-            this.toolStripTextBox3.Enabled = false;
             this.toolStripTextBox3.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.toolStripTextBox3.Name = "toolStripTextBox3";
             this.toolStripTextBox3.Size = new System.Drawing.Size(100, 25);
-            this.toolStripTextBox3.Visible = false;
             // 
             // toolStripButton3
             // 
             this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton3.Enabled = false;
             this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton3.Name = "toolStripButton3";
             this.toolStripButton3.Size = new System.Drawing.Size(42, 22);
             this.toolStripButton3.Text = "Ticket";
-            this.toolStripButton3.Visible = false;
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
             // tableLayoutPanel2
@@ -416,6 +450,7 @@ namespace scale_lite
             this.tabControl2.Controls.Add(this.tabPage3);
             this.tabControl2.Controls.Add(this.tabPage4);
             this.tabControl2.Controls.Add(this.tabPage6);
+            this.tabControl2.Controls.Add(this.tabPage8);
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl2.Location = new System.Drawing.Point(3, 272);
             this.tabControl2.Name = "tabControl2";
@@ -631,6 +666,7 @@ namespace scale_lite
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.simpleButton17);
             this.tabPage4.Controls.Add(this.label29);
             this.tabPage4.Controls.Add(this.label28);
             this.tabPage4.Controls.Add(this.label27);
@@ -651,6 +687,17 @@ namespace scale_lite
             this.tabPage4.TabIndex = 1;
             this.tabPage4.Text = "Salida Azucar";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // simpleButton17
+            // 
+            this.simpleButton17.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton17.Appearance.Options.UseFont = true;
+            this.simpleButton17.Location = new System.Drawing.Point(433, 55);
+            this.simpleButton17.Name = "simpleButton17";
+            this.simpleButton17.Size = new System.Drawing.Size(153, 36);
+            this.simpleButton17.TabIndex = 42;
+            this.simpleButton17.Text = " LECTURA";
+            this.simpleButton17.Click += new System.EventHandler(this.simpleButton17_Click);
             // 
             // label29
             // 
@@ -785,6 +832,7 @@ namespace scale_lite
             // 
             // tabPage6
             // 
+            this.tabPage6.Controls.Add(this.simpleButton18);
             this.tabPage6.Controls.Add(this.button2);
             this.tabPage6.Controls.Add(this.label43);
             this.tabPage6.Controls.Add(this.textBox9);
@@ -813,6 +861,17 @@ namespace scale_lite
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "Petroleo";
             this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // simpleButton18
+            // 
+            this.simpleButton18.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton18.Appearance.Options.UseFont = true;
+            this.simpleButton18.Location = new System.Drawing.Point(250, 53);
+            this.simpleButton18.Name = "simpleButton18";
+            this.simpleButton18.Size = new System.Drawing.Size(153, 36);
+            this.simpleButton18.TabIndex = 54;
+            this.simpleButton18.Text = " LECTURA";
+            this.simpleButton18.Click += new System.EventHandler(this.simpleButton18_Click);
             // 
             // button2
             // 
@@ -907,7 +966,7 @@ namespace scale_lite
             // 
             this.label41.AutoSize = true;
             this.label41.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.label41.Location = new System.Drawing.Point(236, 60);
+            this.label41.Location = new System.Drawing.Point(448, 57);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(47, 22);
             this.label41.TabIndex = 27;
@@ -917,7 +976,7 @@ namespace scale_lite
             // 
             this.label42.AutoSize = true;
             this.label42.Font = new System.Drawing.Font("Tahoma", 16F);
-            this.label42.Location = new System.Drawing.Point(320, 56);
+            this.label42.Location = new System.Drawing.Point(532, 53);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(82, 27);
             this.label42.TabIndex = 26;
@@ -1024,11 +1083,159 @@ namespace scale_lite
             this.label40.TabIndex = 22;
             this.label40.Text = "label40";
             // 
+            // tabPage8
+            // 
+            this.tabPage8.Controls.Add(this.simpleButton19);
+            this.tabPage8.Controls.Add(this.label51);
+            this.tabPage8.Controls.Add(this.label52);
+            this.tabPage8.Controls.Add(this.label53);
+            this.tabPage8.Controls.Add(this.label54);
+            this.tabPage8.Controls.Add(this.label55);
+            this.tabPage8.Controls.Add(this.simpleButton12);
+            this.tabPage8.Controls.Add(this.label57);
+            this.tabPage8.Controls.Add(this.comboBoxEdit9);
+            this.tabPage8.Controls.Add(this.label58);
+            this.tabPage8.Controls.Add(this.label59);
+            this.tabPage8.Controls.Add(this.textBox14);
+            this.tabPage8.Location = new System.Drawing.Point(4, 22);
+            this.tabPage8.Name = "tabPage8";
+            this.tabPage8.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage8.Size = new System.Drawing.Size(729, 406);
+            this.tabPage8.TabIndex = 3;
+            this.tabPage8.Text = "Varios";
+            this.tabPage8.UseVisualStyleBackColor = true;
+            // 
+            // simpleButton19
+            // 
+            this.simpleButton19.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton19.Appearance.Options.UseFont = true;
+            this.simpleButton19.Location = new System.Drawing.Point(515, 64);
+            this.simpleButton19.Name = "simpleButton19";
+            this.simpleButton19.Size = new System.Drawing.Size(153, 36);
+            this.simpleButton19.TabIndex = 55;
+            this.simpleButton19.Text = " LECTURA";
+            this.simpleButton19.Click += new System.EventHandler(this.simpleButton19_Click);
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label51.Location = new System.Drawing.Point(109, 55);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(71, 22);
+            this.label51.TabIndex = 50;
+            this.label51.Text = "Label29";
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label52.Location = new System.Drawing.Point(109, 24);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(57, 22);
+            this.label52.TabIndex = 49;
+            this.label52.Text = "Ticket";
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label53.Location = new System.Drawing.Point(266, 119);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(47, 22);
+            this.label53.TabIndex = 48;
+            this.label53.Text = "Neto";
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label54.Location = new System.Drawing.Point(268, 24);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(45, 22);
+            this.label54.TabIndex = 47;
+            this.label54.Text = "Tara";
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.label55.Location = new System.Drawing.Point(400, 114);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(82, 27);
+            this.label55.TabIndex = 46;
+            this.label55.Text = "label55";
+            // 
+            // simpleButton12
+            // 
+            this.simpleButton12.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton12.Appearance.Options.UseFont = true;
+            this.simpleButton12.Location = new System.Drawing.Point(349, 312);
+            this.simpleButton12.Name = "simpleButton12";
+            this.simpleButton12.Size = new System.Drawing.Size(133, 45);
+            this.simpleButton12.TabIndex = 54;
+            this.simpleButton12.Text = "Salida";
+            this.simpleButton12.Click += new System.EventHandler(this.simpleButton12_Click);
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.label57.Location = new System.Drawing.Point(400, 24);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(82, 27);
+            this.label57.TabIndex = 44;
+            this.label57.Text = "label57";
+            // 
+            // comboBoxEdit9
+            // 
+            this.comboBoxEdit9.Location = new System.Drawing.Point(184, 227);
+            this.comboBoxEdit9.Name = "comboBoxEdit9";
+            this.comboBoxEdit9.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.comboBoxEdit9.Properties.Appearance.Options.UseFont = true;
+            this.comboBoxEdit9.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.comboBoxEdit9.Size = new System.Drawing.Size(323, 28);
+            this.comboBoxEdit9.TabIndex = 53;
+            this.comboBoxEdit9.Visible = false;
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label58.Location = new System.Drawing.Point(98, 230);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(80, 22);
+            this.label58.TabIndex = 42;
+            this.label58.Text = "Producto";
+            this.label58.Visible = false;
+            // 
+            // label59
+            // 
+            this.label59.AutoSize = true;
+            this.label59.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label59.Location = new System.Drawing.Point(266, 74);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(53, 22);
+            this.label59.TabIndex = 43;
+            this.label59.Text = "Bruto";
+            // 
+            // textBox14
+            // 
+            this.textBox14.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textBox14.Location = new System.Drawing.Point(346, 68);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox14.Size = new System.Drawing.Size(136, 28);
+            this.textBox14.TabIndex = 51;
+            this.textBox14.TextChanged += new System.EventHandler(this.textBox14_TextChanged);
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Enabled = false;
             this.tabControl1.Location = new System.Drawing.Point(3, 13);
@@ -1277,6 +1484,7 @@ namespace scale_lite
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.simpleButton14);
             this.tabPage2.Controls.Add(this.comboBoxEdit3);
             this.tabPage2.Controls.Add(this.label25);
             this.tabPage2.Controls.Add(this.simpleButton7);
@@ -1296,9 +1504,20 @@ namespace scale_lite
             this.tabPage2.Text = "Azucar";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // simpleButton14
+            // 
+            this.simpleButton14.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton14.Appearance.Options.UseFont = true;
+            this.simpleButton14.Location = new System.Drawing.Point(240, 367);
+            this.simpleButton14.Name = "simpleButton14";
+            this.simpleButton14.Size = new System.Drawing.Size(104, 36);
+            this.simpleButton14.TabIndex = 38;
+            this.simpleButton14.Text = " LECTURA";
+            this.simpleButton14.Click += new System.EventHandler(this.simpleButton14_Click);
+            // 
             // comboBoxEdit3
             // 
-            this.comboBoxEdit3.Location = new System.Drawing.Point(93, 311);
+            this.comboBoxEdit3.Location = new System.Drawing.Point(72, 312);
             this.comboBoxEdit3.Name = "comboBoxEdit3";
             this.comboBoxEdit3.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
             this.comboBoxEdit3.Properties.Appearance.Options.UseFont = true;
@@ -1326,12 +1545,13 @@ namespace scale_lite
             this.simpleButton7.Size = new System.Drawing.Size(133, 45);
             this.simpleButton7.TabIndex = 37;
             this.simpleButton7.Text = "Ingresa";
+            this.simpleButton7.Click += new System.EventHandler(this.simpleButton7_Click_1);
             // 
             // label20
             // 
             this.label20.AutoSize = true;
             this.label20.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.label20.Location = new System.Drawing.Point(125, 390);
+            this.label20.Location = new System.Drawing.Point(21, 381);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(45, 22);
             this.label20.TabIndex = 9;
@@ -1340,7 +1560,7 @@ namespace scale_lite
             // textBox2
             // 
             this.textBox2.Font = new System.Drawing.Font("Tahoma", 13F);
-            this.textBox2.Location = new System.Drawing.Point(209, 384);
+            this.textBox2.Location = new System.Drawing.Point(72, 375);
             this.textBox2.Name = "textBox2";
             this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textBox2.Size = new System.Drawing.Size(136, 28);
@@ -1408,6 +1628,7 @@ namespace scale_lite
             // 
             // tabPage5
             // 
+            this.tabPage5.Controls.Add(this.simpleButton15);
             this.tabPage5.Controls.Add(this.button1);
             this.tabPage5.Controls.Add(this.label36);
             this.tabPage5.Controls.Add(this.textBox8);
@@ -1421,6 +1642,17 @@ namespace scale_lite
             this.tabPage5.Text = "Petroleo";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // simpleButton15
+            // 
+            this.simpleButton15.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton15.Appearance.Options.UseFont = true;
+            this.simpleButton15.Location = new System.Drawing.Point(343, 65);
+            this.simpleButton15.Name = "simpleButton15";
+            this.simpleButton15.Size = new System.Drawing.Size(104, 36);
+            this.simpleButton15.TabIndex = 46;
+            this.simpleButton15.Text = " LECTURA";
+            this.simpleButton15.Click += new System.EventHandler(this.simpleButton15_Click);
+            // 
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Tahoma", 14F);
@@ -1430,6 +1662,7 @@ namespace scale_lite
             this.button1.TabIndex = 45;
             this.button1.Text = "Ingresar";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // label36
             // 
@@ -1470,6 +1703,172 @@ namespace scale_lite
             this.label30.Size = new System.Drawing.Size(57, 22);
             this.label30.TabIndex = 0;
             this.label30.Text = "Ticket";
+            // 
+            // tabPage7
+            // 
+            this.tabPage7.Controls.Add(this.simpleButton16);
+            this.tabPage7.Controls.Add(this.simpleButton13);
+            this.tabPage7.Controls.Add(this.label50);
+            this.tabPage7.Controls.Add(this.comboBoxEdit7);
+            this.tabPage7.Controls.Add(this.label45);
+            this.tabPage7.Controls.Add(this.simpleButton11);
+            this.tabPage7.Controls.Add(this.label46);
+            this.tabPage7.Controls.Add(this.textBox11);
+            this.tabPage7.Controls.Add(this.textEdit12);
+            this.tabPage7.Controls.Add(this.label47);
+            this.tabPage7.Controls.Add(this.comboBoxEdit8);
+            this.tabPage7.Controls.Add(this.label48);
+            this.tabPage7.Controls.Add(this.textBox12);
+            this.tabPage7.Controls.Add(this.label49);
+            this.tabPage7.Location = new System.Drawing.Point(4, 22);
+            this.tabPage7.Name = "tabPage7";
+            this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage7.Size = new System.Drawing.Size(487, 681);
+            this.tabPage7.TabIndex = 3;
+            this.tabPage7.Text = "Varios";
+            this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // simpleButton16
+            // 
+            this.simpleButton16.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton16.Appearance.Options.UseFont = true;
+            this.simpleButton16.Location = new System.Drawing.Point(265, 419);
+            this.simpleButton16.Name = "simpleButton16";
+            this.simpleButton16.Size = new System.Drawing.Size(104, 36);
+            this.simpleButton16.TabIndex = 51;
+            this.simpleButton16.Text = " LECTURA";
+            this.simpleButton16.Click += new System.EventHandler(this.simpleButton16_Click);
+            // 
+            // simpleButton13
+            // 
+            this.simpleButton13.Location = new System.Drawing.Point(365, 356);
+            this.simpleButton13.Name = "simpleButton13";
+            this.simpleButton13.Size = new System.Drawing.Size(101, 28);
+            this.simpleButton13.TabIndex = 50;
+            this.simpleButton13.Text = "Buscar";
+            this.simpleButton13.Visible = false;
+            this.simpleButton13.Click += new System.EventHandler(this.simpleButton13_Click);
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label50.Location = new System.Drawing.Point(110, 18);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(47, 22);
+            this.label50.TabIndex = 49;
+            this.label50.Text = "Folio";
+            // 
+            // comboBoxEdit7
+            // 
+            this.comboBoxEdit7.Location = new System.Drawing.Point(19, 356);
+            this.comboBoxEdit7.Name = "comboBoxEdit7";
+            this.comboBoxEdit7.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.comboBoxEdit7.Properties.Appearance.Options.UseFont = true;
+            this.comboBoxEdit7.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.comboBoxEdit7.Size = new System.Drawing.Size(337, 28);
+            this.comboBoxEdit7.TabIndex = 46;
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label45.Location = new System.Drawing.Point(15, 314);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(113, 22);
+            this.label45.TabIndex = 43;
+            this.label45.Text = "Transportista";
+            // 
+            // simpleButton11
+            // 
+            this.simpleButton11.Appearance.Font = new System.Drawing.Font("Tahoma", 16F);
+            this.simpleButton11.Appearance.Options.UseFont = true;
+            this.simpleButton11.Location = new System.Drawing.Point(203, 572);
+            this.simpleButton11.Name = "simpleButton11";
+            this.simpleButton11.Size = new System.Drawing.Size(133, 45);
+            this.simpleButton11.TabIndex = 48;
+            this.simpleButton11.Text = "Ingresa";
+            this.simpleButton11.Click += new System.EventHandler(this.simpleButton11_Click);
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label46.Location = new System.Drawing.Point(15, 429);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(45, 22);
+            this.label46.TabIndex = 42;
+            this.label46.Text = "Tara";
+            // 
+            // textBox11
+            // 
+            this.textBox11.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textBox11.Location = new System.Drawing.Point(99, 423);
+            this.textBox11.Name = "textBox11";
+            this.textBox11.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox11.Size = new System.Drawing.Size(136, 28);
+            this.textBox11.TabIndex = 47;
+            // 
+            // textEdit12
+            // 
+            this.textEdit12.Location = new System.Drawing.Point(99, 238);
+            this.textEdit12.Name = "textEdit12";
+            this.textEdit12.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textEdit12.Properties.Appearance.Options.UseFont = true;
+            this.textEdit12.Size = new System.Drawing.Size(148, 28);
+            this.textEdit12.TabIndex = 45;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label47.Location = new System.Drawing.Point(26, 244);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(58, 22);
+            this.label47.TabIndex = 41;
+            this.label47.Text = "Placas";
+            // 
+            // comboBoxEdit8
+            // 
+            this.comboBoxEdit8.Location = new System.Drawing.Point(99, 179);
+            this.comboBoxEdit8.Name = "comboBoxEdit8";
+            this.comboBoxEdit8.Properties.Appearance.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.comboBoxEdit8.Properties.Appearance.Options.UseFont = true;
+            this.comboBoxEdit8.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.comboBoxEdit8.Size = new System.Drawing.Size(323, 28);
+            this.comboBoxEdit8.TabIndex = 44;
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label48.Location = new System.Drawing.Point(26, 185);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(62, 22);
+            this.label48.TabIndex = 40;
+            this.label48.Text = "Chofer";
+            // 
+            // textBox12
+            // 
+            this.textBox12.Enabled = false;
+            this.textBox12.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.textBox12.Location = new System.Drawing.Point(99, 65);
+            this.textBox12.Name = "textBox12";
+            this.textBox12.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox12.Size = new System.Drawing.Size(184, 28);
+            this.textBox12.TabIndex = 39;
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Font = new System.Drawing.Font("Tahoma", 13F);
+            this.label49.Location = new System.Drawing.Point(26, 65);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(47, 22);
+            this.label49.TabIndex = 38;
+            this.label49.Text = "Folio";
             // 
             // tableLayoutPanel1
             // 
@@ -1525,6 +1924,9 @@ namespace scale_lite
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit6.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit5.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit4.Properties)).EndInit();
+            this.tabPage8.ResumeLayout(false);
+            this.tabPage8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit9.Properties)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -1542,6 +1944,11 @@ namespace scale_lite
             ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit2.Properties)).EndInit();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
+            this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit7.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEdit12.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.comboBoxEdit8.Properties)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1670,6 +2077,38 @@ namespace scale_lite
         private System.Windows.Forms.ToolStripLabel toolStripLabel6;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox3;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.TabPage tabPage7;
+        private System.Windows.Forms.Label label50;
+        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit7;
+        private System.Windows.Forms.Label label45;
+        private DevExpress.XtraEditors.SimpleButton simpleButton11;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.TextBox textBox11;
+        private DevExpress.XtraEditors.TextEdit textEdit12;
+        private System.Windows.Forms.Label label47;
+        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit8;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.TabPage tabPage8;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label label53;
+        private System.Windows.Forms.Label label54;
+        private System.Windows.Forms.Label label55;
+        private DevExpress.XtraEditors.SimpleButton simpleButton12;
+        private System.Windows.Forms.Label label57;
+        private DevExpress.XtraEditors.ComboBoxEdit comboBoxEdit9;
+        private System.Windows.Forms.Label label58;
+        private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.TextBox textBox14;
+        private DevExpress.XtraEditors.SimpleButton simpleButton13;
+        private DevExpress.XtraEditors.SimpleButton simpleButton14;
+        private DevExpress.XtraEditors.SimpleButton simpleButton15;
+        private DevExpress.XtraEditors.SimpleButton simpleButton16;
+        private DevExpress.XtraEditors.SimpleButton simpleButton17;
+        private DevExpress.XtraEditors.SimpleButton simpleButton18;
+        private DevExpress.XtraEditors.SimpleButton simpleButton19;
     }
 }
 

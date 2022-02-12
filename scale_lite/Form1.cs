@@ -43,6 +43,11 @@ namespace scale_lite
 
         public int counter = 0;
 
+        public bool boApi = true;
+
+        public bool boFlrfid = false;
+        public string sSerialrfid = string.Empty;
+
         public SerialPort port1 = new SerialPort("COM3", 2400, Parity.None, 7, StopBits.One);
         public SerialPort port2 = new SerialPort("COM4", 2400, Parity.Even, 7, StopBits.One);
 
@@ -154,10 +159,16 @@ namespace scale_lite
 
             //procedure.MakeStructure(sConexl);
 
+            toolStripStatusLabel3.Text = "Lectura API";
+
             if (bLifeconecta)
             {
                 toolStripStatusLabel1.Text = "Conexion con " + sServer;
+
                 toolStripTextBox1.Enabled = true; toolStripTextBox2.Enabled = true;
+
+                ObtainSerialrfid();
+
                 lUsers = procedure.ConvertToList<strucdata.users>(procedure.Predata(1, "id,user,password,nombre_full", "usuarios", "", sConexion));
 
                 lForward = procedure.ConvertToList<strucdata.forwarder>(procedure.Predata(1, "num_fle, nombre", "fleteros", "selTipo = 'FLET'", sConexion));
@@ -227,14 +238,6 @@ namespace scale_lite
         {
             textEdit1.Text = string.Empty; textEdit2.Text = string.Empty; textEdit3.Text = string.Empty; textEdit4.Text = string.Empty;textEdit8.Text = string.Empty;
             label2.Text = string.Empty; label6.Text = string.Empty; label7.Text = string.Empty;textEdit9.Text = string.Empty;textEdit10.Text = string.Empty;
-
-            string sArmado = procedure.stringexe(4, "", "assigndata","");
-
-            procedure.Executecmm(sArmado, sConexion);
-
-            sArmado = procedure.stringexe(4, "", "databurn", "");
-
-            procedure.Executecmm(sArmado, sConexion);
 
             Obtainassigment();
             Obtaindataburn();
@@ -354,7 +357,7 @@ namespace scale_lite
                                     sTable = "btkt_chz";
                                     break;
                                 case "PROD QUIMICOS":
-                                    sTable = "btkt_otr";
+                                    sTable = "btkt_pkim";
                                     break;
                                 case "OTROS":
                                     sTable = "btkt_otr";
@@ -525,8 +528,8 @@ namespace scale_lite
             {
                 case 3:
 
-                    textBox12.Text = string.Empty; comboBoxEdit8.Text = string.Empty;textEdit12.Text = string.Empty;comboBoxEdit7.Text = string.Empty;
-                    textBox14.Text = string.Empty;textBox14.Text = string.Empty;comboBoxEdit9.Text = string.Empty;label57.Text = string.Empty;label51.Text = string.Empty;label55.Text = string.Empty;
+                    textBox12.Text = string.Empty; comboBoxEdit8.Text = string.Empty; textEdit12.Text = string.Empty; comboBoxEdit7.Text = string.Empty;
+                    textBox14.Text = string.Empty; textBox14.Text = string.Empty; comboBoxEdit9.Text = string.Empty; label57.Text = string.Empty; label51.Text = string.Empty; label55.Text = string.Empty;
 
                     comboBoxEdit7.Properties.Items.Clear();
                     comboBoxEdit8.Properties.Items.Clear();
@@ -547,26 +550,26 @@ namespace scale_lite
                             break;
                         case "BIOMASA":
                             sTabla = "btkt_bm";
-                            label58.Visible = true; comboBoxEdit9.Visible = true; iFlOtros = 1;sFieldcb = "biomasa";
+                            label58.Visible = true; comboBoxEdit9.Visible = true; iFlOtros = 1; sFieldcb = "biomasa";
                             break;
                         case "CACHAZA":
                             sTabla = "btkt_chz";
                             label58.Visible = false; comboBoxEdit9.Visible = false;
                             break;
                         case "PROD QUIMICOS":
-                            sTabla = "btkt_otr";
-                            sCondicion = " and producto = 'PROD QUIMICOS'";
-                            label58.Visible = true;comboBoxEdit9.Visible = true;iFlOtros = 1; sFieldcb = "producto";
+                            sTabla = "btkt_pkim";
+                            sCondicion = "";
+                            label58.Visible = true; comboBoxEdit9.Visible = true; iFlOtros = 1; sFieldcb = "producto";
                             break;
                         case "OTROS":
                             sTabla = "btkt_otr";
-                            label58.Visible = true; comboBoxEdit9.Visible = true;iFlOtros = 1; sFieldcb = "producto";
+                            label58.Visible = true; comboBoxEdit9.Visible = true; iFlOtros = 1; sFieldcb = "producto";
                             break;
                     }
 
-                    var ifpget1 = procedure.ConvertToList<strucdata.lastfcane>(procedure.Predata(1, "max(ticket) as ufol", sTabla, "zafra = " + izafra.ToString() + sCondicion, sConexion));
+                    var ifpget1 = procedure.ConvertToList<strucdata.lastfcane>(procedure.Predata(1, "max(ticket) + 1 as ufol", sTabla, "zafra = " + izafra.ToString() + sCondicion, sConexion));
 
-                    int iFpet1= ifpget1[0].ufol + 1;
+                    int iFpet1 = ifpget1[0].ufol + 1;
 
                     textBox12.Text = iFpet1.ToString();
 
@@ -574,7 +577,9 @@ namespace scale_lite
                     ComboBoxItemCollection coll7 = comboBoxEdit7.Properties.Items;
                     ComboBoxItemCollection coll9 = comboBoxEdit9.Properties.Items;
 
-                    var lCarrier2 = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = '" +  sTipo + "'", sConexion));
+                    string sTipf = (sTipo.Trim().Length < 12) ? sTipo : sTipo.Substring(0, 12);
+
+                    var lCarrier2 = procedure.ConvertToList<strucdata.carriers>(procedure.Predata(1, "transportista", "transpt", "tipo_transp = '" +  sTipf + "'", sConexion));
 
                     foreach (var Itm in lCarrier2)
                     {
@@ -953,17 +958,11 @@ namespace scale_lite
         {
             string sEvalua = sString;
 
-            string sArmado = procedure.stringexe(4, "", "databurn", "");
-
-            procedure.Executecmm(sArmado, sConexion);
-
             Obtaindataburn();
 
-            sArmado = procedure.stringexe(4, "", "assigndata", "");
-
-            procedure.Executecmm(sArmado, sConexion);
-
             Obtainassigment();
+
+            var lForwinbatey = procedure.ConvertToList<strucdata.forwinbatey>(procedure.Predata(1, "numtra", "b_ticket", "status = 'BATEY'", sConexion));
 
             lasignacion = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
 
@@ -984,7 +983,9 @@ namespace scale_lite
 
                     var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == iFletero).ToList();
 
-                    if (lFrw.Count() > 0)
+                    var lfrwb = lForwinbatey.Where(x => x.numtra == iFletero).ToList();
+
+                    if (lFrw.Count() > 0 && lfrwb.Count() == 0 )
                     {
                         var lAsig = lasignacion.Where(x => x.fleter == iFletero).ToList();
 
@@ -1001,7 +1002,7 @@ namespace scale_lite
                     }
                     else
                     {
-                        XtraMessageBox.Show("No se encuentra dato de fletero reportar a Informatica/Credito...");
+                        XtraMessageBox.Show("No se encuentra dato de fletero o Se encuentra en BATEY con ticket asignado ...");
                     }
 
 
@@ -1011,13 +1012,15 @@ namespace scale_lite
             {
                 var lFrw = lForward.Where(x => Convert.ToInt32(x.num_fle) == Convert.ToInt32(sString)).ToList();
 
-                if (lFrw.Count() > 0)
+                var lfrwb = lForwinbatey.Where(x => x.numtra == Convert.ToInt32(sString)).ToList();
+
+                if (lFrw.Count() > 0 && lfrwb.Count() == 0)
                 {
                     label6.Text = lFrw[0].nombre;
                 }
                 else
                 {
-                    XtraMessageBox.Show("No se encuentra el dato de fletero, reportar a Informatica/Credito...");
+                    XtraMessageBox.Show("No se encuentra dato de fletero o Se encuentra en BATEY con ticket asignado ...");
                 }
             }
         }
@@ -1068,10 +1071,6 @@ namespace scale_lite
             int iPos = sTicket.ToUpper().IndexOf("T")+1;
 
             string sRTicket = sTicket.Substring(iPos, sTicket.Length - iPos);
-
-            string sArmado = procedure.stringexe(4, "", "databurn", "");
-
-            procedure.Executecmm(sArmado, sConexion);
 
             Obtaindataburn();
 
@@ -1272,64 +1271,72 @@ namespace scale_lite
         {
             apilayer Contenedor = new apilayer();
 
-            string sResulta = Contenedor.ObtaingGet(sApigetasig, "getassign", "", "");
-
-            if (sResulta.Trim().Length > 0)
+            if (boApi == true)
             {
-                if (!sResulta.Contains("html"))
+                string sArmado = procedure.stringexe(4, "", "assigndata", "");
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                string sResulta = Contenedor.ObtaingGet(sApigetasig, "getassign", "", "");
+
+                if (sResulta.Trim().Length > 0)
                 {
-
-                    var vDetails =  JObject.Parse(sResulta);
-
-                    var vRegistros = vDetails["registros"];
-
-                    string sRegistros = string.Empty;
-                    string sQuery = string.Empty;
-
-                    if (vRegistros is object || vRegistros.Count() > 0)
+                    if (!sResulta.Contains("html"))
                     {
-                        var model = Newtonsoft.Json.JsonConvert.DeserializeObject<strucdata.Root1>(sResulta);
 
-                        strucdata.Root1 Content3 = (strucdata.Root1)Container;
+                        var vDetails = JObject.Parse(sResulta);
 
-                        List<strucdata.assigndata> lAsigFr = model.registros.ToList();
+                        var vRegistros = vDetails["registros"];
 
-                        List<strucdata.assigndata> lAsigHr = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
+                        string sRegistros = string.Empty;
+                        string sQuery = string.Empty;
 
-                        if (lAsigHr.Count() == 0)
+                        if (vRegistros is object || vRegistros.Count() > 0)
                         {
-                            foreach (var item in lAsigFr)
+                            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<strucdata.Root1>(sResulta);
+
+                            strucdata.Root1 Content3 = (strucdata.Root1)Container;
+
+                            List<strucdata.assigndata> lAsigFr = model.registros.ToList();
+
+                            List<strucdata.assigndata> lAsigHr = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
+
+                            if (lAsigHr.Count() == 0)
                             {
-                                sRegistros = item.orden + ", " + item.ticket + ", " + item.zona + ", " + item.fleter + ", '" + item.fullnamefleter + "', " + item.lifting + ", '" + item.fullnamelifting + "', " + item.harvest + ", '" + item.fullnameharvest + "'";
-                                
-                                string sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata",sRegistros);
+                                foreach (var item in lAsigFr)
+                                {
+                                    sRegistros = item.orden + ", " + item.ticket + ", " + item.zona + ", " + item.fleter + ", '" + item.fullnamefleter + "', " + item.lifting + ", '" + item.fullnamelifting + "', " + item.harvest + ", '" + item.fullnameharvest + "'";
 
-                                procedure.Executecmm(sArmado, sConexion);
+                                    sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", sRegistros);
 
-                                lAsigHr.Add(new strucdata.assigndata { orden= item.orden, ticket = item.ticket, zona=item.zona,fleter=item.fleter,fullnamefleter=item.fullnamefleter,lifting=item.lifting,fullnamelifting=item.fullnamelifting,harvest=item.harvest,fullnameharvest=item.fullnameharvest});
+                                    procedure.Executecmm(sArmado, sConexion);
+
+                                    lAsigHr.Add(new strucdata.assigndata { orden = item.orden, ticket = item.ticket, zona = item.zona, fleter = item.fleter, fullnamefleter = item.fullnamefleter, lifting = item.lifting, fullnamelifting = item.fullnamelifting, harvest = item.harvest, fullnameharvest = item.fullnameharvest });
+
+                                }
+                            }
+
+                            if (lAsigFr.Count() > lAsigHr.Count())
+                            {
+                                var lResulta = lAsigFr.Where(x => !lAsigHr.Any(y => x.ticket == y.ticket)).ToList();
+
+                                foreach (var item in lResulta)
+                                {
+                                    sRegistros = item.orden + ", " + item.ticket + ", " + item.zona + ", " + item.fleter + ", '" + item.fullnamefleter + "', " + item.lifting + ", '" + item.fullnamelifting + "', " + item.harvest + ", '" + item.fullnameharvest + "'";
+
+                                    sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", sRegistros);
+
+                                    procedure.Executecmm(sArmado, sConexion);
+
+                                };
 
                             }
-                        }
-
-                        if (lAsigFr.Count() > lAsigHr.Count())
-                        {
-                            var lResulta = lAsigFr.Where(x => !lAsigHr.Any(y => x.ticket == y.ticket)).ToList();
-
-                            foreach (var item in lResulta)
-                            {
-                                sRegistros = item.orden + ", " + item.ticket + ", " + item.zona + ", " + item.fleter + ", '" + item.fullnamefleter + "', " + item.lifting + ", '" + item.fullnamelifting + "', " + item.harvest + ", '" + item.fullnameharvest + "'";
-
-                                string sArmado = procedure.stringexe(3, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", sRegistros);
-
-                                procedure.Executecmm(sArmado, sConexion);
-
-                            };
 
                         }
 
                     }
-
                 }
+
             }
 
         }
@@ -1338,64 +1345,130 @@ namespace scale_lite
         {
             apilayer Contenedor = new apilayer();
 
-            string sResulta = Contenedor.ObtaingGet(sApigetasig, "getdataburn", "", "");
-
-            if (sResulta.Trim().Length > 0)
+            if (boApi == true)
             {
-                if (!sResulta.Contains("html"))
+                string sArmado = procedure.stringexe(4, "", "databurn", "");
+
+                procedure.Executecmm(sArmado, sConexion);
+
+                string sResulta = Contenedor.ObtaingGet(sApigetasig, "getdataburn", "", "");
+
+                if (sResulta.Trim().Length > 0)
                 {
-
-                    var vDetails = JObject.Parse(sResulta);
-
-                    var vRegistros = vDetails["registros"];
-
-                    string sRegistros = string.Empty;
-                    string sQuery = string.Empty;
-
-                    if (vRegistros is object || vRegistros.Count() > 0)
+                    if (!sResulta.Contains("html"))
                     {
-                        var model = Newtonsoft.Json.JsonConvert.DeserializeObject<strucdata.Root2>(sResulta);
 
-                        strucdata.Root2 Content3 = (strucdata.Root2)Container;
+                        var vDetails = JObject.Parse(sResulta);
 
-                        List<strucdata.databurni> lAsigFr = model.registros.ToList();
+                        var vRegistros = vDetails["registros"];
 
-                        List<strucdata.databurni> lAsigHr = procedure.ConvertToList<strucdata.databurni>(procedure.Predata(1, "ticket,tpocan,fecque,horque,typeburn", "databurn", "", sConexion));
+                        string sRegistros = string.Empty;
+                        string sQuery = string.Empty;
 
-                        if (lAsigHr.Count() == 0)
+                        if (vRegistros is object || vRegistros.Count() > 0)
                         {
-                            foreach (var item in lAsigFr)
+                            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<strucdata.Root2>(sResulta);
+
+                            strucdata.Root2 Content3 = (strucdata.Root2)Container;
+
+                            List<strucdata.databurni> lAsigFr = model.registros.ToList();
+
+                            List<strucdata.databurni> lAsigHr = procedure.ConvertToList<strucdata.databurni>(procedure.Predata(1, "ticket,tpocan,fecque,horque,typeburn", "databurn", "", sConexion));
+
+                            if (lAsigHr.Count() == 0)
                             {
-                                sRegistros = item.ticket + ", '" + item.tpocan + "', '" + item.fecque + "', '" + item.horque + "', '" + item.typeburn + "'";
+                                foreach (var item in lAsigFr)
+                                {
+                                    sRegistros = item.ticket + ", '" + item.tpocan + "', '" + item.fecque + "', '" + item.horque + "', '" + item.typeburn + "'";
 
-                                string sArmado = procedure.stringexe(3, "ticket,tpocan,fecque,horque,typeburn", "databurn", sRegistros);
+                                    sArmado = procedure.stringexe(3, "ticket,tpocan,fecque,horque,typeburn", "databurn", sRegistros);
 
-                                procedure.Executecmm(sArmado, sConexion);
+                                    procedure.Executecmm(sArmado, sConexion);
 
-                                lAsigHr.Add(new strucdata.databurni { ticket = item.ticket, tpocan = item.tpocan, fecque = item.fecque, horque = item.horque, typeburn = item.typeburn });
+                                    lAsigHr.Add(new strucdata.databurni { ticket = item.ticket, tpocan = item.tpocan, fecque = item.fecque, horque = item.horque, typeburn = item.typeburn });
+
+                                }
+                            }
+
+                            if (lAsigFr.Count() > lAsigHr.Count())
+                            {
+                                var lResulta = lAsigFr.Where(x => !lAsigHr.Any(y => x.ticket == y.ticket)).ToList();
+
+                                foreach (var item in lResulta)
+                                {
+                                    sRegistros = item.ticket + ", '" + item.tpocan + "', '" + item.fecque + "', '" + item.horque + "', '" + item.typeburn + "'";
+
+                                    sArmado = procedure.stringexe(3, "ticket,tpocan,fecque,horque,typeburn", "databurn", sRegistros);
+
+                                    procedure.Executecmm(sArmado, sConexion);
+
+                                };
 
                             }
-                        }
-
-                        if (lAsigFr.Count() > lAsigHr.Count())
-                        {
-                            var lResulta = lAsigFr.Where(x => !lAsigHr.Any(y => x.ticket == y.ticket)).ToList();
-
-                            foreach (var item in lResulta)
-                            {
-                                sRegistros = item.ticket + ", '" + item.tpocan + "', '" + item.fecque + "', '" + item.horque + "', '" + item.typeburn + "'";
-
-                                string sArmado = procedure.stringexe(3, "ticket,tpocan,fecque,horque,typeburn", "databurn", sRegistros);
-
-                                procedure.Executecmm(sArmado, sConexion);
-
-                            };
 
                         }
 
                     }
-
                 }
+
+            }
+
+        }
+
+        private void ObtainSerialrfid()
+        {
+            apilayer Contenedor = new apilayer();
+
+            if (boApi == true)
+            {
+
+                string sArmado = string.Empty;
+
+                string sResulta = Contenedor.ObtaingGet(sApigetasig, "getrfid", "", "");
+
+                if (sResulta.Trim().Length > 0)
+                {
+                    if (!sResulta.Contains("html"))
+                    {
+
+                        var vDetails = JObject.Parse(sResulta);
+
+                        var vRegistros = vDetails["registros"];
+
+                        string sRegistros = string.Empty;
+                        string sQuery = string.Empty;
+
+                        if (vRegistros.Count() > 0 || vRegistros.Count() > 0)
+                        {
+                            var model = Newtonsoft.Json.JsonConvert.DeserializeObject<strucdata.Root3>(sResulta);
+
+                            strucdata.Root3 Content3 = (strucdata.Root3)Container;
+
+                            List<strucdata.forwarder> lrfidfo = model.registros.ToList();
+
+                            List<strucdata.forwarder> lrfidfl = procedure.ConvertToList<strucdata.forwarder>(procedure.Predata(1, "num_fle, nombre, serial_rfid", "fleteros", "seltipo = 'FLET' and serial_rfid is not null", sConexion));
+
+                            if (lrfidfo.Count() == lrfidfl.Count())
+                            {
+                                var lResulta = lrfidfo.Where(x => !lrfidfl.Any(y => x.serial_rfid == y.serial_rfid)).ToList();
+
+                                foreach (var item in lResulta)
+                                {
+                                    sRegistros = "serial_rfid = '" + item.serial_rfid + "'";
+
+                                    sArmado = procedure.stringexe(2,sRegistros, "fleteros", "num_fle = " + item.num_fle);
+
+                                    procedure.Executecmm(sArmado, sConexion);
+
+                                };
+
+                            }
+
+                        }
+
+                    }
+                }
+
             }
 
         }
@@ -1582,7 +1655,7 @@ namespace scale_lite
                             sTabla = "btkt_chz";
                             break;
                         case "PROD QUIMICOS":
-                            sTabla = "btkt_otr";
+                            sTabla = "btkt_pkim";
                             break;
                         case "OTROS":
                             sTabla = "btkt_otr";
@@ -1871,6 +1944,12 @@ namespace scale_lite
                     {
                         label46.Text = "Bruto"; label54.Text = "Bruto"; label59.Text = "Tara";label45.Text = "Proveedor";
                     }
+
+                    if (sOpcion == "PROD QUIMICOS")
+                    {
+                        label46.Text = "Bruto"; label54.Text = "Bruto"; label59.Text = "Tara"; label45.Text = "Proveedor";
+                    }
+
                     else
                     {
                         label46.Text = "Tara"; label54.Text = "Tara"; label59.Text = "Bruto";label45.Text = "Transportista";
@@ -1930,10 +2009,6 @@ namespace scale_lite
                 {
                     string sActualiza = string.Empty;
 
-                    //string sArmado = procedure.stringexe(4, "", "databurn", "");
-
-                    //procedure.Executecmm(sArmado, sConexion);
-
                     Obtaindataburn();
 
                     var lTicketS = procedure.ConvertToList<strucdata.tickettmp>(procedure.Predata(1, "ticket,pesob", "b_ticket", "zafra = " + izafra.ToString() + " and (IFNULL(pesob,0) >0 and IFNULL(peson,0) = 0) and ticket = " + textEdit5.Text, sConexion));
@@ -1991,7 +2066,16 @@ namespace scale_lite
 
                     procedure.Executecmm(sArmado, sConexion);
 
-                   
+                    if (boFlrfid == true)
+                    {
+                        sArmado = procedure.stringexe(2, "out_ = now(), State_ = 2", "rfid_hist", " serial = '" + sSerialrfid + "'");
+
+                        procedure.Executecmm(sArmado, sConexion);
+
+                        boFlrfid = false;
+                    }
+
+
                     if (XtraMessageBox.Show("Imprime Ticket?", "Confirme", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         print_ticket(Convert.ToInt32(textEdit5.Text)); ;
@@ -2258,10 +2342,6 @@ namespace scale_lite
                 if (XtraMessageBox.Show("Procede a guardar datos capturados?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.No)
                 {
 
-                    string sArmado = procedure.stringexe(4, "", "databurn", "");
-
-                    procedure.Executecmm(sArmado, sConexion);
-
                     Obtaindataburn();
 
                     string sCondicion = string.Empty;
@@ -2296,9 +2376,18 @@ namespace scale_lite
                     sCondicion = sCondicion + ",  fecque = ifnull(fecque,'" + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + "'),horque = ifnull(horque,'18:00')";
                     sCondicion = sCondicion + ", status = 'BATEY', diazafra = 0, ent_usuario = '" + sUserC + "', entrytime = now()";
 
-                    sArmado = procedure.stringexe(2, sCondicion, "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
+                    string sArmado = procedure.stringexe(2, sCondicion, "b_ticket", " ticket = " + textEdit1.Text + " and zafra = " + izafra);
 
                     procedure.Executecmm(sArmado, sConexion);
+
+                    if (boFlrfid == true)
+                    {
+                        sArmado = procedure.stringexe(2, "Entry = now(), State_ = 1", "rfid_hist", " serial = '" + sSerialrfid + "'");
+
+                        procedure.Executecmm(sArmado, sConexion);
+
+                        boFlrfid = false;
+                    }
 
                     gridControl1.DataSource = Headert();
 
@@ -2328,15 +2417,8 @@ namespace scale_lite
 
             if (int.TryParse(textEdit2.Text, out iFletero))
             {
-                string sArmado = procedure.stringexe(4, "", "databurn", "");
-
-                procedure.Executecmm(sArmado, sConexion);
 
                 Obtaindataburn();
-
-                sArmado = procedure.stringexe(4, "", "assigndata", "");
-
-                procedure.Executecmm(sArmado, sConexion);
 
                 Obtainassigment();
 
@@ -2413,10 +2495,6 @@ namespace scale_lite
 
                 if (lfTicket.Count() > 0)
                 {
-                    string sArmado = procedure.stringexe(4, "", "databurn", "");
-
-                    procedure.Executecmm(sArmado, sConexion);
-
                     Obtaindataburn();
 
                     lTablep = procedure.ConvertToList<strucdata.tpunishment>(procedure.Predata(1, "typecane,typebourn,at_hour,to_hour,percent_punish,subject_analisis", "table_punish", "", sConexion));
@@ -2749,7 +2827,7 @@ namespace scale_lite
                         sMaterial = "7";
                         break;
                     case "PROD QUIMICOS":
-                        sTabdest = "btkt_otr";
+                        sTabdest = "btkt_pkim";
                         sMaterial = "8";
                         break;
                     case "OTROS":
@@ -3098,6 +3176,117 @@ namespace scale_lite
             {
                 XtraMessageBox.Show(sRespuesta);
             }
+
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            if (boApi == true) { boApi = false; toolStripStatusLabel3.Text = "No lectura API";  } else { boApi = true;toolStripStatusLabel3.Text = "Lectura API"; }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            var lForwrfid = procedure.ConvertToList<strucdata.rfidhistory>(procedure.Predata(1, "num_fle,nombre,Serial,Entry,State_,Out_", "vDepenrfid", "Entry is null and out_ is null", sConexion));
+
+            if (lForwrfid.Count() > 0)
+            {
+                foreach (var itm in lForwrfid)
+                {
+                    comboBox1.Items.Add(itm.num_fle + " " + itm.nombre);
+                }
+            }
+
+            var lForwrfido = procedure.ConvertToList<strucdata.rfidhistory>(procedure.Predata(1, "num_fle,nombre,Serial,Entry,State_,Out_", "vDepenrfid", "Entry is not null and out_ is null", sConexion));
+
+            if (lForwrfido.Count() > 0)
+            {
+                foreach (var itm in lForwrfido)
+                {
+                    comboBox2.Items.Add(itm.num_fle + " " + itm.nombre);
+                }
+            }
+            toolStripStatusLabel4.Text = "Lectura RFID";
+        }
+
+        private void simpleButton20_Click(object sender, EventArgs e)
+        {
+            if (comboBox1.Items.Count > 0)
+            {
+                string sConten = strucdata.stringBetween(comboBox1.Text, comboBox1.Text.Substring(0,1) ," ");
+                int iValue = 0;
+
+                Obtaindataburn();
+
+                Obtainassigment();
+
+                var lTassign = procedure.ConvertToList<strucdata.assigndata>(procedure.Predata(1, "orden,ticket,zona,fleter,fullnamefleter,lifting,fullnamelifting,harvest,fullnameharvest", "vassigndata", "", sConexion));
+
+                var lDprfid = procedure.ConvertToList<strucdata.forwarder>(procedure.Predata(1, "num_fle,nombre,Serial", "vdepenrfid", "", sConexion));
+
+                if (int.TryParse(sConten, out iValue))
+                {
+                    var lTicketa = lTassign.Where(x => x.fleter == iValue).ToList();
+
+                    var lDpn = lDprfid.Where(x => x.num_fle == sConten).ToList();
+
+                    if (lTicketa.Count() > 0)
+                    {
+                        boFlrfid = true;
+
+                        sSerialrfid = lDpn[0].serial_rfid;
+                       
+                        evalticket(lTicketa[0].ticket.ToString());
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("No tiene ticket asignado...");
+                    }
+
+                }
+
+            }
+        }
+
+        private void simpleButton21_Click(object sender, EventArgs e)
+        {
+            if (comboBox2.Items.Count > 0)
+            {
+                string sConten = strucdata.stringBetween(comboBox2.Text, comboBox1.Text.Substring(0, 1), " ");
+                int iValue = 0;
+
+                if (int.TryParse(sConten, out iValue))
+                {
+
+                    var lDprfid = procedure.ConvertToList<strucdata.forwarder>(procedure.Predata(1, "num_fle,nombre,Serial", "vdepenrfid", "", sConexion));
+
+                    lTicko = procedure.ConvertToList<strucdata.headertick>(procedure.Predata(1, "ticket,pesob,castigo,descto", "b_ticket as b", "zafra = " + izafra.ToString() + " and peson = 0 and pesob > 0 and numtra = " + iValue , sConexion));
+
+                    if(lTicko.Count() > 0)
+                    {
+
+                        boFlrfid = true;
+
+                        var lDpn = lDprfid.Where(x => x.num_fle == sConten).ToList();
+
+                        sSerialrfid = lDpn[0].serial_rfid;
+
+                        textEdit5.Text = lTicko[0].ticket.ToString();
+                        textEdit7.Text = lTicko[0].pesob.ToString();
+                        textEdit10.Text = lTicko[0].pesob.ToString();
+                        textEdit9.Text = lTicko[0].castigo.ToString();
+                        textEdit8.Text = lTicko[0].descto.ToString();
+                    }
+                    else
+                    {
+                        XtraMessageBox.Show("El fletero no tiene ningun ticket asignado...");
+                    }
+
+                }
+
+
+            }
+
+
 
         }
     }

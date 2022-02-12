@@ -51,7 +51,6 @@ namespace scale_lite
 
         }
 
-
         public DataTable Predata(int iOption, string sCampos, string sTabla, string sCondicion, string sConecta)
         {
             DataTable dtTabla = new DataTable();
@@ -154,6 +153,20 @@ namespace scale_lite
             return iFlag;
         }
 
+        public static string stringBetween(string Source, string Start, string End)
+        {
+            string result = "";
+            if (Source.Contains(Start) && Source.Contains(End))
+            {
+                int StartIndex = Source.IndexOf(Start, 0) + Start.Length;
+                int EndIndex = Source.IndexOf(End, StartIndex);
+                result = Source.Substring(StartIndex, EndIndex - StartIndex);
+                return result;
+            }
+
+            return result;
+        }
+
         #region Clases_pub
         public class users
         {
@@ -180,6 +193,7 @@ namespace scale_lite
         {
             public string num_fle { get; set; }
             public string nombre { get; set; }
+            public string serial_rfid { get; set; }
         }
 
         public class lifting
@@ -464,6 +478,28 @@ namespace scale_lite
             public string plates { get; set; }
             public string driver { get; set; }
             public int tarew { get; set; }
+        }
+
+        public class forwinbatey
+        {
+            public int numtra { get; set; }
+        }
+
+        public class rfidhistory
+        {
+            public int num_fle { get; set; }
+            public string nombre { get; set; }
+            public string Serial { get; set; }
+            public DateTime Entry { get; set; }
+            public int State_ { get; set; }
+            public DateTime Out_ { get; set; }
+        }
+
+        public class Root3
+        {
+            public bool error { get; set; }
+            public string message { get; set; }
+            public List<forwarder> registros { get; set; }
         }
 
         #endregion

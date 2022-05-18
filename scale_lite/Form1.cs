@@ -842,97 +842,36 @@ namespace scale_lite
 
             string sPeso = string.Empty;
 
-            try
-            {           
-                switch (iBascula)
+            var oPuerto = (iBascula == 3) ? this.port1 : this.port2;
+
+            int iQuita = (iBascula == 3) ? 7 : 6;
+
+            if (oPuerto.IsOpen)
+            {
+                string str2 = oPuerto.ReadExisting();
+
+                toolStripLabel6.Text = str2;
+
+                string sReadw = new String(str2.ToCharArray().Where(c => Char.IsDigit(c)).ToArray());
+
+                if (sReadw.Length >= 5)
                 {
-                    case 3:
-                        if (this.port1.IsOpen)
-                        {
-                            string str2 = this.port1.ReadExisting();
 
-                            toolStripLabel6.Text = str2;
+                    toolStripLabel6.Text = sReadw;
 
-                            string sResult = "";
-                            if (str2.Length > 0)
-                            {
+                    sPeso = CleanInput(sReadw).Substring(0, iQuita);
 
-                                int iPos1 = str2.IndexOf("+");
-                                int iPos2 = str2.IndexOf("k");
-
-                                string sTempo = str2.Substring((iPos1+1), iPos2-1);
-
-                                toolStripLabel6.Text = sTempo;
-
-                                sResult = sTempo.Substring(0,8);
-
-                                string result = string.Concat(sResult.Where(c => Char.IsDigit(c)));
-
-                                sResult = result;
-
-                                int myInt;
-                                bool isNumerical = int.TryParse(sResult, out myInt);
-
-                                sPeso = (isNumerical) ? CleanInput(sResult).Substring(0, 7) : "Vuelva a leer " + sTempo ;
-                            }
-                            else
-                            {
-                                sPeso = connectBasc(3);
-                            }
-
-                            this.port1.Close();
-                        }
-                        else
-                        {
-                            sPeso = connectBasc(3);
-                        }
-                        break;
-                    case 4:
-                        if (this.port2.IsOpen)
-                        {
-                            string str2 = this.port2.ReadExisting();
-
-                           toolStripLabel6.Text = str2 ;
-
-                            if (str2.Length > 0)
-                            {
-
-                                int iPos1 = str2.IndexOf(" ");
-
-                                string sTempo = str2.Substring(iPos1+1, 11);
-
-                                toolStripLabel6.Text = sTempo;
-
-                                string sResult;
-
-                                string result = string.Concat(sTempo.Where(c => Char.IsDigit(c)));
-
-                                sResult = result;
-
-                                int myInt;
-                                bool isNumerical = int.TryParse(sResult, out myInt);
-
-                                sPeso = (isNumerical) ? CleanInput(sResult).Substring(0, 5) : "Vuelva a leer " + sTempo; 
-                            }
-                            else
-                            {
-                                sPeso = connectBasc(4);
-                            }
-
-                            this.port2.Close();
-
-                        }
-                        else
-                        {
-                            sPeso = connectBasc(4);
-                        }
-                        break;
+                }
+                else
+                {
+                    sPeso = connectBasc(iBascula);
                 }
 
+                oPuerto.Close();
             }
-            catch (Exception erorre)
+            else
             {
-                
+                sPeso = connectBasc(iBascula);
             }
 
             return sPeso;
@@ -1242,22 +1181,7 @@ namespace scale_lite
                 ticket.TextoIzquierda(" ");
                 ticket.TextoIzquierda(" ");
                 ticket.TextoIzquierda(" ");
-                //foreach (DataGridViewRow fila in dataGridView1.Rows)
-                //{
-                //    ticket.AgregaArticulo(fila.Cells[1].Value.ToString(), int.Parse(fila.Cells[0].Value.ToString()), decimal.Parse(fila.Cells[3].Value.ToString()));
-                //}
-                //ticket.lineasIgual();
-                //ticket.AgregarTotales("          TOTAL COMPRADO : $ ", decimal.Parse(txtCompra.Text));
-                //ticket.AgregarTotales("          TOTAL VENDIDO  : $ ", decimal.Parse(txtVenta.Text));
-                //ticket.TextoIzquierda(" ");
-                //ticket.AgregarTotales("          GANANCIA       : $ ", decimal.Parse(txtResultado.Text));
-                //ticket.TextoIzquierda(" ");
-                //ticket.TextoIzquierda(" ");
-                //ticket.TextoIzquierda(" ");
-                //ticket.TextoIzquierda(" ");
-                //ticket.TextoIzquierda(" ");
-                //ticket.TextoIzquierda(" ");
-                //ticket.CortaTicket();
+
 
                 auditstrip(ticket.Contenidoticket());
 
@@ -1448,7 +1372,7 @@ namespace scale_lite
 
                             List<strucdata.forwarder> lrfidfl = procedure.ConvertToList<strucdata.forwarder>(procedure.Predata(1, "num_fle, nombre, serial_rfid", "fleteros", "seltipo = 'FLET' and serial_rfid is not null", sConexion));
 
-                            if (lrfidfo.Count() == lrfidfl.Count())
+                            if (lrfidfo.Count() >= lrfidfl.Count())
                             {
                                 var lResulta = lrfidfo.Where(x => !lrfidfl.Any(y => x.serial_rfid == y.serial_rfid)).ToList();
 
@@ -1759,9 +1683,19 @@ namespace scale_lite
 
         }
 
-        private string readscaleauto()
+        private string readscaleauto(int iOpcion)
         {
-            string sPuerto = (string)toolStripComboBox2.SelectedItem;
+            string sPuerto = string.Empty;
+
+            switch(iOpcion)
+            {
+                case 1:
+                    sPuerto = (string)toolStripComboBox2.SelectedItem;
+                    break;
+                case 2:
+                    sPuerto = (string)toolStripComboBox3.SelectedItem;
+                    break;
+            }
 
             int iPuerto = Convert.ToInt32(sPuerto.Substring(3, 1));
 
@@ -1877,10 +1811,6 @@ namespace scale_lite
             CleanControls();
         }
 
-        private void gridControl1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void textEdit6_EditValueChanged(object sender, EventArgs e)
         {
@@ -1897,11 +1827,6 @@ namespace scale_lite
         private void textEdit9_EditValueChanged(object sender, EventArgs e)
         {
             Totals();
-        }
-
-        private void simpleButton6_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -2098,17 +2023,6 @@ namespace scale_lite
 
         }
 
-        private void simpleButton7_Click(object sender, EventArgs e)
-        {
-
-
-        }
-
-        private void toolStripComboBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
 
@@ -2213,12 +2127,23 @@ namespace scale_lite
         private void textBox10_TextChanged(object sender, EventArgs e)
         {
             int iPesot = 0;
+            double iDens = 0;
 
             if (textBox10.Text.Trim().Length == 0) { return; }
 
             if (int.TryParse(textBox10.Text, out iPesot))
             {
                 label42.Text = (Convert.ToInt32(label40.Text) - Convert.ToInt32(textBox10.Text)).ToString();
+
+                if(textBox13.Text.Trim().Length > 0 && double.TryParse(textBox13.Text, out iDens))
+                {
+                    textBox9.Text = (Math.Round(Convert.ToInt32(label42.Text) / Convert.ToDouble(textBox13.Text),0) ).ToString();
+                }
+                else
+                {
+                    XtraMessageBox.Show("El campo Densidad esta vacio o tiene un valor no valido...");
+                }
+                
             }
             else
             {
@@ -2294,7 +2219,7 @@ namespace scale_lite
 
         private void simpleButton9_Click(object sender, EventArgs e)
         {
-            string sRespuesta = readscaleauto();
+            string sRespuesta = readscaleauto(1);
             int iLectura = 0;
 
             if (int.TryParse(sRespuesta, out iLectura))
@@ -2310,7 +2235,7 @@ namespace scale_lite
 
         private void simpleButton10_Click(object sender, EventArgs e)
         {
-            string sRespuesta = readscaleauto();
+            string sRespuesta = readscaleauto(2);
             int iLectura = 0;
 
             if (int.TryParse(sRespuesta, out iLectura))
@@ -2403,12 +2328,6 @@ namespace scale_lite
             Obtainassigment();
         }
 
-        private void textEdit2_EditValueChanged_1(object sender, EventArgs e)
-        {
-
-            
-        }
-
         private void simpleButton2_Click_1(object sender, EventArgs e)
         {
             int iFletero = 0;
@@ -2457,16 +2376,6 @@ namespace scale_lite
                 evaltkforwarder(textEdit2.Text);
 
             }
-        }
-
-        private void textEdit2_EditValueChanging(object sender, ChangingEventArgs e)
-        {
-
-        }
-
-        private void textEdit2_KeyDown(object sender, KeyEventArgs e)
-        {
-          
         }
 
         private void textEdit2_KeyUp(object sender, KeyEventArgs e)
@@ -2614,11 +2523,6 @@ namespace scale_lite
             CleanControls();
         }
 
-        private void textEdit1_EditValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void simpleButton4_Click_1(object sender, EventArgs e)
         {
             int iAlza = 0;
@@ -2644,11 +2548,6 @@ namespace scale_lite
             {
                 XtraMessageBox.Show("No es un valor valido identidad Alzadora...");
             }
-        }
-
-        private void textEdit4_EditValueChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void textEdit4_KeyUp(object sender, KeyEventArgs e)
@@ -2906,7 +2805,7 @@ namespace scale_lite
                     }
 
 
-                    var lTicketS = procedure.ConvertToList<strucdata.tickettmp>(procedure.Predata(1, "ticket,"+ sFpeso , sTabdest, "zafra = " + izafra.ToString() + " and (IFNULL(" +sFpeso+ ",0) >0 and IFNULL(peson,0) = 0) and ticket = " + label51.Text, sConexion));
+                    var lTicketS = procedure.ConvertToList<strucdata.tickettmp>(procedure.Predata(1, "ticket,"+ sFpeso , sTabdest, "zafra = " + izafra.ToString() + " /* and (IFNULL(" +sFpeso+ ",0) >0 and IFNULL(peson,0) = 0)*/ and ticket = " + label51.Text, sConexion));
 
                     if (lTicketS.Count() > 0)
                     {
@@ -3080,7 +2979,7 @@ namespace scale_lite
 
         private void simpleButton14_Click(object sender, EventArgs e)
         {
-            string sRespuesta = readscaleauto();
+            string sRespuesta = readscaleauto(1);
             int iLectura = 0;
 
             if (int.TryParse(sRespuesta, out iLectura))
@@ -3097,7 +2996,7 @@ namespace scale_lite
 
         private void simpleButton15_Click(object sender, EventArgs e)
         {
-            string sRespuesta = readscaleauto();
+            string sRespuesta = readscaleauto(1);
             int iLectura = 0;
 
             if (int.TryParse(sRespuesta, out iLectura))
@@ -3114,7 +3013,7 @@ namespace scale_lite
 
         private void simpleButton16_Click(object sender, EventArgs e)
         {
-            string sRespuesta = readscaleauto();
+            string sRespuesta = readscaleauto(1);
             int iLectura = 0;
 
             if (int.TryParse(sRespuesta, out iLectura))
@@ -3130,7 +3029,7 @@ namespace scale_lite
 
         private void simpleButton17_Click(object sender, EventArgs e)
         {
-            string sRespuesta = readscaleauto();
+            string sRespuesta = readscaleauto(2);
             int iLectura = 0;
 
             if (int.TryParse(sRespuesta, out iLectura))
@@ -3146,7 +3045,7 @@ namespace scale_lite
 
         private void simpleButton18_Click(object sender, EventArgs e)
         {
-            string sRespuesta = readscaleauto();
+            string sRespuesta = readscaleauto(2);
             int iLectura = 0;
 
             if (int.TryParse(sRespuesta, out iLectura))
@@ -3164,7 +3063,7 @@ namespace scale_lite
         private void simpleButton19_Click(object sender, EventArgs e)
         {
 
-            string sRespuesta = readscaleauto();
+            string sRespuesta = readscaleauto(2);
             int iLectura = 0;
 
             if (int.TryParse(sRespuesta, out iLectura))
@@ -3190,6 +3089,8 @@ namespace scale_lite
 
             if (lForwrfid.Count() > 0)
             {
+                comboBox1.Items.Clear();
+
                 foreach (var itm in lForwrfid)
                 {
                     comboBox1.Items.Add(itm.num_fle + " " + itm.nombre);
@@ -3202,6 +3103,8 @@ namespace scale_lite
             {
                 foreach (var itm in lForwrfido)
                 {
+                    comboBox2.Items.Clear();
+
                     comboBox2.Items.Add(itm.num_fle + " " + itm.nombre);
                 }
             }
@@ -3287,6 +3190,30 @@ namespace scale_lite
             }
 
 
+
+        }
+
+
+
+        private void anulacionSalidaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (XtraMessageBox.Show("Esta seguro de aplicar reversa a un ticket ya con salida registrada?", "Confirme", MessageBoxButtons.YesNo) != DialogResult.Yes) { return; }
+
+            int iTicket = Convert.ToInt32( XtraInputBox.Show("Numero de Ticket a aplicar Reversa", "Reversa Salida", "0"));
+
+            if (iTicket == 0) { return; }
+
+            var lTicketS = procedure.ConvertToList<strucdata.tickettmp>(procedure.Predata(1, "ticket", "b_ticket", "zafra = " + izafra.ToString() + " and  IFNULL(peson,0) > 0 and ticket = " + iTicket, sConexion));
+
+            if (lTicketS.Count() > 0)
+            {
+
+            }
+            else
+            {
+                XtraMessageBox.Show("El Ticket no esta registrado en Salida ...");
+            }
 
         }
     }
